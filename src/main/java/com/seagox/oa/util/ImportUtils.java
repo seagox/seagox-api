@@ -663,7 +663,7 @@ public class ImportUtils {
 		           	 				}
 		           	 			}
 			           	 		if(annotationJson.containsKey("max")) {
-				           	 		if(cellValue.length() > annotationJson.getInteger("min")) {
+				           	 		if(cellValue.length() > annotationJson.getInteger("max")) {
 		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
 		           	 				}
 		           	 			}
@@ -704,7 +704,7 @@ public class ImportUtils {
 		           	 				}
 		           	 			}
 			           	 		if(annotationJson.containsKey("max")) {
-				           	 		if(Integer.valueOf(cellValue) > annotationJson.getInteger("min")) {
+				           	 		if(Integer.valueOf(cellValue) > annotationJson.getInteger("max")) {
 		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
 		           	 				}
 		           	 			}
