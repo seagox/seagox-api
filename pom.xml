@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.seagull.oa</groupId>
+	<groupId>com.seagox.oa</groupId>
 	<artifactId>seagox-api</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
@@ -156,14 +156,6 @@
 		    <groupId>com.amazonaws</groupId>
 		    <artifactId>aws-java-sdk-s3</artifactId>
 		    <version>1.12.230</version>
-		</dependency>
-		<!--引入契约锁电子签章的依赖-->
-		<dependency>
-			<groupId>com.qiyuesuo.sdk</groupId>
-			<artifactId>sdk-java</artifactId>
-			<version>3.4.1</version>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/sdk-java-3.4.1.jar</systemPath>
 		</dependency>
 		<!--引入postgresql的依赖-->
 		<dependency>

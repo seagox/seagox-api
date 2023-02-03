@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seagull.oa.sys.mapper.UserRelateMapper">
+<mapper namespace="com.seagox.oa.sys.mapper.UserRelateMapper">
 
     <!--查询是否存在角色-->
 	<select id="queryCountByRoleId" resultType="int">

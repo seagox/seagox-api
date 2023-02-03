@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seagull.oa.flow.mapper.SeaDefinitionMapper">
+<mapper namespace="com.seagox.oa.flow.mapper.SeaDefinitionMapper">
 	
 	<!--查询列表-->
     <select id="queryByCode" resultType="camelKeyMap">

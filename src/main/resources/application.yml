@@ -13,29 +13,29 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
   redis:
-    host: 192.168.0.188
+    host: 127.0.0.1
     port: 6379
-    password:
+    password: 123456
     jedis:
       pool:
         min-idle: 1
         max-active: 5000
         max-idle: 5000
   datasource:
-    url: jdbc:mysql://192.168.0.188:3306/assets?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    url: jdbc:mysql://127.0.0.1:3306/seagox?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     solr:
-      host: http://192.168.0.192:8983/solr/solr_core
+      host: http://127.0.0.1:8983/solr/solr_core
 
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
-  type-aliases-package: com.seagull.oa
+  type-aliases-package: com.seagox.oa
   global-config.db-config.id-type: AUTO # oracle 配置INPUT
-  type-handlers-package: com.seagull.oa.common
+  type-handlers-package: com.seagox.oa.common
 
 #oracle不加报错
 #  configuration:
@@ -48,29 +48,32 @@ logging:
     console: "%d - %msg%n"
   level:
     com:
-      seagull:
+      seagox:
         oa: debug
 
 # 1:minio 2:aliyun 3:ecloud、aws s3
 oss:
   type: 1
-  endpoint: http://192.168.0.188:9000
+  endpoint: http://127.0.0.1:9000
   access-key: minioadmin
   secret-key: minioadmin
 
-#Windows D:\\Program Files\\OpenOffice
-#Linux /opt/OpenOffice
-#Mac /Applications/OpenOffice.app/Contents
+#Windows G:\\workingdir
+#Linux /opt/workingdir
 #LibreOffice
 jodconverter:
   working-dir: G:\\workingdir
   
 third-party:
   applets:
-    appid: wx78df3d52a59d458d
-    sercret: 0db176c67e1887c4ebff84f15d529314
+    appid: wx78df
+    sercret: 0db176c
+  serviceNumber:
+    appid: wx78df
+    sercret: 0db176c
     
 ignore:
+  secret: 61e2znsKMY75Q9YjaI4719xHJcllvMRy
   token: /auth,/upload,/cloud/entrance,/cloud/download
   sign: /auth,/upload,/user/import,/cloud/download,/cloud/entrance/openApi
 
