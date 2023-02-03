@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.disk.mapper.JellyDiskRecycleMapper">
+
+    <!--根据用户id查询-->
+    <select id="queryByUserId" resultType="camelKeyMap">
+        SELECT
+            a.id,
+            a.disk_id AS "diskId",
+            b.name,
+            b.type,
+            b.path,
+            b.capacity,
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+            	to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM
+            jelly_disk_recycle a
+            JOIN jelly_disk b ON a.disk_id = b.id
+        <where>
+            b.company_id = #{companyId}
+            AND b.user_id = #{userId}
+        </where>
+    </select>
+</mapper>

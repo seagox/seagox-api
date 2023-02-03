@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.sys.mapper.SysAccountMapper">
+
+    <!--查询全部通过公司id-->
+	<select id="queryByCompanyId" resultType="camelKeyMap">
+        SELECT 
+        	a.*, b.role_ids as "roleIds", b.company_id as "companyId", 
+        	b.department_id as "departmentId", a.id as value,
+        	a.name as label,c.name as "departmentName",d.name as "companyName" 
+       	FROM sys_account a
+       	LEFT JOIN sys_user_relate b ON b.user_id = a.id
+       	LEFT JOIN sys_department c ON c.id = b.department_id
+       	LEFT JOIN sys_company d ON d.id = b.company_id
+        <where>
+        	<choose>
+	            <when test="_databaseId == 'mysql' and prefix != null and prefix != ''">
+	                d.code LIKE CONCAT(#{prefix}, '%')
+	            </when>
+	            <when test="_databaseId == 'postgresql' and prefix != null and prefix != ''">
+	            	AND d.code LIKE #{prefix} || '%'
+	            </when>
+                <when test="_databaseId == 'kingbase' and prefix != null and prefix != ''">
+                    AND d.code LIKE #{prefix} || '%'
+                </when>
+                <when test="_databaseId == 'dm' and prefix != null and prefix != ''">
+                    AND d.code LIKE #{prefix} || '%'
+                </when>
+                <when test="_databaseId == 'oracle' and prefix != null and prefix != ''">
+                    AND d.code LIKE #{prefix} || '%'
+                </when>
+                <when test="_databaseId == 'sqlserver' and prefix != null and prefix != ''">
+                    AND d.code LIKE #{prefix} + '%'
+                </when>
+	            <otherwise>
+	            	b.company_id = #{searchCompanyId}
+	            </otherwise>
+            </choose>
+            <if test="departmentId != null">
+            	AND b.department_id = #{departmentId}
+            </if>
+             <if test="_databaseId == 'mysql' and name != null and name != ''">
+                AND a.name LIKE CONCAT('%', #{name},'%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name != ''">
+            	AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name != ''">
+                AND a.name LIKE '%' + #{name} + '%'
+            </if>
+        </where>
+        ORDER BY a.sort,a.create_time DESC
+    </select>
+    
+    <!--通过部门id查询用户-->
+	<select id="queryByDeptId" resultType="camelKeyMap">
+        SELECT b.* FROM sys_user_relate a
+        	LEFT JOIN sys_account b ON b.id = a.user_id
+        <where>
+            a.department_id = #{deptId}
+        </where>
+        ORDER BY b.create_time DESC
+    </select>
+    
+    <!--查询全部通过公司id-->
+	<select id="queryUserByCompanyId" resultType="camelKeyMap">
+        SELECT a.*
+        	FROM sys_account a
+        	LEFT JOIN sys_user_relate b ON b.user_id = a.id
+        <where>
+        	b.company_id = #{companyId}
+        </where>
+    </select>
+    
+    <!--通过用户串获取用户-->
+	<select id="queryByIds" resultType="camelKeyMap">
+        SELECT * FROM sys_account
+        <where>
+        	id IN
+            <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+        </where>
+    </select>
+
+    <!--查询列表-->
+    <select id="queryList" resultType="camelKeyMap">
+        SELECT b.id, b.name,b.avatar, a.role_ids as "roleIds", a.company_id as "companyId", 
+        b.id as "userId", b.name as "userName", b.sort
+        FROM sys_user_relate a
+        LEFT JOIN sys_account b ON b.id = a.user_id
+        <where>
+            a.company_id = #{companyId}
+            AND b.id != #{userId}
+            <if test="_databaseId == 'mysql' and userName != null and userName != ''">
+                AND b.name LIKE CONCAT('%', #{userName},'%')
+            </if>
+            <if test="_databaseId == 'postgresql' and userName != null and userName != ''">
+            	AND b.name LIKE '%' || #{userName} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and userName != null and userName != ''">
+                AND b.name LIKE '%' || #{userName} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and userName != null and userName != ''">
+                AND b.name LIKE '%' || #{userName} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and userName != null and userName != ''">
+                AND b.name LIKE '%' || #{userName} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and userName != null and userName != ''">
+                AND b.name LIKE '%' + #{userName} + '%'
+            </if>
+        </where>
+        ORDER BY b.create_time DESC
+    </select>
+
+</mapper>

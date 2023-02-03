@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.excel.mapper.JellyDicClassifyMapper">
+    
+    <!--查询列表-->
+    <select id="queryByCode" resultType="camelKeyMap">
+        SELECT a.id, a.name, a.company_id as "companyId", a.sort
+        FROM jelly_dic_classify a 
+        LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+        	<if test="_databaseId == 'mysql'">
+                b.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                b.code LIKE #{prefix} + '%'
+            </if>
+            ORDER BY a.sort
+        </where>
+    </select>
+    
+    <!--查询列表通过名称-->
+    <select id="queryByName" resultType="camelKeyMap">
+        SELECT b.name, b.code
+        FROM jelly_dic_classify a 
+        LEFT JOIN jelly_dic_detail b ON b.classify_id = a.id
+        <where>
+        	a.company_id = #{companyId}
+        	AND a.name = #{name}
+        </where>
+    </select>
+    
+</mapper>

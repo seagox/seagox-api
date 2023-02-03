@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.flow.mapper.SeaNodeDetailMapper">
+	
+	<!--查询节点详情-->
+	<select id="queryNodeDetail" resultType="camelKeyMap">
+        SELECT 
+        	a.name, 
+        	a.status, 
+        	a.remark, 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.start_time, '%Y-%m-%d %H:%i') AS "startTime", 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.start_time,'yyyy-MM-dd HH24:MI') AS "startTime",
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI') AS "startTime",
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI') AS "startTime",
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI') AS "startTime",
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.start_time, 120 ) AS "startTime"
+            </if>
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i') AS "endTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI') AS "endTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI') AS "endTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI') AS "endTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI') AS "endTime",
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.end_time, 120 ) AS "endTime"
+            </if>
+        FROM sea_node_detail a 
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        <where>
+            b.target = #{nodeId}
+            AND b.status in (0,1)
+            AND b.version = #{version}
+            AND c.id = #{defId}
+        </where>
+        ORDER BY a.start_time DESC, a.end_time
+    </select>
+    
+    <!--更新节点详情-->
+    <update id="updateNodeDetail">
+		update sea_node_detail a 
+		LEFT JOIN sea_node b ON b.id = a.node_id
+		<set>
+			<if test="_databaseId == 'mysql'">
+            	a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'dm'">
+                a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'oralce'">
+                a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                a.end_time = GETDATE()
+            </if>
+		</set>
+	    <where>
+	    	a.status = 0
+	    	AND b.def_id = #{defId}
+	    </where>
+	</update> 
+	
+	<!--更新节点详情-->
+    <update id="updateNodeDetailEndTime">
+		update sea_node_detail a 
+		LEFT JOIN sea_node b ON b.id = a.node_id
+		<set>
+			<if test="_databaseId == 'mysql'">
+            	a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'kingbase'">
+            	a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'dm'">
+                a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'oralce'">
+                a.end_time = NOW()
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                a.end_time = GETDATE()
+            </if>
+		</set>
+	    <where>
+	    	a.status IN (2,4)
+	    	AND b.def_id = #{defId}
+	    </where>
+	</update> 
+	
+	<!--查询节点详情-->
+	<select id="queryProcessDetailByNodeName" resultType="camelKeyMap">
+        SELECT 
+        	a.name, 
+        	a.remark, 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') AS "endTime" 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.end_time, 120 ) AS "endTime"
+            </if>
+        FROM sea_node_detail a 
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        <where>
+        	a.status = 1
+            AND b.name = #{nodeName}
+            AND b.version = #{version}
+            AND c.id = #{defId}
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+    <!--查询节点详情-->
+	<select id="queryProcessDetailByNodeId" resultType="camelKeyMap">
+        SELECT 
+        	a.name, 
+        	a.remark, 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') AS "endTime" 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.end_time, 120 ) AS "endTime"
+            </if>
+        FROM sea_node_detail a 
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        <where>
+        	a.status = 1
+            AND b.target = #{nodeId}
+            AND b.version = #{version}
+            AND c.id = #{defId}
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="selectFlowTodoList" resultType="camelKeyMap">
+        SELECT
+            b.name as "nodeName",
+            a.name as "assigneeName",
+            a.status as "status",
+            a.remark,
+            <if test="_databaseId == 'mysql'">
+                DATE_FORMAT(a.start_time, '%Y-%m-%d %H:%i:%s') AS "startTime",
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI:ss') AS "startTime",
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI:ss') AS "startTime",
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI:ss') AS "startTime",
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.start_time,'yyyy-MM-dd HH24:MI:ss') AS "startTime",
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.start_time, 120 ) AS "startTime",
+            </if>
+            <if test="_databaseId == 'mysql'">
+                DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') AS "endTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.end_time, 120 ) AS "endTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        <where>
+            a.status = #{status}
+            AND
+            a.node_id in (select id from sea_node where def_id = #{defId} and version = #{version} and type = #{type} and status = #{status})
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+</mapper>

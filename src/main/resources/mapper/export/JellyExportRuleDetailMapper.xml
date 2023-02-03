@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.export.mapper.JellyExportRuleDetailMapper">
+
+    <select id="queryByRuleId" resultType="camelKeyMap">
+        SELECT
+            a.id,
+            a.export_rule_id as "exportRuleId",
+            a.field,
+            b.comment as "comment",
+            b.name,
+            a.col,
+            a.type,
+            a.source,
+            a.sql_source as "sqlSource"
+        FROM
+            jelly_export_rule_detail a
+            left join jelly_business_field b on a.field = b.id
+        <where>
+            a.export_rule_id = #{ruleId}
+        </where>
+        ORDER BY length(a.col), a.col ASC
+    </select>
+
+</mapper>

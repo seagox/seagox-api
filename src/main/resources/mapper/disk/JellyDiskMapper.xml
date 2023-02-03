@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.disk.mapper.JellyDiskMapper">
+
+    <!--根据用户id查询-->
+    <select id="queryByUserId" resultType="camelKeyMap">
+    	SELECT
+       		id,
+            company_id as "companyId",
+            user_id as "userId",
+            parent_id as "parentId",
+            type,
+            name,
+            path,
+            link,
+            text,
+            capacity,
+            status,
+            to_user_ids as "toUserIds",
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS "createTime",
+            	DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%s') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+            	to_char(update_time,'yyyy-MM-dd HH24:MI:ss') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+                to_char(update_time,'yyyy-MM-dd HH24:MI:ss') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+                to_char(update_time,'yyyy-MM-dd HH24:MI:ss') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+            	to_char(create_time,'yyyy-MM-dd hh24:mi:ss') AS "createTime",
+            	to_char(update_time,'yyyy-MM-dd hh24:mi:ss') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CONVERT(varchar, create_time, 120 ) AS "createTime",
+            	CONVERT(varchar, create_time, 120 ) AS "updateTime"
+            </if>
+       	FROM
+          jelly_disk
+        <where>
+            company_id = #{companyId}
+            AND user_id = #{userId}
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="_databaseId == 'mysql' and name != null and name !=''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name !=''">
+                AND name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name !=''">
+                AND name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name !=''">
+                AND name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name !=''">
+                AND name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name !=''">
+                AND name LIKE '%' + #{name} + '%'
+            </if>
+            <if test="status != null and status !=''">
+                AND status = #{status}
+            </if>
+            <if test="typeList != null and typeList.size() > 0">
+                AND type IN
+                <foreach collection="typeList" item="type" index="index" open="(" close=")" separator=",">
+                    #{type}
+                </foreach>
+            </if>
+    	</where>
+    </select>
+</mapper>

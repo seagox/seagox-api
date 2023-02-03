@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.excel.mapper.JellyBusinessFieldMapper">
+
+    <!--查询全部通过表名-->
+	<select id="queryByTableName" resultType="camelKeyMap">
+        SELECT a.id, b.name as "tableName", b.remark as "tableComment", a.name, a.remark, a.type FROM jelly_business_field a 
+        	LEFT JOIN jelly_business_table b ON b.id = a.business_table_id
+        <where>
+            b.name = #{tableName}
+        </where>
+    </select>
+    
+    <!--查询全部通过表ids-->
+	<select id="queryByTableIds" resultType="camelKeyMap">
+        SELECT b.id, a.name as "tableName", a.remark as "tableComment", b.name, b.remark, b.type FROM jelly_business_table a 
+        	LEFT JOIN jelly_business_field b ON a.id = b.business_table_id
+        <where>
+            a.id IN
+            <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+        </where>
+    </select>
+    
+    <!--查询业务字段全部表单id-->
+	<select id="queryByFormId" resultType="camelKeyMap">
+        SELECT c.name, c.kind FROM jelly_data_sheet a
+        	LEFT JOIN jelly_business_table b ON  b.name = a.table_name
+        	LEFT JOIN jelly_business_field c ON c.business_table_id = b.id
+        <where>
+        	a.form_id = #{formId}
+            AND c.kind = 6
+        </where>
+    </select>
+    
+    <!--查询必填字段全部表单id-->
+	<select id="queryRequiredByFormId" resultType="camelKeyMap">
+        SELECT b.name as "tableName", c.name, c.remark FROM jelly_data_sheet a
+        	LEFT JOIN jelly_business_table b ON  b.name = a.table_name
+        	LEFT JOIN jelly_business_field c ON c.business_table_id = b.id
+        <where>
+        	a.form_id = #{formId}
+            AND a.single_flag = 1
+            AND c.not_null = 1
+        </where>
+    </select>
+    
+</mapper>

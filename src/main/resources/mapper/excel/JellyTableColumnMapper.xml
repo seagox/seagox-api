@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.excel.mapper.JellyTableColumnMapper">
+
+	<resultMap id="BaseResultTreeMap" type="com.seagull.oa.excel.entity.JellyTableColumn">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+		<result column="classify_id" jdbcType="BIGINT" property="classifyId"/>
+		<result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+		<result column="prop" jdbcType="VARCHAR" property="prop"/>
+		<result column="label" jdbcType="VARCHAR" property="label"/>
+		<result column="width" jdbcType="BIGINT" property="width"/>
+		<result column="locking" jdbcType="BIGINT" property="locking"/>
+		<result column="summary" jdbcType="BIGINT" property="summary"/>
+		<result column="total" jdbcType="BIGINT" property="total"/>
+		<result column="target" jdbcType="BIGINT" property="target"/>
+		<result column="formatter" jdbcType="BIGINT" property="formatter"/>
+		<result column="options" jdbcType="VARCHAR" property="options"/>
+		<result column="sort" jdbcType="BIGINT" property="sort"/>
+		<result column="formula" jdbcType="VARCHAR" property="formula"/>
+		<result column="router_json" jdbcType="VARCHAR" property="routerJson"/>
+		<result column="display" jdbcType="BIGINT" property="display"/>
+		<!--使用mybatis  collection 进行集合查询-->
+		<collection property="children" ofType="com.seagull.oa.excel.entity.JellyTableColumn" select="selectTree" column="id" javaType="java.util.ArrayList"/>
+	</resultMap>
+
+	<!--父级查询-->
+	<select id="queryConfigByClassifyIdTree" resultMap="BaseResultTreeMap">
+		SELECT a.id, a.parent_id, a.prop, a.label, a.width, a.target, a.formatter, a.options, a.summary,a.locking,a.formula,a.total,a.router_json,b.display
+		FROM jelly_table_column a
+		LEFT JOIN (SELECT * FROM jelly_table_column_config WHERE user_id = #{userId}) b ON b.table_column_id = a.id
+		<where>
+			a.classify_id = #{classifyId}
+			AND a.parent_id IS NULL
+		</where>
+		ORDER BY a.sort
+    </select>
+
+	<!--关联集合查询-->
+	<select id="selectTree" parameterType="String" resultMap="BaseResultTreeMap">
+		SELECT a.id, a.parent_id, a.prop, a.label, a.width, a.target, a.formatter, a.options, a.summary,a.locking,a.formula,a.total,a.router_json,b.display
+		FROM jelly_table_column a
+		LEFT JOIN (SELECT * FROM jelly_table_column_config WHERE user_id = #{userId}) b ON b.table_column_id = a.id
+		<where>
+			a.parent_id = #{id}
+		</where>
+		ORDER BY a.sort
+    </select>
+
+    <!--查询表格表头-->
+	<select id="queryConfigByClassifyId" resultType="camelKeyMap">
+        SELECT a.id, a.parent_id, a.prop, a.label, a.width, a.target, a.formatter, a.options, b.display, a.summary,a.locking,a.formula,a.total,a.router_json as "routerJson" FROM jelly_table_column a
+        	LEFT JOIN (SELECT * FROM jelly_table_column_config WHERE user_id = #{userId}) b ON b.table_column_id = a.id
+        <where>
+            a.classify_id = #{classifyId}
+        </where>
+        ORDER BY a.sort
+    </select>
+    
+	<!--通过格式化更新表格表头-->
+    <update id="updateByFormatter">
+    	UPDATE jelly_table_column
+    	<set>
+    		options = #{options}
+    	</set>
+    	<where>
+    		target = 1
+    		AND formatter = #{formatter}
+    	</where>
+    </update>
+    
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.disk.mapper.JellyDiskShareMapper">
+
+    <!--根据用户id查询-->
+    <select id="queryByUserId" resultType="camelKeyMap">
+        SELECT
+            a.id,
+            a.disk_id AS "diskId",
+            a.share_user_id as "shareUserId",
+            (select name from sys_account where id=a.share_user_id) as "shareUserName",
+            b.name,
+            b.type,
+            b.path,
+            b.capacity,
+            b.company_id as "companyId",
+            b.parent_id as "parentId",
+            b.link,
+            b.text,
+            b.capacity,
+            b.status,
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.share_time, '%Y-%m-%d %H:%i:%s') AS "shareTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.share_time,'yyyy-MM-dd HH24:MI:ss') AS "shareTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.share_time,'yyyy-MM-dd HH24:MI:ss') AS "shareTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.share_time,'yyyy-MM-dd HH24:MI:ss') AS "shareTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+            	to_char(a.share_time,'yyyy-MM-dd hh24:mi:ss') AS "shareTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+			    CONVERT(varchar, a.share_time, 120 ) AS "share_time"
+			</if>
+        FROM
+            jelly_disk_share a
+            JOIN jelly_disk b ON a.disk_id = b.id
+        <where>
+            a.company_id = #{companyId}
+            AND a.user_id = #{userId}
+            AND b.status = 1
+            order by a.share_time desc
+        </where>
+    </select>
+</mapper>

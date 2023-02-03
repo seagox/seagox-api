@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.export.mapper.JellyExportDimensionMapper">
+
+    <select id="queryByOdsId" resultType="camelKeyMap">
+        SELECT
+            a.id,
+            a.name,
+            a.odm_source AS "odmSource",
+            a.odm_code_field AS "odmCodeField",
+            a.odm_name_field AS "odmNameField",
+            a.dim_source AS "dimSource",
+            a.dim_code_field AS "dimCodeField",
+            a.dim_name_field AS "dimNameField",
+            a.dim_year_field AS "dimYearField",
+            b.name AS "odmFieldCode",
+            b.comment AS "odmCommentCode",
+            c.name AS "odmFieldName",
+            c.comment AS "odmCommentName",
+            d.name AS "dimSourceName",
+            e.name AS "dimFieldCode",
+            f.name AS "dimFieldName",
+            g.name AS "dimFieldYear"
+        FROM
+            jelly_export_dimension a
+            LEFT JOIN jelly_business_field b ON b.id = a.odm_code_field
+            LEFT JOIN jelly_business_field c ON c.id = a.odm_name_field
+            LEFT JOIN jelly_business_table d ON d.id = a.dim_source
+            LEFT JOIN jelly_business_field e ON e.id = a.dim_code_field
+            LEFT JOIN jelly_business_field f ON f.id = a.dim_name_field
+            LEFT JOIN jelly_business_field g ON g.id = a.dim_year_field
+        <where>
+            a.odm_source = #{odsId}
+        </where>
+        ORDER BY a.create_time asc
+    </select>
+
+</mapper>

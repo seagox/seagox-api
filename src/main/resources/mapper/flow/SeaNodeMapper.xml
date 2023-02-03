@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.flow.mapper.SeaNodeMapper">
+	
+	<!--查询当前节点-->
+	<select id="queryCurrentNodeDetail" resultType="camelKeyMap">
+        SELECT a.id, a.type, a.source, a.target, a.is_concurrent AS "isConcurrent", c.id AS "nodeDetailId"
+        FROM sea_node a
+        LEFT JOIN sea_instance b ON a.def_id = b.id
+        LEFT JOIn sea_node_detail c ON c.node_id = a.id
+        <where>
+            b.id = #{defId}
+            AND a.status = 0
+            AND a.version = #{version}
+            AND c.status = 0
+            AND c.assignee = #{assignee}
+        </where>
+        ORDER BY a.create_time desc 
+        LIMIT 1
+    </select>
+    
+    <!--查询是否可撤回-->
+	<select id="queryApproverCount" resultType="int">
+        SELECT COUNT(a.id)
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        <where>
+            c.id = #{defId}
+            AND b.type = 1
+            AND b.version = #{version}
+            AND a.status IN(1,2)
+        </where>
+    </select>
+
+    <!--查询审核人当前节点-->
+    <select id="queryCurrentNodeByAssignee" resultType="camelKeyMap">
+        SELECT a.id, a.def_id as "defId", a.version, a.source, a.target, a.name, a.type, c.id as "nodeDetailId", c.status, b.status as "procdefStatus"
+        FROM sea_node a
+        LEFT JOIN sea_instance b ON a.def_id = b.id
+        LEFT JOIn sea_node_detail c ON c.node_id = a.id
+        <where>
+            b.id = #{defId}
+            AND a.version = b.version
+            AND c.assignee = #{assignee}
+            AND c.status in (0,1,2,3,4,5)
+        </where>
+        ORDER BY a.create_time desc
+        LIMIT 1
+    </select>
+
+    <!--根据下一节点-->
+    <select id="queryNextNode" resultType="camelKeyMap">
+       SELECT a.id, a.def_id as "defId", a.version, a.source, a.target, a.type, a.status
+        FROM
+            sea_node a,
+            ( SELECT id, def_id, version, create_time, target FROM sea_node WHERE id = #{id} ) b
+        <where>
+            a.def_id = b.def_id
+            AND a.version = b.version
+            AND a.create_time &gt; b.create_time
+            AND a.target not in ('close', 'open')
+            AND a.source = b.target
+        </where>
+        ORDER BY
+            a.id desc
+--             LIMIT 1
+    </select>
+
+    <!--查询是否已处理-->
+    <select id="queryHandleCount" resultType="int">
+        SELECT
+            count(id)
+        FROM
+            sea_node_detail
+        WHERE
+            node_id = #{nodeId}
+            AND STATUS IN ( 1,2,4,5)
+    </select>
+    
+</mapper>

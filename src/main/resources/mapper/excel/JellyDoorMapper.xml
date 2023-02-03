@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.excel.mapper.JellyDoorMapper">
+    
+    <!--查询列表-->
+    <select id="queryByCode" resultType="camelKeyMap">
+        SELECT a.id, a.name, a.company_id as "companyId",a.config, a.authority, a.path
+        FROM jelly_door a 
+        LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+            <if test="_databaseId == 'mysql'">
+                b.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                b.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+    </select>
+    
+</mapper>

@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.flow.mapper.SeaInstanceMapper">
+	
+	<!--查询历史处理意见-->
+	<select id="queryHistoryOpinion" resultType="camelKeyMap">
+        select 
+        	c.name as "assigneeName", 
+        	c.status, 
+        	c.remark, 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(c.end_time, '%Y-%m-%d %H:%i:%s') AS "endTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(c.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(c.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(c.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(c.end_time,'yyyy-MM-dd HH24:MI:ss') AS "endTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+			    CONVERT(varchar, c.end_time, 120 ) AS "endTime"
+			</if>
+        FROM sea_instance a
+        LEFT JOIN sea_node b ON b.def_id = a.id
+        LEFT JOIN sea_node_detail c ON c.node_id = b.id
+        <where>
+            a.business_type = #{businessType}
+            AND a.business_key = #{businessKey}
+            AND c.status IN (1,2,3,4,5,6,7,8)
+        </where>
+        ORDER BY c.end_time DESC
+    </select>
+   
+    <!--查询待办事项-->
+	<select id="queryTodoItem" resultType="camelKeyMap">
+        SELECT 
+        	c.id, 
+        	c.name, 
+        	c.business_type as "businessType", 
+        	c.business_key as "businessKey",
+        	c.return_number as "returnNumber", 
+        	d.name as "assigneeName", 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id AND c.version = b.version
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        <where>
+        	a.status = 0
+        	AND b.status = 0
+        	AND b.type IN (1,4)
+            AND a.assignee = #{userId}
+            AND c.status IN (0,1,2,3)
+            <if test="formId != null and formId != ''">
+                AND c.business_type = #{formId}
+            </if>
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+    <!--查询已办事项-->
+	<select id="queryDoneItem" resultType="camelKeyMap">
+        SELECT 
+        	c.id, 
+        	c.name, 
+        	c.business_type as "businessType", 
+        	c.business_key as "businessKey", 
+        	d.name as assigneeName, 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.end_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        <where>
+        	a.status IN (1,2)
+            AND a.assignee = #{userId}
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+        ORDER BY a.end_time DESC
+    </select>
+    
+    <!--查询抄送事项-->
+	<select id="queryCopyItem" resultType="camelKeyMap">
+        SELECT 
+        	a.id, 
+        	c.name, 
+        	c.business_type as "businessType", 
+        	c.business_key as "businessKey", 
+        	d.name as "assigneeName",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(c.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, c.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        <where>
+        	b.type = 2
+            AND b.status = 1
+            AND a.assignee = #{userId}
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+    <!--查询我发起的-->
+	<select id="querySelfItem" resultType="camelKeyMap">
+        SELECT 
+        	a.id, 
+        	a.name, 
+        	a.business_type as "businessType", 
+        	a.business_key as "businessKey",
+        	a.current_agent as "assigneeName", 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+		FROM sea_instance a
+		LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+            a.user_id = #{userId}
+            <if test="formId != null and formId != ''">
+                AND a.business_type = #{formId}
+            </if>
+            <if test="_databaseId == 'mysql'">
+                AND b.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND b.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+    <!--查询待发事项-->
+	<select id="queryReadyItem" resultType="camelKeyMap">
+        SELECT 
+        	id, 
+        	title as name,
+            business_type AS "businessType",
+            business_key AS "businessKey",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, create_time, 120 ) AS "createTime"
+            </if>
+		FROM sys_message
+        <where>
+        	type = 4
+        	AND company_id = #{companyId}
+            AND to_user_id = #{userId}
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!--查询我的工作：待办事项-->
+    <select id="queryWorkTodoItem" resultType="camelKeyMap">
+        SELECT 
+        	c.id, c.name, c.business_type as "businessType", 
+        	c.business_key as "businessKey", d.name as "assigneeName", 
+        	c.resources, c.status, c.return_number as "returnNumber",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id AND c.version = b.version
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        LEFT JOIN sys_user_relate f ON f.company_id = c.company_id AND f.user_id = c.user_id
+        <where>
+            a.status = 0
+            AND b.status = 0
+            AND b.type IN (1,4)
+            AND a.assignee = #{userId}
+            AND c.status IN (0,1,2,3)
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+            <if test="_databaseId == 'mysql' and name != null and name != ''">
+                AND c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name != ''">
+                AND c.name LIKE '%' + #{name} + '%'
+            </if>
+            <if test="_databaseId == 'mysql' and statusStr != null and statusStr != ''">
+                AND find_in_set(c.status, #{statusStr})
+            </if>
+            <if test="_databaseId == 'postgresql' and statusStr != null and statusStr != ''">
+                AND cast(#{statusStr} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(c.status as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'kingbase' and statusStr != null and statusStr != ''">
+                AND cast(#{statusStr} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(c.status as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'dm' and statusStr != null and statusStr != ''">
+                AND position(c.status in #{statusStr})
+            </if>
+            <if test="_databaseId == 'oracle' and statusStr != null and statusStr != ''">
+                AND position(c.status in #{statusStr})
+            </if>
+            <if test="_databaseId == 'sqlserver' and statusStr != null and statusStr != ''">
+                AND position(c.status in #{statusStr})
+            </if>
+
+            <if test="_databaseId == 'mysql' and businessTypeStr != null and businessTypeStr != ''">
+                AND find_in_set(c.business_type, #{businessTypeStr})
+            </if>
+            <if test="_databaseId == 'postgresql' and businessTypeStr != null and businessTypeStr != ''">
+                AND cast(#{businessTypeStr} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(c.business_type as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'kingbase' and businessTypeStr != null and businessTypeStr != ''">
+                AND cast(#{businessTypeStr} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(c.business_type as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'dm' and businessTypeStr != null and businessTypeStr != ''">
+                AND position(c.business_type in #{businessTypeStr})
+            </if>
+            <if test="_databaseId == 'oracle' and businessTypeStr != null and businessTypeStr != ''">
+                AND position(c.business_type in #{businessTypeStr})
+            </if>
+            <if test="_databaseId == 'sqlserver' and businessTypeStr != null and businessTypeStr != ''">
+                AND position(c.business_type in #{businessTypeStr})
+            </if>
+
+            <if test="_databaseId == 'mysql' and departmentIds != null and departmentIds != ''">
+                AND find_in_set(f.department_id, #{departmentIds})
+            </if>
+            <if test="_databaseId == 'postgresql' and departmentIds != null and departmentIds != ''">
+                AND cast(#{departmentIds} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(f.department_id as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'kingbase' and departmentIds != null and departmentIds != ''">
+                AND cast(#{departmentIds} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(f.department_id as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'dm' and departmentIds != null and departmentIds != ''">
+                AND position(f.department_id in #{departmentIds})
+            </if>
+            <if test="_databaseId == 'oracle' and departmentIds != null and departmentIds != ''">
+                AND position(f.department_id in #{departmentIds})
+            </if>
+            <if test="_databaseId == 'sqlserver' and departmentIds != null and departmentIds != ''">
+                AND position(f.department_id in #{departmentIds})
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!--查询我的工作：待发事项-->
+    <select id="queryWorkReadyItem" resultType="camelKeyMap">
+        SELECT 
+        	id, title as name, business_type AS "businessType", business_key AS "businessKey",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS createTime
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS createTime
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS createTime
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS createTime
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:ss') AS createTime
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, create_time, 120 ) AS "createTime"
+            </if>
+        FROM sys_message
+        <where>
+            type = 4
+            AND company_id = #{companyId}
+            AND to_user_id = #{userId}
+            <if test="_databaseId == 'mysql' and title != null and title != ''">
+                AND title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and title != null and title != ''">
+                AND title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and title != null and title != ''">
+                AND title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and title != null and title != ''">
+                AND title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and title != null and title != ''">
+                AND title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and title != null and title != ''">
+                AND title LIKE '%' + #{title} + '%'
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!--查询我的工作：已办事项-->
+    <select id="queryWorkDoneItem" resultType="camelKeyMap">
+        SELECT 
+        	c.id, c.name, c.business_type as "businessType", 
+        	c.business_key as "businessKey",d.name as "assigneeName", 
+        	c.resources,c.current_agent AS "currentToDoPersons",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime",
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime",
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') AS "handleTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "handleTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "handleTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "handleTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.end_time,'yyyy-MM-dd HH24:MI:ss') AS "handleTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CONVERT(varchar, a.end_time, 120 ) AS "handleTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        <where>
+            a.status IN (1,2)
+            AND a.assignee = #{userId}
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+            <if test="_databaseId == 'mysql' and name != null and name != ''">
+                AND c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name != ''">
+                AND c.name LIKE '%' + #{name} + '%'
+            </if>
+        </where>
+        ORDER BY a.end_time DESC
+    </select>
+
+    <!--查询我的工作：抄送事项-->
+    <select id="queryWorkCopyItem" resultType="camelKeyMap">
+        SELECT 
+        	a.id, c.name, c.business_type as "businessType", 
+        	c.business_key as "businessKey",d.name as "assigneeName", 
+        	c.resources,
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(c.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(c.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, c.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_node_detail a
+        LEFT JOIN sea_node b ON b.id = a.node_id
+        LEFT JOIN sea_instance c ON c.id = b.def_id
+        LEFT JOIN sys_account d ON d.id = c.user_id
+        LEFT JOIN sys_company e ON e.id = c.company_id
+        <where>
+            b.type = 2
+            AND a.assignee = #{userId}
+            <if test="_databaseId == 'mysql'">
+                AND e.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND e.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND e.code LIKE #{prefix} + '%'
+            </if>
+            <if test="_databaseId == 'mysql' and name != null and name != ''">
+                AND c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name != ''">
+                AND c.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name != ''">
+                AND c.name LIKE '%' + #{name} + '%'
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!--查询我的工作: 我发起的-->
+    <select id="queryWorkSelfItem" resultType="camelKeyMap">
+        SELECT 
+        	a.id, a.name, a.business_type as "businessType", 
+        	a.business_key as "businessKey", a.resources, a.current_agent AS "currentToDoPersons",
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sea_instance a
+        LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+            a.user_id = #{userId}
+            <if test="_databaseId == 'mysql'">
+                AND b.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND b.code LIKE #{prefix} + '%'
+            </if>
+            <if test="_databaseId == 'mysql' and name != null and name != ''">
+                AND a.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and name != null and name != ''">
+                AND a.name LIKE '%' || #{name} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and name != null and name != ''">
+                AND a.name LIKE '%' + #{name} + '%'
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+    <!--删除流程记录-->
+    <delete id="deleteProcess">
+    	DELETE a,b,c 
+		FROM sea_instance AS a 
+		LEFT JOIN sea_node AS b ON b.def_id = a.id 
+		LEFT JOIN sea_node_detail AS c ON c.node_id = b.id
+		<where>
+			a.business_type = #{businessType}
+            AND a.business_key = #{businessKey}
+		</where> 
+    </delete>
+    
+</mapper>

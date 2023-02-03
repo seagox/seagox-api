@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.sys.mapper.DepartmentMapper">
+	
+	<!--查询全部通过公司id-->
+	<select id="queryByCompanyId" resultType="camelKeyMap">
+        SELECT 
+        	a.id,
+        	a.code,
+        	a.name, 
+        	a.director, 
+        	a.charge_leader as "chargeLeader", 
+        	a.parent_id as "parentId", 
+        	a.id as value, 
+        	a.name as label, 
+        	a.company_id as "companyId", 
+        	b.name as "companyName", 
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime" 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sys_department a 
+        LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+            a.company_id = #{companyId}
+        </where>
+    </select>
+    
+    <!--查询全部通过编码前缀-->
+	<select id="queryByCode" resultType="camelKeyMap">
+        SELECT 
+        	a.id, 
+        	a.name, 
+        	a.code,
+        	a.director, 
+        	a.charge_leader as "chargeLeader", 
+        	a.parent_id as "parentId", 
+        	a.id as value, 
+        	a.name as label, 
+        	a.company_id as "companyId", 
+        	b.name as "companyName",
+        	<if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime" 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM sys_department a 
+        LEFT JOIN sys_company b ON b.id = a.company_id
+        <where>
+        	<if test="_databaseId == 'mysql'">
+                b.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                b.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                b.code LIKE #{prefix} + '%'
+            </if>
+        </where>
+    </select>
+    
+    <!--查询最大编码通过编码前缀-->
+	<select id="queryMaxCode" resultType="string">
+        SELECT MAX(code) FROM sys_department
+        <where>
+        	company_id = #{companyId}
+        	<if test="_databaseId == 'mysql'">
+                AND code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND code LIKE #{prefix} + '%'
+            </if>
+            <if test="_databaseId == 'mysql'">
+            	AND LENGTH(code) = #{digit}
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	AND LENGTH(code) = #{digit}
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                AND LENGTH(code) = #{digit}
+            </if>
+            <if test="_databaseId == 'dm'">
+                AND LENGTH(code) = #{digit}
+            </if>
+            <if test="_databaseId == 'oracle'">
+                AND LENGTH(code) = #{digit}
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                AND LENGTH(code) = #{digit}
+            </if>
+        </where>
+    </select>
+    
+</mapper>

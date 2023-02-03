@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.sys.mapper.NoticeMapper">
+    <!--根据id查询-->
+    <select id="queryById" resultType="camelKeyMap">
+        SELECT
+            a.id,
+            a.title,
+            a.img_json AS "imgJson",
+            a.text,
+            a.annex_json AS "annexJson",
+            a.from_user_id AS "fromUserId",
+            a.to_user_ids AS "toUserId",
+            a.status,
+            b.name AS "fromUserName",
+            <if test="_databaseId == 'mysql'">
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime" 
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, a.create_time, 120 ) AS "createTime"
+            </if>
+        FROM
+            sys_notice a
+            LEFT JOIN sys_account b ON a.from_user_id = b.id
+        <where>
+            a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="queryAll" resultType="camelKeyMap">
+        select
+        a.id,
+        a.title,
+        b.name,
+        a.classify,
+        <if test="status == 1">
+            (select count(id) from sys_message where business_key = a.id and business_type = -1 and type = 2 and status = 1) as "readNum",
+            (select count(id) from sys_message where business_key = a.id and business_type = -1 and type = 2 and status = 0) as "unreadNum",
+        </if>
+        <if test="_databaseId == 'mysql'">
+            DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
+        </if>
+        <if test="_databaseId == 'postgresql'">
+            to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+        </if>
+        <if test="_databaseId == 'kingbase'">
+            to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+        </if>
+        <if test="_databaseId == 'dm'">
+            to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+        </if>
+        FROM sys_notice a
+        LEFT JOIN sys_account b ON b.id = a.user_id
+        LEFT JOIN sys_company c ON c.id = a.company_id
+        <where>
+            <if test="_databaseId == 'mysql'">
+                and c.code LIKE CONCAT(#{prefix}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                and c.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                and c.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'dm'">
+                and c.code LIKE #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'mysql' and title != null and title != ''">
+                and a.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="_databaseId == 'postgresql' and title != null and title != ''">
+                and a.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'kingbase' and title != null and title != ''">
+                and a.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'dm' and title != null and title != ''">
+                and a.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="userId != null">
+                AND a.user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="querySendOrRec" resultType="camelKeyMap">
+        select id,title from sys_notice
+        <where>
+            (
+            user_id = #{userId}
+            or
+            <if test="_databaseId == 'mysql'">
+                FIND_IN_SET(#{userId}, to_user_ids)
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                #{userId} = ANY(STRING_TO_ARRAY(to_user_ids,','))
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                #{userId} = ANY(STRING_TO_ARRAY(to_user_ids,','))
+            </if>
+            <if test="_databaseId == 'dm'">
+                position(#{userId} in to_user_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                position(#{userId} in to_user_ids)
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CHARINDEX(#{userId}, to_user_ids) > 0
+            </if>
+            )
+            and status = 1
+            order by create_time desc
+        </where>
+    </select>
+
+    <select id="queryType" resultType="camelKeyMap">
+        select
+            code,
+            name,
+            status
+        from
+            jelly_dic_detail
+        where
+            classify_id = (select id from jelly_dic_classify where name = '通知类型')
+    </select>
+
+    <select id="queryByIds" resultType="camelKeyMap">
+        select id,title,classify from sys_notice
+        <where>
+            id in
+            <foreach collection="relationIdAry" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectByRelation" resultType="java.lang.Integer">
+        select count(id) from sys_notice
+        <where>
+            <if test="_databaseId == 'mysql'">
+                FIND_IN_SET(#{id}, relation)
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                #{id} = ANY(STRING_TO_ARRAY(relation,','))
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                #{id} = ANY(STRING_TO_ARRAY(relation,','))
+            </if>
+            <if test="_databaseId == 'dm'">
+                position(#{id} in relation)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                position(#{id} in relation)
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CHARINDEX(#{id}, relation) > 0
+            </if>
+        </where>
+    </select>
+
+</mapper>

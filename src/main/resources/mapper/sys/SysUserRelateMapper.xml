@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seagull.oa.sys.mapper.UserRelateMapper">
+
+    <!--查询是否存在角色-->
+	<select id="queryCountByRoleId" resultType="int">
+        SELECT count(*) FROM sys_user_relate
+        <where>
+        	<if test="_databaseId == 'mysql'">
+            	FIND_IN_SET(#{roleId}, role_ids)
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'kingbase'">
+            	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'dm'">
+                position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+            	CHARINDEX(#{roleId}, role_ids) > 0
+            </if>
+        </where>
+    </select>
+    
+    <!--查询角色下用户根据角色组-->
+	<select id="queryUserByRoleId" resultType="string">
+        SELECT user_id FROM sys_user_relate
+        <where>
+           <if test="_databaseId == 'mysql'">
+            	FIND_IN_SET(#{roleId}, role_ids)
+            </if>
+            <if test="_databaseId == 'postgresql'">
+            	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'kingbase'">
+            	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
+            </if>
+            <if test="_databaseId == 'dm'">
+                position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CHARINDEX(#{roleId}, role_ids) > 0
+            </if>
+        </where>
+    </select>
+	
+	<!--查询角色下用户通过公司id-->
+	<select id="queryUserByCompanyId" resultType="string">
+        SELECT user_id FROM sys_user_relate
+        <where>
+            company_id = #{companyId}
+        </where>
+    </select>
+    
+    <!--查询角色下用户通过部门id-->
+	<select id="queryUserByDepartmentId" resultType="string">
+        SELECT user_id FROM sys_user_relate
+        <where>
+            department_id = #{departmentId}
+        </where>
+    </select>
+    
+</mapper>
