@@ -72,10 +72,10 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append("\" (");
                 sql.append("\"id\" bigserial NOT NULL PRIMARY KEY,");
             } else if (datasourceUrl.contains("oracle")) {
-                sql.append("CREATE TABLE \"");
+                sql.append("CREATE TABLE ");
                 sql.append(businessTable.getName());
-                sql.append("\" (");
-                sql.append("\"id\" number(20) NOT NULL PRIMARY KEY,");
+                sql.append(" (");
+                sql.append("id number(20) NOT NULL PRIMARY KEY,");
             } else if (datasourceUrl.contains("dm")) {
                 sql.append("CREATE TABLE \"");
                 sql.append(businessTable.getName());
@@ -102,7 +102,7 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                                 || datasourceUrl.contains("sqlserver")) {
                             sql.append("\"company_id\" bigint NOT NULL,");
                         } else if (datasourceUrl.contains("oracle")) {
-                            sql.append("\"company_id\" number(20) NOT NULL,");
+                            sql.append("company_id number(20) NOT NULL,");
                         }
                         businessField.setRemark("公司id");
                         businessField.setType("bigint");
@@ -117,7 +117,7 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                                 || datasourceUrl.contains("sqlserver")) {
                             sql.append("\"user_id\" bigint NOT NULL,");
                         } else if (datasourceUrl.contains("oracle")) {
-                            sql.append("\"user_id\" number(20) NOT NULL,");
+                            sql.append("user_id number(20) NOT NULL,");
                         }
                         businessField.setRemark("用户id");
                         businessField.setType("bigint");
@@ -132,7 +132,7 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                                 || datasourceUrl.contains("sqlserver")) {
                             sql.append("\"is_valid\" int NOT NULL,");
                         } else if (datasourceUrl.contains("oracle")) {
-                            sql.append("\"is_valid\" number(4) NOT NULL,");
+                            sql.append("is_valid number(4) NOT NULL,");
                         }
                         businessField.setRemark("是否有效(1:是;2:否;)");
                         businessField.setType("int");
@@ -146,7 +146,7 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                                 || datasourceUrl.contains("sqlserver")) {
                             sql.append("\"is_submit\" int NOT NULL,");
                         } else if (datasourceUrl.contains("oracle")) {
-                            sql.append("\"is_submit\" number(4) NOT NULL,");
+                            sql.append("is_submit number(4) NOT NULL,");
                         }
                         businessField.setRemark("是否提交(1:是;2:否;)");
                         businessField.setType("int");
@@ -164,7 +164,6 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append("'");
             } else if (datasourceUrl.contains("postgresql")
                     || datasourceUrl.contains("kingbase8")
-                    || datasourceUrl.contains("oracle")
                     || datasourceUrl.contains("dm")) {
                 sql.append("\"create_time\" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,");
                 sql.append("\"update_time\" TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
@@ -202,6 +201,43 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append(businessTable.getName());
                 sql.append("\".\"update_time\" IS ");
                 sql.append("'更新时间';");
+            } else if (datasourceUrl.contains("oracle")) {
+                sql.append("create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,");
+                sql.append("update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+                sql.append(" );");
+                //添加表注释
+                sql.append("COMMENT ON TABLE ");
+                sql.append(businessTable.getName());
+                sql.append(" IS ");
+                sql.append("'");
+                sql.append(businessTable.getRemark());
+                sql.append("'");
+                sql.append(";");
+                //添加列id注释
+                sql.append("COMMENT ON COLUMN ");
+                sql.append(businessTable.getName());
+                sql.append(".id IS ");
+                sql.append("'主键';");
+                //添加列companyId注释
+                sql.append("COMMENT ON COLUMN ");
+                sql.append(businessTable.getName());
+                sql.append(".company_id IS ");
+                sql.append("'公司id';");
+                //添加列userId注释
+                sql.append("COMMENT ON COLUMN ");
+                sql.append(businessTable.getName());
+                sql.append(".user_id IS ");
+                sql.append("'用户id';");
+                //添加列create_time注释
+                sql.append("COMMENT ON COLUMN ");
+                sql.append(businessTable.getName());
+                sql.append(".create_time IS ");
+                sql.append("'创建时间';");
+                //添加列update_time注释
+                sql.append("COMMENT ON COLUMN ");
+                sql.append(businessTable.getName());
+                sql.append(".update_time IS ");
+                sql.append("'更新时间'");
             } else if (datasourceUrl.contains("sqlserver")) {
                 sql.append("\"create_time\" datetime2(7) DEFAULT CURRENT_TIMESTAMP,");
                 sql.append("\"update_time\" datetime2(7) DEFAULT CURRENT_TIMESTAMP");
@@ -271,7 +307,14 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append("'COLUMN', N'");
                 sql.append("update_time';");
             }
-            jdbcTemplate.execute(sql.toString());
+            if (datasourceUrl.contains("oracle")){
+                String[] splitSql = sql.toString().split(";");
+                for (String oracleSql : splitSql) {
+                    jdbcTemplate.execute(oracleSql);
+                }
+            }else{
+                jdbcTemplate.execute(sql.toString());
+            }
             return ResultData.success(null);
         } else {
             return ResultData.warn(ResultCode.OTHER_ERROR, "表名已经存在");
@@ -287,7 +330,6 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
             StringBuffer sql = new StringBuffer();
             if (datasourceUrl.contains("mysql")
                     || datasourceUrl.contains("postgresql")
-                    || datasourceUrl.contains("oracle")
                     || datasourceUrl.contains("kingbase8")
                     || datasourceUrl.contains("dm")) {
                 sql.append("ALTER TABLE ");
@@ -298,6 +340,11 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append("sp_rename ");
                 sql.append(originalBusinessTable.getName());
                 sql.append(",");
+                sql.append(businessTable.getName());
+            } else if (datasourceUrl.contains("oracle")){
+                sql.append("ALTER TABLE ");
+                sql.append(originalBusinessTable.getName());
+                sql.append(" rename to ");
                 sql.append(businessTable.getName());
             }
             jdbcTemplate.execute(sql.toString());
@@ -313,7 +360,6 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append(businessTable.getRemark());
                 sql.append("'");
             } else if (datasourceUrl.contains("postgresql")
-                    || datasourceUrl.contains("oracle")
                     || datasourceUrl.contains("kingbase8")
                     || datasourceUrl.contains("dm")) {
                 sql.append("COMMENT ON TABLE ");
@@ -330,6 +376,13 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append("'SCHEMA', N'dbo',");
                 sql.append("'TABLE', N'");
                 sql.append(businessTable.getName());
+                sql.append("'");
+            } else if (datasourceUrl.contains("oracle")) {
+                sql.append("COMMENT ON TABLE ");
+                sql.append(businessTable.getName());
+                sql.append(" IS ");
+                sql.append("'");
+                sql.append(businessTable.getRemark());
                 sql.append("'");
             }
             jdbcTemplate.execute(sql.toString());
@@ -349,7 +402,11 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
         } else {
             JellyBusinessTable businessTable = businessTableMapper.selectById(id);
             StringBuffer sql = new StringBuffer();
-            sql.append("DROP TABLE IF EXISTS ");
+            if (datasourceUrl.contains("oracle")){
+                sql.append("DROP TABLE ");
+            } else {
+                sql.append("DROP TABLE IF EXISTS ");
+            }
             sql.append(businessTable.getName());
             jdbcTemplate.execute(sql.toString());
             businessTableMapper.deleteById(id);

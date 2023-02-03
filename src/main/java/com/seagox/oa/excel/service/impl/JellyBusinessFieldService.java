@@ -146,21 +146,21 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
             sql = sql.replaceAll("comment_name", businessField.getRemark());
             jdbcTemplate.execute(sql);
         } else if (datasourceUrl.contains("oracle")) {
-            String sql = "ALTER TABLE table_name ADD column_name column_type column_default;COMMENT ON COLUMN table_name.column_name IS 'comment_name';";
+            String sql = "ALTER TABLE table_name ADD column_name column_type column_default;COMMENT ON COLUMN table_name.column_name IS 'comment_name'";
             sql = sql.replaceAll("table_name", businessTable.getName());
             sql = sql.replaceAll("column_name", businessField.getName());
             if (businessField.getNotNull() == 1) {
                 //不为空
                 String columnDefault = "NOT NULL";
                 if (!StringUtils.isEmpty(businessField.getDefaultValue())) {
-                    columnDefault = columnDefault + " DEFAULT " + businessField.getDefaultValue();
+                    columnDefault = columnDefault + " DEFAULT '" + businessField.getDefaultValue() + "'";
                 }
                 sql = sql.replaceAll("column_default", columnDefault);
             } else {
                 //为空
                 String columnDefault = "";
                 if (!StringUtils.isEmpty(businessField.getDefaultValue())) {
-                    columnDefault = "DEFAULT " + businessField.getDefaultValue();
+                    columnDefault = "DEFAULT '" + businessField.getDefaultValue() + "'";
                 } else {
                     columnDefault = "DEFAULT NULL";
                 }
@@ -171,13 +171,16 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
                 sql = sql.replaceAll("column_type", businessField.getType() + "(" + businessField.getLength() + "," + businessField.getDecimals() + ")");
             } else if (businessField.getType().equals("varchar")) {
                 sql = sql.replaceAll("column_type", "varchar2" + "(" + businessField.getLength() + ")");
-            } else if (businessField.getType().equals("text")) {
-                sql = sql.replaceAll("column_type", "long" + "(" + businessField.getLength() + ")");
+            } else if (businessField.getType().equals("text") || businessField.getType().equals("json")) {
+                sql = sql.replaceAll("column_type", "clob");
             } else {
                 sql = sql.replaceAll("column_type", businessField.getType());
             }
             sql = sql.replaceAll("comment_name", businessField.getRemark());
-            jdbcTemplate.execute(sql);
+            String[] splitSql = sql.split(";");
+            for (String oracleSql : splitSql) {
+                jdbcTemplate.execute(oracleSql);
+            }
         }
 
         businessFieldMapper.insert(businessField);
@@ -244,20 +247,23 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
                 sql = sql.replaceAll("comment_name", businessField.getRemark());
                 jdbcTemplate.execute(sql);
             } else if (datasourceUrl.contains("oracle")) {
-                String sql = "ALTER TABLE table_name MODIFY column_name TYPE column_type;COMMENT ON COLUMN table_name.column_name IS 'comment_name';";
+                String sql = "ALTER TABLE table_name MODIFY (column_name column_type);COMMENT ON COLUMN table_name.column_name IS 'comment_name'";
                 sql = sql.replaceAll("table_name", businessTable.getName());
                 sql = sql.replaceAll("column_name", businessField.getName());
                 if (businessField.getType().equals("number")) {
                     sql = sql.replaceAll("column_type", businessField.getType() + "(" + businessField.getLength() + "," + businessField.getDecimals() + ")");
                 } else if (businessField.getType().equals("varchar")) {
                     sql = sql.replaceAll("column_type", "varchar2" + "(" + businessField.getLength() + ")");
-                } else if (businessField.getType().equals("text")) {
-                    sql = sql.replaceAll("column_type", "long" + "(" + businessField.getLength() + ")");
+                } else if (businessField.getType().equals("text") || businessField.getType().equals("json")) {
+                    sql = sql.replaceAll("column_type", "clob");
                 } else {
                     sql = sql.replaceAll("column_type", businessField.getType());
                 }
                 sql = sql.replaceAll("comment_name", businessField.getRemark());
-                jdbcTemplate.execute(sql);
+                String[] splitSql = sql.split(";");
+                for (String oracleSql : splitSql) {
+                    jdbcTemplate.execute(oracleSql);
+                }
             }
         } else {
             LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
@@ -310,12 +316,15 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
                     sql = sql.replaceAll("comment_name", businessField.getRemark());
                     jdbcTemplate.execute(sql);
                 } else if (datasourceUrl.contains("oracle")) {
-                    String sql = "ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;COMMENT ON COLUMN table_name.new_column_name IS 'comment_name';";
+                    String sql = "ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;COMMENT ON COLUMN table_name.new_column_name IS 'comment_name'";
                     sql = sql.replaceAll("table_name", businessTable.getName());
                     sql = sql.replaceAll("old_column_name", originalBusinessField.getName());
                     sql = sql.replaceAll("new_column_name", businessField.getName());
                     sql = sql.replaceAll("comment_name", businessField.getRemark());
-                    jdbcTemplate.execute(sql);
+                    String[] splitSql = sql.split(";");
+                    for (String oracleSql : splitSql) {
+                        jdbcTemplate.execute(oracleSql);
+                    }
                 }
             }
         }
