@@ -1181,8 +1181,8 @@ INSERT INTO "sys_company" VALUES (1, NULL, 'default', '1001', '默认单位', '�
 select setval('sys_company_id_seq',(select max(id) from "sys_company"));
 INSERT INTO "sys_department" VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 select setval('sys_department_id_seq',(select max(id) from "sys_department"));
-INSERT INTO "sys_account" VALUES (1, NULL, 'fjctAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
-INSERT INTO "sys_account" VALUES (2, NULL, 'sysAdmin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "sys_account" VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "sys_account" VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 select setval('sys_account_id_seq',(select max(id) from "sys_account"));
 INSERT INTO "sys_user_relate" VALUES (1, 1, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
 INSERT INTO "sys_user_relate" VALUES (2, 2, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
