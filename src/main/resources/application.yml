@@ -72,7 +72,7 @@ third-party:
     appid: wx78df
     sercret: 0db176c
     
-ignore:
+platform:
   secret: 61e2znsKMY75Q9YjaI4719xHJcllvMRy
   token: /auth,/upload,/cloud/entrance,/cloud/download
   sign: /auth,/upload,/user/import,/cloud/download,/cloud/entrance/openApi

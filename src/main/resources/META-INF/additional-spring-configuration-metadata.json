@@ -35,15 +35,15 @@
   "type": "java.lang.String",
   "description": "A description for 'third-party.serviceNumber.sercret'"
 },{
-  "name": "ignore.secret",
+  "name": "platform.secret",
   "type": "java.lang.String",
-  "description": "A description for 'ignore.secret'"
+  "description": "A description for 'platform.secret'"
 },{
-  "name": "ignore.token",
+  "name": "platform.token",
   "type": "java.lang.String",
-  "description": "A description for 'ignore.token'"
+  "description": "A description for 'platform.token'"
 },{
-  "name": "ignore.sign",
+  "name": "platform.sign",
   "type": "java.lang.String",
-  "description": "A description for 'ignore.sign'"
+  "description": "A description for 'platform.sign'"
 }]}

@@ -23,10 +23,10 @@ import java.util.*;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    @Value("#{'${ignore.token}'.split(',')}")
+    @Value("#{'${platform.token}'.split(',')}")
     private String[] ignoreToken;
 
-    @Value("#{'${ignore.sign}'.split(',')}")
+    @Value("#{'${platform.sign}'.split(',')}")
     private String[] ignoreSign;
 
     @Autowired
@@ -35,7 +35,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     /**
      * 密钥
      */
-    @Value("${ignore.secret}")
+    @Value("${platform.secret}")
     private String secret;
 
     @Override
