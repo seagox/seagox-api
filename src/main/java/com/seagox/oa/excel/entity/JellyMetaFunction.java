@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  * 元函数
  */
-@KeySequence(value = "jelly_meta_funtion_seq")
+@KeySequence(value = "jelly_meta_function_seq")
 public class JellyMetaFunction {
 	
 	/**

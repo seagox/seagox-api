@@ -8,19 +8,19 @@
         	b.account, a.name, a.ip, a.uri, a.method, a.params, 
         	a.ua, b.status, a.cost_time, a.result,
         	<if test="_databaseId == 'mysql'">
-            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS create_time
+            	DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
             </if>
             <if test="_databaseId == 'postgresql'">
-            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS create_time
+            	to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
             </if>
             <if test="_databaseId == 'kingbase'">
-                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS create_time
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
             </if>
             <if test="_databaseId == 'dm'">
-                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS create_time
+                to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
             </if>
             <if test="_databaseId == 'oracle'">
-            	to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') AS create_time
+            	to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') AS "createTime"
             </if>
             <if test="_databaseId == 'sqlserver'">
                 CONVERT(varchar, a.create_time, 120 ) AS "createTime"

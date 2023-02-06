@@ -11,5 +11,51 @@
             AND b.path = #{path}
         </where>
     </select>
-    
+    <select id="selectMapByCompanyId" resultType="camelKeyMap">
+        select
+            id,
+            company_id AS "companyId",
+            parent_id AS "parentId",
+            name,
+            path,
+            script,
+            <if test="_databaseId == 'mysql'">
+                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS "createTime",
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(create_time,'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, create_time, 120 ) AS "createTime"
+            </if>
+            <if test="_databaseId == 'mysql'">
+                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%s') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                to_char(update_time,'yyyy-MM-dd HH24:MI:SS') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'kingbase'">
+                to_char(update_time,'yyyy-MM-dd HH24:MI:SS') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'dm'">
+                to_char(update_time,'yyyy-MM-dd HH24:MI:SS') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'oracle'">
+                to_char(update_time,'yyyy-MM-dd HH24:MI:SS') AS "updateTime"
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                CONVERT(varchar, update_time, 120 ) AS "updateTime"
+            </if>
+        from jelly_meta_function where company_id = #{companyId}
+    </select>
+
 </mapper>
