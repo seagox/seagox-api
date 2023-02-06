@@ -13,14 +13,7 @@ CREATE TABLE jelly_import_rule  (
 );
 -- 创建序列
 create sequence jelly_import_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_import_rule_trigger
-before insert on jelly_import_rule
-for each row
-begin
-	select jelly_import_rule_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_import_rule.id IS '主键';
 COMMENT ON COLUMN jelly_import_rule.company_id IS '公司id';
 COMMENT ON COLUMN jelly_import_rule.code IS '编码';
@@ -45,14 +38,7 @@ CREATE TABLE jelly_import_rule_detail  (
 );
 -- 创建序列
 create sequence jelly_import_rule_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_import_rule_detail
-before insert on jelly_import_rule_detail
-for each row
-begin
-	select jelly_import_rule_detail_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_import_rule_detail.id IS '主键';
 COMMENT ON COLUMN jelly_import_rule_detail.rule_id IS '导入规则id';
 COMMENT ON COLUMN jelly_import_rule_detail.field IS '对应字段';
@@ -73,14 +59,7 @@ CREATE TABLE jelly_open_api  (
 );
 -- 创建序列
 create sequence jelly_open_api_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_open_api_trigger
-before insert on jelly_open_api
-for each row
-begin
-	select jelly_open_api_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_open_api.id IS '主键';
 COMMENT ON COLUMN jelly_open_api.company_id IS '公司id';
 COMMENT ON COLUMN jelly_open_api.appid IS 'appid';
@@ -102,14 +81,7 @@ CREATE TABLE jelly_procedure  (
 );
 -- 创建序列
 create sequence jelly_procedure_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_procedure_trigger
-before insert on jelly_procedure
-for each row
-begin
-	select jelly_procedure_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_procedure.id IS '主键';
 COMMENT ON COLUMN jelly_procedure.company_id IS '公司id';
 COMMENT ON COLUMN jelly_procedure.name IS '名称';
@@ -133,14 +105,7 @@ CREATE TABLE jelly_inform  (
 );
 -- 创建序列
 create sequence jelly_inform_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_inform_trigger
-before insert on jelly_inform
-for each row
-begin
-	select jelly_inform_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_inform.id IS '主键';
 COMMENT ON COLUMN jelly_inform.company_id IS '公司id';
 COMMENT ON COLUMN jelly_inform.type IS '类型(1:word;2:excel;)';
@@ -166,14 +131,7 @@ CREATE TABLE jelly_export_rule  (
 );
 -- 创建序列
 create sequence jelly_export_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_export_rule_trigger
-before insert on jelly_export_rule
-for each row
-begin
-	select jelly_export_rule_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_export_rule.id IS '主键';
 COMMENT ON COLUMN jelly_export_rule.company_id IS '公司id';
 COMMENT ON COLUMN jelly_export_rule.code IS '编码';
@@ -199,14 +157,7 @@ CREATE TABLE jelly_export_rule_detail  (
 );
 -- 创建序列
 create sequence jelly_export_rule_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_export_rule_detail
-before insert on jelly_export_rule_detail
-for each row
-begin
-	select jelly_export_rule_detail_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_export_rule_detail.id IS '主键';
 COMMENT ON COLUMN jelly_export_rule_detail.export_rule_id IS '导入规则id';
 COMMENT ON COLUMN jelly_export_rule_detail.field IS '对应字段';
@@ -229,14 +180,7 @@ CREATE TABLE jelly_export_data  (
 );
 -- 创建序列
 create sequence jelly_export_data_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_export_data_trigger
-before insert on jelly_export_data
-for each row
-begin
-	select jelly_export_data_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_export_data.id IS '主键';
 COMMENT ON COLUMN jelly_export_data.name IS '名称';
 COMMENT ON COLUMN jelly_export_data.company_id IS '公司id';
@@ -263,14 +207,7 @@ CREATE TABLE jelly_export_dimension  (
 );
 -- 创建序列
 create sequence jelly_export_dimension_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_export_dimension_trigger
-before insert on jelly_export_dimension
-for each row
-begin
-	select jelly_export_dimension_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_export_dimension.id IS '主键';
 COMMENT ON COLUMN jelly_export_dimension.name IS '维度名称';
 COMMENT ON COLUMN jelly_export_dimension.odm_source IS 'ODM表';
@@ -298,14 +235,7 @@ create table jelly_form_design (
 );
 -- 创建序列
 create sequence jelly_form_design_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_form_design_trigger
-before insert on jelly_form_design
-for each row
-begin
-	select jelly_form_design_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_form_design.id IS '主键';
 COMMENT ON COLUMN jelly_form_design.company_id IS '公司id';
 COMMENT ON COLUMN jelly_form_design.type IS '类型(1:简化版;2:高级版;)';
@@ -328,14 +258,7 @@ create table jelly_print (
 );
 -- 创建序列
 create sequence jelly_print_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_print_trigger
-before insert on jelly_print
-for each row
-begin
-	select jelly_print_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_print.id IS '主键';
 COMMENT ON COLUMN jelly_print.company_id IS '公司id';
 COMMENT ON COLUMN jelly_print.name IS '名称';
@@ -377,14 +300,7 @@ create table jelly_form (
 );
 -- 创建序列
 create sequence jelly_form_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_form_trigger
-before insert on jelly_form
-for each row
-begin
-	select jelly_form_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_form.id IS '主键';
 COMMENT ON COLUMN jelly_form.company_id IS '公司id';
 COMMENT ON COLUMN jelly_form.design_ids IS '设计ids';
@@ -429,14 +345,7 @@ CREATE TABLE jelly_report  (
 );
 -- 创建序列
 create sequence jelly_report_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_report_trigger
-before insert on jelly_report
-for each row
-begin
-	select jelly_report_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_report.id IS '主键';
 COMMENT ON COLUMN jelly_report.company_id IS '公司id';
 COMMENT ON COLUMN jelly_report.name IS '名称';
@@ -461,14 +370,7 @@ create table jelly_data_sheet (
 );
 -- 创建序列
 create sequence jelly_data_sheet_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_data_sheet_trigger
-before insert on jelly_data_sheet
-for each row
-begin
-	select jelly_data_sheet_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_data_sheet.id IS '主键';
 COMMENT ON COLUMN jelly_data_sheet.form_id IS '表单id';
 COMMENT ON COLUMN jelly_data_sheet.single_flag IS '是否单条(1:是;2:否;)';
@@ -490,14 +392,7 @@ create table jelly_table_classify (
 );
 -- 创建序列
 create sequence jelly_table_classify_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_table_classify_trigger
-before insert on jelly_table_classify
-for each row
-begin
-	select jelly_table_classify_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_table_classify.id IS '主键';
 COMMENT ON COLUMN jelly_table_classify.company_id IS '公司id';
 COMMENT ON COLUMN jelly_table_classify.name IS '名称';
@@ -527,14 +422,7 @@ create table jelly_table_column (
 );
 -- 创建序列
 create sequence jelly_table_column_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_table_column_trigger
-before insert on jelly_table_column
-for each row
-begin
-	select jelly_table_column_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_table_column.id IS '主键';
 COMMENT ON COLUMN jelly_table_column.classify_id IS '分类id';
 COMMENT ON COLUMN jelly_table_column.parent_id IS '上级id';
@@ -566,14 +454,7 @@ create table jelly_table_column_config (
 );
 -- 创建序列
 create sequence jelly_table_column_config_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jtc_config_trigger
-before insert on jelly_table_column_config
-for each row
-begin
-	select jelly_table_column_config_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_table_column_config.id IS '主键';
 COMMENT ON COLUMN jelly_table_column_config.user_id IS '用户id';
 COMMENT ON COLUMN jelly_table_column_config.table_column_id IS '表头id';
@@ -595,14 +476,7 @@ create table jelly_business_table (
 );
 -- 创建序列
 create sequence jelly_business_table_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_business_table_trigger
-before insert on jelly_business_table
-for each row
-begin
-	select jelly_business_table_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_business_table.id IS '主键';
 COMMENT ON COLUMN jelly_business_table.company_id IS '公司id';
 COMMENT ON COLUMN jelly_business_table.name IS '名称';
@@ -629,14 +503,7 @@ create table jelly_business_field (
 );
 -- 创建序列
 create sequence jelly_business_field_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_business_field_trigger
-before insert on jelly_business_field
-for each row
-begin
-	select jelly_business_field_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_business_field.id IS '主键';
 COMMENT ON COLUMN jelly_business_field.business_table_id IS '业务表id';
 COMMENT ON COLUMN jelly_business_field.name IS '名称';
@@ -662,14 +529,7 @@ create table jelly_dic_classify (
 );
 -- 创建序列
 create sequence jelly_dic_classify_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_dic_classify_trigger
-before insert on jelly_dic_classify
-for each row
-begin
-	select jelly_dic_classify_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_dic_classify.id IS '主键';
 COMMENT ON COLUMN jelly_dic_classify.company_id IS '公司id';
 COMMENT ON COLUMN jelly_dic_classify.name IS '名称';
@@ -691,14 +551,7 @@ create table jelly_dic_detail (
 );
 -- 创建序列
 create sequence jelly_dic_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_dic_detail_trigger
-before insert on jelly_dic_detail
-for each row
-begin
-	select jelly_dic_detail_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_dic_detail.id IS '主键';
 COMMENT ON COLUMN jelly_dic_detail.classify_id IS '字典分类id';
 COMMENT ON COLUMN jelly_dic_detail.code IS '编码';
@@ -720,14 +573,7 @@ create table jelly_business_rule (
 );
 -- 创建序列
 create sequence jelly_business_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_business_rule_trigger
-before insert on jelly_business_rule
-for each row
-begin
-	select jelly_business_rule_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_business_rule.id IS '主键';
 COMMENT ON COLUMN jelly_business_rule.company_id IS '公司id';
 COMMENT ON COLUMN jelly_business_rule.name IS '名称';
@@ -745,14 +591,7 @@ create table jelly_regions (
 );
 -- 创建序列
 create sequence jelly_regions_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_regions_trigger
-before insert on jelly_regions
-for each row
-begin
-	select jelly_regions_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_regions.id IS '主键';
 COMMENT ON COLUMN jelly_regions.code IS '编码';
 COMMENT ON COLUMN jelly_regions.grade IS '等级';
@@ -772,14 +611,7 @@ create table jelly_job (
 );
 -- 创建序列
 create sequence jelly_job_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_job_trigger
-before insert on jelly_job
-for each row
-begin
-	select jelly_job_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_job.id IS '主键';
 COMMENT ON COLUMN jelly_job.company_id IS '公司id';
 COMMENT ON COLUMN jelly_job.name IS '名称';
@@ -801,14 +633,7 @@ create table jelly_gauge (
 );
 -- 创建序列
 create sequence jelly_gauge_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_gauge_trigger
-before insert on jelly_gauge
-for each row
-begin
-	select jelly_gauge_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_gauge.id IS '主键';
 COMMENT ON COLUMN jelly_gauge.company_id IS '公司id';
 COMMENT ON COLUMN jelly_gauge.name IS '名称';
@@ -830,14 +655,7 @@ create table jelly_door (
 );
 -- 创建序列
 create sequence jelly_door_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_door_trigger
-before insert on jelly_door
-for each row
-begin
-	select jelly_door_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_door.id IS '主键';
 COMMENT ON COLUMN jelly_door.company_id IS '公司id';
 COMMENT ON COLUMN jelly_door.name IS '名称';
@@ -862,14 +680,6 @@ CREATE TABLE jelly_meta_page  (
 );
 -- 创建序列
 create sequence jelly_meta_page_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_meta_page_trigger
-before insert on jelly_meta_page
-for each row
-begin
-	select jelly_meta_page_seq.nextval into :new.id from dual;
-end;
-/
 
 COMMENT ON COLUMN jelly_meta_page.id IS '主键';
 COMMENT ON COLUMN jelly_meta_page.company_id IS '公司id';
@@ -894,14 +704,6 @@ CREATE TABLE jelly_meta_function  (
 );
 -- 创建序列
 create sequence jelly_meta_function_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_meta_function_trigger
-before insert on jelly_meta_function
-for each row
-begin
-	select jelly_meta_function_seq.nextval into :new.id from dual;
-end;
-/
 
 COMMENT ON COLUMN jelly_meta_function.id IS '主键';
 COMMENT ON COLUMN jelly_meta_function.company_id IS '公司id';
@@ -924,14 +726,6 @@ CREATE TABLE jelly_template_engine  (
 );
 -- 创建序列
 create sequence jelly_template_engine_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_template_engine_trigger
-before insert on jelly_template_engine
-for each row
-begin
-	select jelly_template_engine_seq.nextval into :new.id from dual;
-end;
-/
 
 COMMENT ON COLUMN jelly_template_engine.id IS '主键';
 COMMENT ON COLUMN jelly_template_engine.company_id IS '公司id';
@@ -960,14 +754,6 @@ CREATE TABLE jelly_file_chunk  (
 
 -- 创建序列
 create sequence jelly_file_chunk_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_file_chunk_trigger
-before insert on jelly_file_chunk
-for each row
-begin
-	select jelly_file_chunk_seq.nextval into :new.id from dual;
-end;
-/
 
 COMMENT ON COLUMN jelly_file_chunk.id IS '主键';
 COMMENT ON COLUMN jelly_file_chunk.chunk_number IS '前分片，从1开始';
@@ -994,14 +780,7 @@ CREATE TABLE sea_definition  (
 );
 -- 创建序列
 create sequence sea_definition_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sea_definition_trigger
-before insert on sea_definition
-for each row
-begin
-	select sea_definition_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sea_definition.id IS '主键';
 COMMENT ON COLUMN sea_definition.company_id IS '公司id';
 COMMENT ON COLUMN sea_definition.name IS '名称';
@@ -1032,14 +811,7 @@ create table sea_instance (
 );
 -- 创建序列
 create sequence sea_instance_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sea_instance_trigger
-before insert on sea_instance
-for each row
-begin
-	select sea_instance_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sea_instance.id IS '主键';
 COMMENT ON COLUMN sea_instance.company_id IS '公司id';
 COMMENT ON COLUMN sea_instance.user_id IS '用户id';
@@ -1077,14 +849,7 @@ create table sea_node (
 );
 -- 创建序列
 create sequence sea_node_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sea_node_trigger
-before insert on sea_node
-for each row
-begin
-	select sea_node_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sea_node.id IS '主键';
 COMMENT ON COLUMN sea_node.def_id IS '流程实例id';
 COMMENT ON COLUMN sea_node.version IS '版本';
@@ -1115,14 +880,7 @@ create table sea_node_detail (
 );
 -- 创建序列
 create sequence sea_node_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sea_node_detail_trigger
-before insert on sea_node_detail
-for each row
-begin
-	select sea_node_detail_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sea_node_detail.id IS '主键';
 COMMENT ON COLUMN sea_node_detail.node_id IS '流程节点id';
 COMMENT ON COLUMN sea_node_detail.name IS '名称';
@@ -1148,14 +906,7 @@ create table sys_company (
 );
 -- 创建序列
 create sequence sys_company_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_company_trigger
-before insert on sys_company
-for each row
-begin
-	select sys_company_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_company.id IS '主键';
 COMMENT ON COLUMN sys_company.parent_id IS '上级id';
 COMMENT ON COLUMN sys_company.mark IS '标识';
@@ -1181,14 +932,7 @@ create table sys_department (
 );
 -- 创建序列
 create sequence sys_department_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_department_trigger
-before insert on sys_department
-for each row
-begin
-	select sys_department_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_department.id IS '主键';
 COMMENT ON COLUMN sys_department.company_id IS '公司id';
 COMMENT ON COLUMN sys_department.parent_id IS '上级id';
@@ -1212,14 +956,7 @@ create table sys_user_relate (
 );
 -- 创建序列
 create sequence sys_user_relate_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_user_relate_trigger
-before insert on sys_user_relate
-for each row
-begin
-	select sys_user_relate_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_user_relate.id IS '主键';
 COMMENT ON COLUMN sys_user_relate.user_id IS '用户id';
 COMMENT ON COLUMN sys_user_relate.company_id IS '公司id';
@@ -1249,14 +986,7 @@ create table sys_account (
 );
 -- 创建序列
 create sequence sys_account_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_account_trigger
-before insert on sys_account
-for each row
-begin
-	select sys_account_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_account.id IS '主键';
 COMMENT ON COLUMN sys_account.avatar IS '头像';
 COMMENT ON COLUMN sys_account.account IS '账号';
@@ -1285,14 +1015,7 @@ create table sys_role (
 );
 -- 创建序列
 create sequence sys_role_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_role_trigger
-before insert on sys_role
-for each row
-begin
-	select sys_role_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_role.id IS '主键';
 COMMENT ON COLUMN sys_role.company_id IS '公司id';
 COMMENT ON COLUMN sys_role.name IS '名称';
@@ -1318,14 +1041,7 @@ create table sys_menu (
 );
 -- 创建序列
 create sequence sys_menu_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_menu_trigger
-before insert on sys_menu
-for each row
-begin
-	select sys_menu_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_menu.id IS '主键';
 COMMENT ON COLUMN sys_menu.company_id IS '公司id';
 COMMENT ON COLUMN sys_menu.parent_id IS '上级id';
@@ -1357,14 +1073,7 @@ create table sys_notice (
 );
 -- 创建序列
 create sequence sys_notice_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_notice_trigger
-before insert on sys_notice
-for each row
-begin
-	select sys_notice_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_notice.id IS '主键';
 COMMENT ON COLUMN sys_notice.company_id IS '公司id';
 COMMENT ON COLUMN sys_notice.user_id IS '发送公告人id';
@@ -1395,14 +1104,7 @@ create table sys_message (
 );
 -- 创建序列
 create sequence sys_message_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_message_trigger
-before insert on sys_message
-for each row
-begin
-	select sys_message_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_message.id IS '主键';
 COMMENT ON COLUMN sys_message.company_id IS '公司id';
 COMMENT ON COLUMN sys_message.type IS '类型(1:流程消息;2:公告通知;3:数据预警;4:暂存数据;9:其它消息;)';
@@ -1434,14 +1136,7 @@ create table sys_log (
 );
 -- 创建序列
 create sequence sys_log_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_log_trigger
-before insert on sys_log
-for each row
-begin
-	select sys_log_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_log.id IS '主键';
 COMMENT ON COLUMN sys_log.company_id IS '公司id';
 COMMENT ON COLUMN sys_log.user_id IS '用户id';
@@ -1466,14 +1161,7 @@ create table sys_theme (
 );
 -- 创建序列
 create sequence sys_theme_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger sys_theme_trigger
-before insert on sys_theme
-for each row
-begin
-	select sys_theme_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN sys_theme.id IS '主键';
 COMMENT ON COLUMN sys_theme.user_id IS '用户id';
 COMMENT ON COLUMN sys_theme.color IS '颜色值';
@@ -1491,14 +1179,7 @@ create table jelly_common_words (
 );
 -- 创建序列
 create sequence sjelly_common_words_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_common_words_trigger
-before insert on jelly_common_words
-for each row
-begin
-	select jelly_common_words_seq.nextval into :new.id from dual;
-end;
-/
+
 COMMENT ON COLUMN jelly_common_words.id IS '主键';
 COMMENT ON COLUMN jelly_common_words.company_id IS '公司id';
 COMMENT ON COLUMN jelly_common_words.user_id IS '用户id';
