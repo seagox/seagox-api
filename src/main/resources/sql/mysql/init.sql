@@ -359,33 +359,6 @@ CREATE TABLE `jelly_door` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '门户管理';
 
 
-DROP TABLE IF EXISTS `jelly_disk`;
-CREATE TABLE `jelly_disk`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `user_id` bigint(20) NOT NULL COMMENT '用户id',
-    `parent_id` bigint(20) DEFAULT 0 COMMENT '上级id',
-    `type` int(4) DEFAULT 1 COMMENT '类型(1:文件夹;2:图片;3:word;4:excel;5:ppt;6:pdf;7:压缩文件;8:txt;9:文档(富文本);10:视频;11:音乐;12:其他;13:文档(markdown);)',
-    `name` varchar(225) NOT NULL COMMENT '名称',
-    `path` text NOT NULL COMMENT '路径(根目录:/)',
-    `link` varchar(225) DEFAULT NULL COMMENT '链接',
-    `text` text DEFAULT NULL COMMENT '文本',
-    `capacity` int(4) DEFAULT NULL COMMENT '大小',
-    `status` int(4) DEFAULT 1 COMMENT '状态(1:正常;2;回收站;3:删除;)',
-    `to_user_ids` text DEFAULT NULL COMMENT '分享模板用户ids',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '网盘';
-
-DROP TABLE IF EXISTS `jelly_disk_recycle`;
-CREATE TABLE `jelly_disk_recycle`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `disk_id` bigint(20) NOT NULL COMMENT '文件id',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '回收站';
-
 DROP TABLE IF EXISTS `jelly_meta_page`;
 CREATE TABLE `jelly_meta_page`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -672,26 +645,16 @@ CREATE TABLE `jelly_common_words`  (
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '常用语';
 
-DROP TABLE IF EXISTS `jelly_disk_share`;
-CREATE TABLE `jelly_disk_share` (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `disk_id` bigint(20) NOT NULL COMMENT '文件id',
-    `user_id` bigint(20) NOT NULL COMMENT '所属用户id',
-    `share_user_id` bigint(20) NOT NULL COMMENT '分享用户id',
-    `share_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '分享时间',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci  COMMENT='他人分享';
 
 BEGIN;
 INSERT INTO sys_menu VALUES (1, 1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, '2021-07-01 11:33:27', '2021-07-01 11:33:27');
 INSERT INTO sys_menu VALUES (2, 1, 1, 4, '通讯录', 'el-icon-collection', 'contact', 1, 1, NULL, '2021-07-01 11:34:04', '2021-07-01 11:34:04');
-INSERT INTO sys_menu VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'roleManager', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
+INSERT INTO sys_menu VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'role', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
 INSERT INTO sys_company VALUES (1, NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 INSERT INTO sys_department VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 INSERT INTO sys_role VALUES (1, 1, '默认角色', '1,2,3', '2021-07-01 11:31:22.25', '2021-07-01 11:31:22');
-INSERT INTO sys_account VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO sys_account VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO sys_user_relate VALUES (1, 1, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
-INSERT INTO sys_account VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO sys_account VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO sys_user_relate VALUES (2, 2, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
 COMMIT;

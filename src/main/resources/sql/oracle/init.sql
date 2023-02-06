@@ -849,70 +849,6 @@ COMMENT ON COLUMN jelly_door.update_time IS '更新时间';
 COMMENT ON TABLE jelly_door IS '门户管理';
 
 
-create table jelly_disk (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    user_id NUMBER(20) NOT NULL,
-    parent_id NUMBER(20) DEFAULT 0,
-    type NUMBER(4) DEFAULT 1,
-    name VARCHAR2(225) NOT NULL,
-    path clob NOT NULL,
-    link VARCHAR2(225),
-    text clob,
-    capacity NUMBER(4),
-    status NUMBER(4) DEFAULT 1,
-    to_user_ids clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_disk_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_disk_trigger
-before insert on jelly_disk
-for each row
-begin
-	select jelly_disk_seq.nextval into :new.id from dual;
-end;
-/
-COMMENT ON COLUMN jelly_disk.id IS '主键';
-COMMENT ON COLUMN jelly_disk.company_id IS '公司id';
-COMMENT ON COLUMN jelly_disk.user_id IS '用户id';
-COMMENT ON COLUMN jelly_disk.parent_id IS '上级id';
-COMMENT ON COLUMN jelly_disk.type IS '类型(1:文件夹;2:图片;3:word;4:excel;5:ppt;6:pdf;7:压缩文件;8:txt;9:文档(富文本);10:视频;11:音乐;12:其他;13:文档(markdown);)';
-COMMENT ON COLUMN jelly_disk.name IS '名称';
-COMMENT ON COLUMN jelly_disk.path IS '路径(根目录:/)';
-COMMENT ON COLUMN jelly_disk.link IS '链接';
-COMMENT ON COLUMN jelly_disk.text IS '文本';
-COMMENT ON COLUMN jelly_disk.capacity IS '大小';
-COMMENT ON COLUMN jelly_disk.status IS '状态(1:正常;2;回收站;3:删除;)';
-COMMENT ON COLUMN jelly_disk.to_user_ids IS '分享模板用户ids';
-COMMENT ON COLUMN jelly_disk.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_disk.update_time IS '更新时间';
-COMMENT ON TABLE jelly_disk IS '网盘';
-
-
-create table jelly_disk_recycle (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    disk_id NUMBER(20) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_disk_recycle_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_disk_recycle_trigger
-before insert on jelly_disk_recycle
-for each row
-begin
-	select jelly_disk_recycle_seq.nextval into :new.id from dual;
-end;
-/
-COMMENT ON COLUMN jelly_disk_recycle.id IS '主键';
-COMMENT ON COLUMN jelly_disk_recycle.disk_id IS '文件id';
-COMMENT ON COLUMN jelly_disk_recycle.create_time IS '创建时间';
-COMMENT ON TABLE jelly_disk_recycle IS '回收站';
-
-
 CREATE TABLE jelly_meta_page  (
 	id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
@@ -1571,42 +1507,17 @@ COMMENT ON COLUMN jelly_common_words.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_common_words.update_time IS '更新时间';
 COMMENT ON TABLE jelly_common_words IS '常用语';
 
-CREATE TABLE jelly_disk_share (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    disk_id NUMBER(20) NOT NULL,
-    user_id NUMBER(20) NOT NULL,
-    share_user_id NUMBER(20) NOT NULL,
-    share_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_disk_share_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
--- 创建触发器
-create or replace trigger jelly_disk_share_trigger
-before insert on jelly_disk_share
-for each row
-begin
-    select jelly_disk_share_seq.nextval into :new.id from dual;
-end;
-/
-COMMENT ON COLUMN jelly_disk_share.id IS '主键';
-COMMENT ON COLUMN jelly_disk_share.company_id IS '公司id';
-COMMENT ON COLUMN jelly_disk_share.disk_id IS '文件id';
-COMMENT ON COLUMN jelly_disk_share.user_id IS '所属用户id';
-COMMENT ON COLUMN jelly_disk_share.share_user_id IS '分享用户id';
-COMMENT ON COLUMN jelly_disk_share.share_time IS '分享时间';
-COMMENT ON TABLE jelly_disk_share IS '他人分享';
 
 INSERT INTO sys_company VALUES (1, NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_department VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO sys_account VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO sys_account VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_user_relate VALUES (1, 1, 1, 1, 1, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO sys_account VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO sys_account VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_user_relate VALUES (2, 2, 1, 1, 1, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_role VALUES (1, 1, '默认角色', '1,2,3', TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_menu VALUES (1, 1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_menu VALUES (2, 1, 1, 4, '通讯录', 'el-icon-collection', 'contact', 1, 1, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO sys_menu VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'roleManager', 1, 2, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO sys_menu VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'role', 1, 2, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 
 
 CREATE OR REPLACE FUNCTION FIND_IN_SET(piv_str1 varchar2, piv_str2 varchar2, p_sep varchar2 := ',')

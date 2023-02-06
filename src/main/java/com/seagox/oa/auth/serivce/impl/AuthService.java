@@ -228,7 +228,7 @@ public class AuthService implements IAuthService {
 
 	@Override
 	public ResultData verifyLogin(String orgstr, String account, String noncestr, String timestamp, String sign) {
-		String key = "yVwlsbIrY3q22EnoYYM4nR5zqTmqed05";
+		String key = "61e2znsKMY75Q9YjaI4719xHJcllvMRy";
 		String ratioSign = EncryptUtils.md5Encode("account=" + account + "&noncestr=" + noncestr + "&org=" + orgstr
 				+ "&timestamp=" + timestamp + "&key=" + key).toUpperCase();
 		if (ratioSign.equals(sign)) {

@@ -621,52 +621,6 @@ COMMENT ON COLUMN "public"."jelly_door"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_door" IS '门户管理';
 
 
-DROP TABLE IF EXISTS "public"."jelly_disk";
-CREATE TABLE "public"."jelly_disk" (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"user_id" BIGINT NOT NULL,
-	"parent_id" BIGINT DEFAULT 0,
-	"type" INTEGER DEFAULT 1,
-	"name" VARCHAR(100) NOT NULL,
-	"path" TEXT NOT NULL,
-	"link" VARCHAR(800),
-	"text" TEXT,
-	"capacity" INTEGER,
-	"status" INTEGER DEFAULT 1,
-	"to_user_ids" TEXT,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_disk"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_disk"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_disk"."user_id" IS '用户id';
-COMMENT ON COLUMN "public"."jelly_disk"."parent_id" IS '上级id';
-COMMENT ON COLUMN "public"."jelly_disk"."type" IS '类型(1:文件夹;2:图片;3:word;4:excel;5:ppt;6:pdf;7:压缩文件;8:txt;9:文档(富文本);10:视频;11:音乐;12:其他;13:文档(markdown);)';
-COMMENT ON COLUMN "public"."jelly_disk"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_disk"."path" IS '路径(根目录:/)';
-COMMENT ON COLUMN "public"."jelly_disk"."link" IS '链接';
-COMMENT ON COLUMN "public"."jelly_disk"."text" IS '文本';
-COMMENT ON COLUMN "public"."jelly_disk"."capacity" IS '大小';
-COMMENT ON COLUMN "public"."jelly_disk"."status" IS '状态(1:正常;2;回收站;3:删除;)';
-COMMENT ON COLUMN "public"."jelly_disk"."to_user_ids" IS '分享模板用户ids';
-COMMENT ON COLUMN "public"."jelly_disk"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_disk"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_disk" IS '网盘';
-
-
-DROP TABLE IF EXISTS "public"."jelly_disk_recycle";
-CREATE TABLE "public"."jelly_disk_recycle" (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"disk_id" BIGINT NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_disk_recycle"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_disk_recycle"."disk_id" IS '文件id';
-COMMENT ON COLUMN "public"."jelly_disk_recycle"."create_time" IS '创建时间';
-COMMENT ON TABLE "public"."jelly_disk_recycle" IS '回收站';
-
-
 DROP TABLE IF EXISTS "public"."jelly_meta_page";
 CREATE TABLE "public"."jelly_meta_page"  (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -1159,29 +1113,12 @@ COMMENT ON COLUMN "public"."jelly_common_words"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_common_words"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_common_words" IS '常用语';
 
-DROP TABLE IF EXISTS "public"."jelly_disk_share";
-CREATE TABLE "public"."jelly_disk_share" (
-    "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    "company_id" BIGINT NOT NULL,
-    "disk_id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "share_user_id" BIGINT NOT NULL,
-    "share_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_disk_share"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_disk_share"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_disk_share"."disk_id" IS '文件id';
-COMMENT ON COLUMN "public"."jelly_disk_share"."user_id" IS '所属用户id';
-COMMENT ON COLUMN "public"."jelly_disk_share"."share_user_id" IS '分享用户id';
-COMMENT ON COLUMN "public"."jelly_disk_share"."share_time" IS '分享时间';
-COMMENT ON TABLE "public"."jelly_disk_share" IS '他人分享';
-
 
 INSERT INTO "public"."sys_company" VALUES (NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 INSERT INTO "public"."sys_department" VALUES (1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
-INSERT INTO "public"."sys_account" VALUES (NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "public"."sys_account" VALUES (NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO "public"."sys_user_relate" VALUES (1, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
-INSERT INTO "public"."sys_account" VALUES (NULL, 'admin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "public"."sys_account" VALUES (NULL, 'admin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO "public"."sys_user_relate" VALUES (2, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
 
 SET IDENTITY_INSERT "public"."sys_role" ON;
@@ -1191,4 +1128,4 @@ SET IDENTITY_INSERT "public"."sys_role" OFF;
 
 INSERT INTO "public"."sys_menu" VALUES (1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, '2021-07-01 11:33:27', '2021-07-01 11:33:27');
 INSERT INTO "public"."sys_menu" VALUES (1, 1, 4, '通讯录', 'el-icon-collection', 'contact', 1, 1, NULL, '2021-07-01 11:34:04', '2021-07-01 11:34:04');
-INSERT INTO "public"."sys_menu" VALUES (1, 1, 4, '角色管理', 'el-icon-coin', 'roleManager', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
+INSERT INTO "public"."sys_menu" VALUES (1, 1, 4, '角色管理', 'el-icon-coin', 'role', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');

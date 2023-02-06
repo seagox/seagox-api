@@ -621,52 +621,6 @@ COMMENT ON COLUMN "jelly_door"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_door" IS '门户管理';
 
 
-DROP TABLE IF EXISTS "jelly_disk";
-CREATE TABLE "jelly_disk" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"user_id" BIGINT NOT NULL,
-	"parent_id" BIGINT DEFAULT 0,
-	"type" INTEGER DEFAULT 1,
-	"name" VARCHAR(225) NOT NULL,
-	"path" TEXT NOT NULL,
-	"link" VARCHAR(225),
-	"text" TEXT,
-	"capacity" INTEGER,
-	"status" INTEGER DEFAULT 1,
-	"to_user_ids" TEXT,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_disk"."id" IS '主键';
-COMMENT ON COLUMN "jelly_disk"."company_id" IS '公司id';
-COMMENT ON COLUMN "jelly_disk"."user_id" IS '用户id';
-COMMENT ON COLUMN "jelly_disk"."parent_id" IS '上级id';
-COMMENT ON COLUMN "jelly_disk"."type" IS '类型(1:文件夹;2:图片;3:wopublic;4:excel;5:ppt;6:pdf;7:压缩文件;8:txt;9:文档(富文本);10:视频;11:音乐;12:其他;13:文档(markdown);)';
-COMMENT ON COLUMN "jelly_disk"."name" IS '名称';
-COMMENT ON COLUMN "jelly_disk"."path" IS '路径(根目录:/)';
-COMMENT ON COLUMN "jelly_disk"."link" IS '链接';
-COMMENT ON COLUMN "jelly_disk"."text" IS '文本';
-COMMENT ON COLUMN "jelly_disk"."capacity" IS '大小';
-COMMENT ON COLUMN "jelly_disk"."status" IS '状态(1:正常;2;回收站;3:删除;)';
-COMMENT ON COLUMN "jelly_disk"."to_user_ids" IS '分享模板用户ids';
-COMMENT ON COLUMN "jelly_disk"."create_time" IS '创建时间';
-COMMENT ON COLUMN "jelly_disk"."update_time" IS '更新时间';
-COMMENT ON TABLE "jelly_disk" IS '网盘';
-
-
-DROP TABLE IF EXISTS "jelly_disk_recycle";
-CREATE TABLE "jelly_disk_recycle" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"disk_id" BIGINT NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_disk_recycle"."id" IS '主键';
-COMMENT ON COLUMN "jelly_disk_recycle"."disk_id" IS '文件id';
-COMMENT ON COLUMN "jelly_disk_recycle"."create_time" IS '创建时间';
-COMMENT ON TABLE "jelly_disk_recycle" IS '回收站';
-
-
 DROP TABLE IF EXISTS "jelly_meta_page";
 CREATE TABLE "jelly_meta_page"  (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
@@ -1158,31 +1112,14 @@ COMMENT ON COLUMN "jelly_common_wopublics"."create_time" IS '创建时间';
 COMMENT ON COLUMN "jelly_common_wopublics"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_common_wopublics" IS '常用语';
 
-DROP TABLE IF EXISTS "jelly_disk_share";
-CREATE TABLE "jelly_disk_share" (
-    "id" BIGSERIAL PRIMARY KEY NOT NULL,
-    "company_id" BIGINT NOT NULL,
-    "disk_id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "share_user_id" BIGINT NOT NULL,
-    "share_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_disk_share"."id" IS '主键';
-COMMENT ON COLUMN "jelly_disk_share"."company_id" IS '公司id';
-COMMENT ON COLUMN "jelly_disk_share"."disk_id" IS '文件id';
-COMMENT ON COLUMN "jelly_disk_share"."user_id" IS '所属用户id';
-COMMENT ON COLUMN "jelly_disk_share"."share_user_id" IS '分享用户id';
-COMMENT ON COLUMN "jelly_disk_share"."share_time" IS '分享时间';
-COMMENT ON TABLE "jelly_disk_share" IS '他人分享';
-
 
 BEGIN;
 INSERT INTO "sys_company" VALUES (1, NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 select setval('sys_company_id_seq',(select max(id) from "sys_company"));
 INSERT INTO "sys_department" VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 select setval('sys_department_id_seq',(select max(id) from "sys_department"));
-INSERT INTO "sys_account" VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
-INSERT INTO "sys_account" VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, '3bf784f6c81c39142ec0cb2327fc90cc', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "sys_account" VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "sys_account" VALUES (2, NULL, 'admin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 select setval('sys_account_id_seq',(select max(id) from "sys_account"));
 INSERT INTO "sys_user_relate" VALUES (1, 1, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
 INSERT INTO "sys_user_relate" VALUES (2, 2, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
@@ -1191,7 +1128,7 @@ INSERT INTO "sys_role" VALUES (1, 1, '默认角色', '1,2,3,4', '2021-07-01 11:3
 select setval('sys_role_id_seq',(select max(id) from "sys_role"));
 INSERT INTO "sys_menu" VALUES (1, 1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, '2021-07-01 11:33:27', '2021-07-01 11:33:27');
 INSERT INTO "sys_menu" VALUES (2, 1, 1, 4, '通讯录', 'el-icon-collection', 'contact', 1, 1, NULL, '2021-07-01 11:34:04', '2021-07-01 11:34:04');
-INSERT INTO "sys_menu" VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'roleManager', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
+INSERT INTO "sys_menu" VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'role', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
 select setval('sys_menu_id_seq',(select max(id) from "sys_menu"));
 COMMIT;
 
