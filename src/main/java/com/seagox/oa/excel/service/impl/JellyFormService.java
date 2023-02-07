@@ -565,7 +565,17 @@ public class JellyFormService implements IJellyFormService {
                         if (!StringUtils.isEmpty(value)) {
                             valueArray.add(value);
                             fieldSql = fieldSql + businessFieldList.get(j).get("name") + ",";
-                            valueSql = valueSql + "?,";
+                            if (datasourceUrl.contains("oracle")) {
+                                if ("date".equals(businessFieldList.get(j).get("type"))) {
+                                    valueSql = valueSql + "TO_DATE(?, 'yyyy-MM-dd'),";
+                                } else if ("timestamp".equals(businessFieldList.get(j).get("type"))) {
+                                    valueSql = valueSql + "TO_DATE(?, 'yyyy-MM-dd hh24:mi:ss'),";
+                                } else {
+                                    valueSql = valueSql + "?,";
+                                }
+                            } else {
+                                valueSql = valueSql + "?,";
+                            }
                         }
                     }
                 }
