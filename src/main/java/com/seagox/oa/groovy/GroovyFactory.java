@@ -76,27 +76,6 @@ public class GroovyFactory {
         throw new IllegalArgumentException("读取groovy脚本异常");
     }
 
-    /**
-     * 根据脚本内容生成IFlow的实现
-     *
-     * @param code
-     * @return
-     * @throws Exception
-     */
-    public IGroovyFlow getIFlowFromCode(String code) throws Exception {
-        Class<?> clazz = groovyClassLoader.parseClass(code);
-        if (clazz != null) {
-            Object instance = clazz.newInstance();
-            if (instance != null) {
-                if (instance instanceof IGroovyFlow) {
-                    return (IGroovyFlow) instance;
-                }
-            }
-        }
-        groovyClassLoader.clearCache();
-        throw new IllegalArgumentException("读取groovy脚本异常");
-    }
-
 
     /**
      * 根据脚本内容生成ICloud的实现

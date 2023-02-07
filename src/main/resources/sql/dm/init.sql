@@ -108,108 +108,6 @@ COMMENT ON COLUMN "public"."jelly_inform"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_inform"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_inform" IS '报告模板';
 
-DROP TABLE IF EXISTS "public"."jelly_export_rule";
-CREATE TABLE "public"."jelly_export_rule"  (
-    "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    "company_id" BIGINT NOT NULL,
-    "code" varchar(30) NOT NULL,
-    "name" varchar(100) NOT NULL,
-    "sz_code" varchar(20) NOT NULL,
-    "sc_code" varchar(20) NOT NULL,
-    "data_source" bigint NOT NULL,
-    "business_rule_id" bigint DEFAULT NULL,
-    "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-COMMENT ON COLUMN "public"."jelly_export_rule"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_export_rule"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_export_rule"."code" IS '编码';
-COMMENT ON COLUMN "public"."jelly_export_rule"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_export_rule"."sz_code" IS '收支编码（收入01；支出02）';
-COMMENT ON COLUMN "public"."jelly_export_rule"."sc_code" IS '资金性质';
-COMMENT ON COLUMN "public"."jelly_export_rule"."data_source" IS '数据源';
-COMMENT ON COLUMN "public"."jelly_export_rule"."business_rule_id" IS '业务校验规则id';
-COMMENT ON COLUMN "public"."jelly_export_rule"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_export_rule"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_export_rule" IS '导入规则';
-
-DROP TABLE IF EXISTS "public"."jelly_export_rule_detail";
-CREATE TABLE "public"."jelly_export_rule_detail"  (
-    "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    "export_rule_id" BIGINT NOT NULL,
-    "field" BIGINT NOT NULL,
-    "col" varchar(30) NOT NULL,
-    "type" INTEGER DEFAULT 1,
-    "source" BIGINT DEFAULT NULL,
-    "sql_source" varchar(500) DEFAULT NULL,
-    "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."export_rule_id" IS '导入规则id';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."field" IS '对应字段';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."col" IS '对应列';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."type" IS '字段转换类型(1无;2字典;3用户;4部门;5唯一字段;6地址)';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."source" IS '字段转换来源';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."sql_source" IS 'sql语句';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_export_rule_detail"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_export_rule_detail" IS '导入规则明细';
-
-
-DROP TABLE IF EXISTS "public"."jelly_export_data";
-CREATE TABLE "public"."jelly_export_data"  (
-    "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    "name" VARCHAR(120) NOT NULL,
-    "company_id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "config" text NOT NULL,
-    "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-DROP TABLE IF EXISTS "jelly_export_dimension";
-CREATE TABLE "jelly_export_dimension"  (
-    "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    "name" VARCHAR(30) NOT NULL,
-    "odm_source" BIGINT NOT NULL,
-    "odm_code_field" BIGINT NOT NULL,
-    "odm_name_field" BIGINT NOT NULL,
-    "dim_source" BIGINT NOT NULL,
-    "dim_code_field" BIGINT NOT NULL,
-    "dim_name_field" BIGINT NOT NULL,
-    "dim_year_field" BIGINT DEFAULT NULL,
-    "user_id" BIGINT NOT NULL,
-    "company_id" BIGINT NOT NULL,
-    "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_export_dimension"."id" IS '主键';
-COMMENT ON COLUMN "jelly_export_dimension"."name" IS '维度名称';
-COMMENT ON COLUMN "jelly_export_dimension"."odm_source" IS 'ODM表';
-COMMENT ON COLUMN "jelly_export_dimension"."odm_code_field" IS 'ODM表字段编码';
-COMMENT ON COLUMN "jelly_export_dimension"."odm_name_field" IS 'ODM表字段名称';
-COMMENT ON COLUMN "jelly_export_dimension"."dim_source" IS 'DIM表';
-COMMENT ON COLUMN "jelly_export_dimension"."dim_code_field" IS 'DIM表字段编码';
-COMMENT ON COLUMN "jelly_export_dimension"."dim_name_field" IS 'DIM表字段名称';
-COMMENT ON COLUMN "jelly_export_dimension"."dim_year_field" IS 'DIM表字段年段';
-COMMENT ON COLUMN "jelly_export_dimension"."user_id" IS '用户id';
-COMMENT ON COLUMN "jelly_export_dimension"."company_id" IS '公司id';
-COMMENT ON COLUMN "jelly_export_dimension"."create_time" IS '创建时间';
-COMMENT ON COLUMN "jelly_export_dimension"."update_time" IS '更新时间';
-COMMENT ON TABLE "jelly_export_dimension" IS '维度管理';
-
-COMMENT ON COLUMN "public"."jelly_export_data"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_export_data"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_export_data"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_export_data"."user_id" IS '用户id';
-COMMENT ON COLUMN "public"."jelly_export_data"."config" IS '配置';
-COMMENT ON COLUMN "public"."jelly_export_data"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_export_data"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_export_data" IS '导入数据';
-
 DROP TABLE IF EXISTS "public"."jelly_form_design";
 CREATE TABLE "public"."jelly_form_design" (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -650,7 +548,6 @@ DROP TABLE IF EXISTS "public"."jelly_meta_function";
 CREATE TABLE "public"."jelly_meta_function"  (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     "company_id" BIGINT NOT NULL,
-    "parent_id" BIGINT DEFAULT NULL
 	"name" VARCHAR(30) NOT NULL,
 	"path" VARCHAR(30) NOT NULL,
 	"script" TEXT DEFAULT NULL,
@@ -660,7 +557,6 @@ CREATE TABLE "public"."jelly_meta_function"  (
 
 COMMENT ON COLUMN "public"."jelly_meta_function"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_meta_function"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_meta_function"."parent_id" IS '父节点';
 COMMENT ON COLUMN "public"."jelly_meta_function"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_meta_function"."path" IS '路径';
 COMMENT ON COLUMN "public"."jelly_meta_function"."script" IS '脚本';

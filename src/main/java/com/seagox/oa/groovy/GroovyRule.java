@@ -6,7 +6,7 @@ import java.util.Map;
 public class GroovyRule implements IGroovyRule {
 
     @Override
-    public Map<String, Object> businessRule(Map<String, Object> params, HttpServletRequest request) {
+    public Object execute(HttpServletRequest request, Map<String, Object> params) {
 
         return null;
     }

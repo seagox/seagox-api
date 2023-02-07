@@ -146,7 +146,7 @@ public class AuthController {
 
 	@RequestMapping("/testCloud")
 	public ResultData testCloud(HttpServletRequest request) {
-		return groovyCloud.entrance(request);
+		return groovyCloud.execute(request);
 	}
 
 }

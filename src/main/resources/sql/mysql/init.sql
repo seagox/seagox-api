@@ -59,61 +59,6 @@ CREATE TABLE `jelly_inform`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '报告模板';
 
-DROP TABLE IF EXISTS `jelly_export_rule`;
-CREATE TABLE `jelly_export_rule`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `code` varchar(30) NOT NULL COMMENT '编码',
-    `name` varchar(100) NOT NULL COMMENT '名称',
-    `sz_code` varchar(20) NOT NULL COMMENT '收支编码（收入01；支出02）',
-    `sc_code` varchar(20) NOT NULL COMMENT '资金性质',
-    `data_source` bigint(20) NOT NULL COMMENT '数据源',
-    `business_rule_id` bigint(20) DEFAULT NULL COMMENT '业务校验规则id',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入规则';
-
-DROP TABLE IF EXISTS `jelly_export_rule_detail`;
-CREATE TABLE `jelly_export_rule_detail`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `export_rule_id` bigint(20) NOT NULL COMMENT '导入规则id',
-    `field` bigint(20) NOT NULL COMMENT '对应字段',
-    `col` varchar(30) NOT NULL COMMENT '对应列',
-    `type` int(2) DEFAULT 1 COMMENT '字段转换类型(1无;2字典;3用户;4部门;5唯一字段;6地址)',
-    `source` bigint(20) DEFAULT NULL COMMENT '字段转换来源',
-    `sql_source` varchar(500) DEFAULT NULL COMMENT 'sql语句',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入规则明细';
-
-DROP TABLE IF EXISTS `jelly_export_data`;
-CREATE TABLE `jelly_export_data`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `name` varchar(120) NOT NULL COMMENT '名称',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `user_id` bigint(20) NOT NULL COMMENT '用户id',
-    `config` text NOT NULL COMMENT '配置',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入数据';
-
-DROP TABLE IF EXISTS `jelly_export_dimension`;
-CREATE TABLE `jelly_export_dimension`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `user_id` bigint(20) NOT NULL COMMENT '用户id',
-    `name` varchar(30) NOT NULL COMMENT '维度名称',
-    `odm_source` bigint(20) NOT NULL COMMENT 'ODM表',
-    `odm_code_field` bigint(20) NOT NULL COMMENT 'ODM表字段编码',
-    `odm_name_field` bigint(20) NOT NULL COMMENT 'ODM表字段名称',
-    `dim_source` bigint(20) NOT NULL COMMENT 'DIM表',
-    `dim_code_field` bigint(20) NOT NULL COMMENT 'DIM表字段编码',
-    `dim_name_field` bigint(20) NOT NULL COMMENT 'DIM表字段名称',
-    `dim_year_field` bigint(20) NOT NULL COMMENT 'DIM表字段年段',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '维度管理';
-
 DROP TABLE IF EXISTS `jelly_form_design`;
 CREATE TABLE `jelly_form_design`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -378,7 +323,6 @@ DROP TABLE IF EXISTS `jelly_meta_function`;
 CREATE TABLE `jelly_meta_function`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `parent_id` bigint(20) DEFAULT NULL COMMENT '父节点',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `path` varchar(30) NOT NULL COMMENT '路径',
     `script` text DEFAULT NULL COMMENT '脚本',

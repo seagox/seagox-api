@@ -437,7 +437,7 @@ public class JellyFormService implements IJellyFormService {
             params.put("temporaryStorage", request.getParameter("temporaryStorage"));
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertBeforeRule.getScript());
-                groovyRule.businessRule(params, request);
+                groovyRule.execute(request, params);
             } catch (ConfirmException e) {
                 throw new ConfirmException(e.getMessage());
             } catch (Exception e) {
@@ -507,7 +507,7 @@ public class JellyFormService implements IJellyFormService {
                 ruleParams.put("formName", form.getName());
                 ruleParams.put("businessKey", businessKey);
                 params.put("temporaryStorage", request.getParameter("temporaryStorage"));
-                groovyRule.businessRule(ruleParams, request);
+                groovyRule.execute(request, ruleParams);
             } catch (Exception e) {
                 e.printStackTrace();
                 // 手动回滚
@@ -664,7 +664,7 @@ public class JellyFormService implements IJellyFormService {
             JellyBusinessRule updateBeforeRule = businessRuleMapper.selectById(form.getUpdateBeforeRule());
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateBeforeRule.getScript());
-                groovyRule.businessRule(null, request);
+                groovyRule.execute(request, null);
             } catch (ConfirmException e) {
                 throw new ConfirmException(e.getMessage());
             } catch (Exception e) {
@@ -744,7 +744,7 @@ public class JellyFormService implements IJellyFormService {
                 Map<String, Object> ruleParams = new HashMap<>();
                 ruleParams.put("username", user.getName());
                 ruleParams.put("formName", form.getName());
-                groovyRule.businessRule(ruleParams, request);
+                groovyRule.execute(request, ruleParams);
             } catch (Exception e) {
                 e.printStackTrace();
                 // 手动回滚
@@ -1218,7 +1218,7 @@ public class JellyFormService implements IJellyFormService {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(deleteBeforeRule.getScript());
-                groovyRule.businessRule(params, request);
+                groovyRule.execute(request, params);
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
@@ -1257,7 +1257,7 @@ public class JellyFormService implements IJellyFormService {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(deleteAfterRule.getScript());
-                groovyRule.businessRule(params, request);
+                groovyRule.execute(request, params);
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
@@ -1392,7 +1392,8 @@ public class JellyFormService implements IJellyFormService {
         return ResultData.success(jdbcTemplate.queryForList(sql));
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void export(HttpServletRequest request, HttpServletResponse response) {
         JellyForm form = formMapper.selectById(request.getParameter("id"));
         String sql = form.getDataSource();
@@ -1429,7 +1430,7 @@ public class JellyFormService implements IJellyFormService {
                 Map<String, Object> params = new HashMap<>();
                 params.put("list", list);
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(exportRule.getScript());
-                Map<String, Object> resultMap = groovyRule.businessRule(params, request);
+                Map<String, Object> resultMap = (Map<String, Object>) groovyRule.execute(request, params);
                 if (resultMap != null) {
                     resultMap.forEach((key, value) -> {
                         resultData.put(key, value);
@@ -1860,7 +1861,7 @@ public class JellyFormService implements IJellyFormService {
 	            Map<String, Object> params = new HashMap<>();
 	            try {
 	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(beforeRule.getScript());
-	                groovyRule.businessRule(params, request);
+	                groovyRule.execute(request, params);
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
@@ -1906,7 +1907,7 @@ public class JellyFormService implements IJellyFormService {
 	            Map<String, Object> params = new HashMap<>();
 	            try {
 	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(afterRule.getScript());
-	                groovyRule.businessRule(params, request);
+	                groovyRule.execute(request, params);
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());

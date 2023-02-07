@@ -6,6 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface IGroovyCloud {
 
-    public ResultData entrance(HttpServletRequest request);
+    public ResultData execute(HttpServletRequest request);
 
 }

@@ -4,9 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -24,12 +22,6 @@ public class JellyMetaFunction {
      * 公司id
      */
     private Long companyId;
-    
-    /**
-     * 父节点
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private Long parentId;
     
     /**
      * 名称
@@ -74,14 +66,6 @@ public class JellyMetaFunction {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
-	}
-
-	public Long getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
 	}
 
 	public String getName() {

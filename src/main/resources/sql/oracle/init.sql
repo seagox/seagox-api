@@ -117,112 +117,6 @@ COMMENT ON COLUMN jelly_inform.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_inform.update_time IS '更新时间';
 COMMENT ON TABLE jelly_inform IS '报告模板';
 
-CREATE TABLE jelly_export_rule  (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    code VARCHAR2(30) NOT NULL,
-    name VARCHAR2(100) NOT NULL,
-    sz_code VARCHAR2(20) NOT NULL,
-    sc_code VARCHAR2(20) NOT NULL,
-    data_source NUMBER(20) NOT NULL,
-    business_rule_id NUMBER(20) DEFAULT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_export_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_export_rule.id IS '主键';
-COMMENT ON COLUMN jelly_export_rule.company_id IS '公司id';
-COMMENT ON COLUMN jelly_export_rule.code IS '编码';
-COMMENT ON COLUMN jelly_export_rule.name IS '名称';
-COMMENT ON COLUMN jelly_export_rule.sz_code IS '收支编码（收入01；支出02）';
-COMMENT ON COLUMN jelly_export_rule.sc_code IS '资金性质';
-COMMENT ON COLUMN jelly_export_rule.data_source IS '数据源';
-COMMENT ON COLUMN jelly_export_rule.business_rule_id IS '业务校验规则id';
-COMMENT ON COLUMN jelly_export_rule.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_export_rule.update_time IS '更新时间';
-COMMENT ON TABLE jelly_export_rule IS '导入规则';
-
-CREATE TABLE jelly_export_rule_detail  (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    export_rule_id NUMBER(20) NOT NULL,
-    field NUMBER(20) NOT NULL,
-    col VARCHAR2(30) NOT NULL,
-    type NUMBER(2) DEFAULT 1,
-    source  NUMBER(20) DEFAULT NULL,
-    sql_source VARCHAR2(500) DEFAULT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_export_rule_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_export_rule_detail.id IS '主键';
-COMMENT ON COLUMN jelly_export_rule_detail.export_rule_id IS '导入规则id';
-COMMENT ON COLUMN jelly_export_rule_detail.field IS '对应字段';
-COMMENT ON COLUMN jelly_export_rule_detail.col IS '对应列';
-COMMENT ON COLUMN jelly_export_rule_detail.type IS '字段转换类型(1无;2字典;3用户;4部门;5唯一字段;6地址)';
-COMMENT ON COLUMN jelly_export_rule_detail.source IS '字段转换来源';
-COMMENT ON COLUMN jelly_export_rule_detail.sql_source IS 'sql语句';
-COMMENT ON COLUMN jelly_export_rule_detail.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_export_rule_detail.update_time IS '更新时间';
-COMMENT ON TABLE jelly_export_rule_detail IS '导入规则明细';
-
-CREATE TABLE jelly_export_data  (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    name VARCHAR2(120) NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    user_id NUMBER(20) NOT NULL,
-    config clob NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_export_data_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_export_data.id IS '主键';
-COMMENT ON COLUMN jelly_export_data.name IS '名称';
-COMMENT ON COLUMN jelly_export_data.company_id IS '公司id';
-COMMENT ON COLUMN jelly_export_data.user_id IS '用户id';
-COMMENT ON COLUMN jelly_export_data.config IS '配置';
-COMMENT ON COLUMN jelly_export_data.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_export_data.update_time IS '更新时间';
-COMMENT ON TABLE jelly_export_data IS '导入数据';
-
-CREATE TABLE jelly_export_dimension  (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    name VARCHAR2(30) NOT NULL,
-    odm_source NUMBER(20) NOT NULL,
-    odm_code_field NUMBER(20) NOT NULL,
-    odm_name_field NUMBER(20) NOT NULL,
-    dim_source NUMBER(20) NOT NULL,
-    dim_code_field NUMBER(20) NOT NULL,
-    dim_name_field NUMBER(20) NOT NULL,
-    dim_year_field NUMBER(20) DEFAULT NULL,
-    user_id NUMBER(20) NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_export_dimension_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_export_dimension.id IS '主键';
-COMMENT ON COLUMN jelly_export_dimension.name IS '维度名称';
-COMMENT ON COLUMN jelly_export_dimension.odm_source IS 'ODM表';
-COMMENT ON COLUMN jelly_export_dimension.odm_code_field IS 'ODM表字段编码';
-COMMENT ON COLUMN jelly_export_dimension.odm_name_field IS 'ODM表字段名称';
-COMMENT ON COLUMN jelly_export_dimension.dim_source IS 'DIM表';
-COMMENT ON COLUMN jelly_export_dimension.dim_code_field IS 'DIM表字段编码';
-COMMENT ON COLUMN jelly_export_dimension.dim_name_field IS 'DIM表字段名称';
-COMMENT ON COLUMN jelly_export_dimension.dim_year_field IS 'DIM表字段年段';
-COMMENT ON COLUMN jelly_export_dimension.user_id IS '用户id';
-COMMENT ON COLUMN jelly_export_dimension.company_id IS '公司id';
-COMMENT ON COLUMN jelly_export_dimension.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_export_dimension.update_time IS '更新时间';
-COMMENT ON TABLE jelly_export_dimension IS '维度管理';
-
 create table jelly_form_design (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
@@ -695,7 +589,6 @@ COMMENT ON TABLE jelly_meta_page IS '元页面';
 CREATE TABLE jelly_meta_function  (
 	id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
-    parent_id NUMBER(20) DEFAULT NULL,
 	name VARCHAR2(30) NOT NULL,
 	path VARCHAR2(30) NOT NULL,
 	script clob DEFAULT NULL,
@@ -707,7 +600,6 @@ create sequence jelly_meta_function_seq increment by 1 start with 1 nomaxvalue m
 
 COMMENT ON COLUMN jelly_meta_function.id IS '主键';
 COMMENT ON COLUMN jelly_meta_function.company_id IS '公司id';
-COMMENT ON COLUMN jelly_meta_function.parent_id IS '父节点';
 COMMENT ON COLUMN jelly_meta_function.name IS '名称';
 COMMENT ON COLUMN jelly_meta_function.path IS '路径';
 COMMENT ON COLUMN jelly_meta_function.script IS '脚本';

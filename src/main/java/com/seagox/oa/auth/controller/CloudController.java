@@ -32,35 +32,13 @@ public class CloudController {
      * @param path 路径
      */
     @Transactional
-    @RequestMapping("/entrance/{path}")
-    public ResultData singleEntrance(@PathVariable String path, HttpServletRequest request) {
+    @RequestMapping("/openApi/{path}")
+    public ResultData openApi(@PathVariable String path, HttpServletRequest request) {
         try {
-            String rule = metaFunctionService.queryByPath(path);
-            if (!StringUtils.isEmpty(rule)) {
-                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(rule);
-                return groovyCloud.entrance(request);
-            } else {
-                return ResultData.warn(ResultCode.OTHER_ERROR, "路径错误");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-        }
-    }
-
-    /**
-     * 开放api
-     *
-     * @param path 路径
-     */
-    @Transactional
-    @RequestMapping("/entrance/{route}/{path}")
-    public ResultData multiEntrance(@PathVariable String route, @PathVariable String path, HttpServletRequest request) {
-        try {
-            String rule = metaFunctionService.queryByPath(route + "/" + path);
-            if (!StringUtils.isEmpty(rule)) {
-                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(rule);
-                return groovyCloud.entrance(request);
+            String script = metaFunctionService.queryByPath(path);
+            if (!StringUtils.isEmpty(script)) {
+                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(script);
+                return groovyCloud.execute(request);
             } else {
                 return ResultData.warn(ResultCode.OTHER_ERROR, "路径错误");
             }
@@ -77,57 +55,18 @@ public class CloudController {
      */
     @Transactional
     @RequestMapping("/authority/{path}")
-    public ResultData singleAuthority(@PathVariable String path, HttpServletRequest request) {
+    public ResultData authority(@PathVariable String path, HttpServletRequest request) {
         try {
-            String rule = metaFunctionService.queryByPath(path);
-            if (!StringUtils.isEmpty(rule)) {
-                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(rule);
-                return groovyCloud.entrance(request);
+            String script = metaFunctionService.queryByPath(path);
+            if (!StringUtils.isEmpty(script)) {
+                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(script);
+                return groovyCloud.execute(request);
             } else {
                 return ResultData.warn(ResultCode.OTHER_ERROR, "路径错误");
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-        }
-    }
-
-    /**
-     * 权限api
-     *
-     * @param path 路径
-     */
-    @Transactional
-    @RequestMapping("/authority/{route}/{path}")
-    public ResultData multiAuthority(@PathVariable String route, @PathVariable String path, HttpServletRequest request) {
-        try {
-            String rule = metaFunctionService.queryByPath(route + "/" + path);
-            if (!StringUtils.isEmpty(rule)) {
-                IGroovyCloud groovyCloud = GroovyFactory.getInstance().getICloudFromCode(rule);
-                return groovyCloud.entrance(request);
-            } else {
-                return ResultData.warn(ResultCode.OTHER_ERROR, "路径错误");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-        }
-    }
-
-
-    /**
-     * 下载api
-     *
-     * @param path 路径
-     */
-    @RequestMapping("/download/{path}")
-    public void singleDownload(@PathVariable String path, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String rule = metaFunctionService.queryByPath(path);
-            IGroovyUpload groovyUpload = GroovyFactory.getInstance().getIUploadFromCode(rule);
-            groovyUpload.download(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -136,11 +75,11 @@ public class CloudController {
      *
      * @param path 路径
      */
-    @RequestMapping("/download/{route}/{path}")
-    public void multiDownload(@PathVariable String route, @PathVariable String path, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/download/{path}")
+    public void download(@PathVariable String path, HttpServletRequest request, HttpServletResponse response) {
         try {
-            String rule = metaFunctionService.queryByPath(route + "/" + path);
-            IGroovyUpload groovyUpload = GroovyFactory.getInstance().getIUploadFromCode(rule);
+            String script = metaFunctionService.queryByPath(path);
+            IGroovyUpload groovyUpload = GroovyFactory.getInstance().getIUploadFromCode(script);
             groovyUpload.download(request, response);
         } catch (Exception e) {
             e.printStackTrace();

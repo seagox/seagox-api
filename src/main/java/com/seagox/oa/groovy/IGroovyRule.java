@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface IGroovyRule {
 
-    public Map<String, Object> businessRule(Map<String, Object> params, HttpServletRequest request);
+    public Object execute(HttpServletRequest request, Map<String, Object> params);
 
 }

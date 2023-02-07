@@ -25,7 +25,6 @@ import com.seagox.oa.flow.mapper.SeaNodeDetailMapper;
 import com.seagox.oa.flow.mapper.SeaNodeMapper;
 import com.seagox.oa.flow.service.IRuntimeService;
 import com.seagox.oa.groovy.GroovyFactory;
-import com.seagox.oa.groovy.IGroovyFlow;
 import com.seagox.oa.groovy.IGroovyRule;
 import com.seagox.oa.sys.entity.*;
 import com.seagox.oa.sys.mapper.*;
@@ -668,7 +667,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                     params.put("formId", businessType);
                     params.put("businessKey", businessKey);
                     IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(processEndRule.getScript());
-                    groovyRule.businessRule(params, null);
+                    groovyRule.execute(request, null);
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException();
@@ -723,17 +722,13 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
             if (!StringUtils.isEmpty(nodeCurMap.getString("precondition"))) {
                 JellyBusinessRule flowRule = businessRuleMapper.selectById(nodeCurMap.getString("precondition"));
                 if (flowRule != null) {
-                    IGroovyFlow groovyFlow;
                     try {
-                        groovyFlow = GroovyFactory.getInstance().getIFlowFromCode(flowRule.getScript());
+                    	Map<String, Object> params = new HashMap<String, Object>();
+                    	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(flowRule.getScript());
+                        groovyRule.execute(request, params);
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw new FlowException("前置条件语法错误");
-                    }
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    ResultData result = groovyFlow.execute(request, params);
-                    if (result.getCode() != 200) {
-                        throw new FlowException(result.getMessage());
                     }
                 }
             }
@@ -1313,7 +1308,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                         params.put("currentNodeId", currentNode.get("id"));
                         params.put("assignee", assignee);
                         IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(abandonRule.getScript());
-                        groovyRule.businessRule(params, null);
+                        groovyRule.execute(null, params);
                     } catch (Exception e) {
                         e.printStackTrace();
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

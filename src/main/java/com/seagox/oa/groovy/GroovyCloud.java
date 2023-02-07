@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GroovyCloud implements IGroovyCloud {
 
     @Override
-    public ResultData entrance(HttpServletRequest request) {
+    public ResultData execute(HttpServletRequest request) {
         // 业务逻辑
 
         return ResultData.success(null);

@@ -743,7 +743,7 @@ public class ImportUtils {
 	           	 	Map<String, Object> params = JSON.parseObject(rowJson.toJSONString());
 		            try {
 		                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(verifyScript);
-		                groovyRule.businessRule(params, null);
+		                groovyRule.execute(null, params);
 		            } catch (ConfirmException e) {
 		                throw new ConfirmException(e.getMessage());
 		            } catch (Exception e) {
