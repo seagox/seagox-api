@@ -312,6 +312,17 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 for (String oracleSql : splitSql) {
                     jdbcTemplate.execute(oracleSql);
                 }
+                // 创建序列
+                String sequenceSql = "create sequence "+ businessTable.getName().trim() +"_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle";
+                String triggerSql = "create or replace trigger "+ businessTable.getName().trim() +"_trigger " +
+                        "before insert on " + businessTable.getName().trim() +
+                        " for each row " +
+                        "begin " +
+                        "select "+ businessTable.getName().trim() +"_seq.nextval into :new.id from dual;" +
+                        "end;";
+                jdbcTemplate.execute(sequenceSql);
+                jdbcTemplate.execute(triggerSql);
+                // 创建触发器
             }else{
                 jdbcTemplate.execute(sql.toString());
             }
@@ -346,8 +357,24 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
                 sql.append(originalBusinessTable.getName());
                 sql.append(" rename to ");
                 sql.append(businessTable.getName());
+                // 更新原表名序列
+                String updateSequenceSql = "rename " + originalBusinessTable.getName().trim() + "_seq" + " to " + businessTable.getName().trim() + "_seq";
+                jdbcTemplate.execute(updateSequenceSql);
+                // 删除原表名触发器
+                String deleteTriggerSql = "drop trigger " + originalBusinessTable.getName().trim() + "_trigger";
+                jdbcTemplate.execute(deleteTriggerSql);
             }
             jdbcTemplate.execute(sql.toString());
+            if (datasourceUrl.contains("oracle")){
+                // 新建触发器
+                String triggerSql = "create or replace trigger "+ businessTable.getName().trim() +"_trigger " +
+                        "before insert on " + businessTable.getName().trim() +
+                        " for each row " +
+                        "begin " +
+                        "select "+ businessTable.getName().trim() +"_seq.nextval into :new.id from dual;" +
+                        "end;";
+                jdbcTemplate.execute(triggerSql);
+            }
         }
         if (!originalBusinessTable.getRemark().equals(businessTable.getRemark())) {
             //更新表注释
@@ -404,6 +431,12 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
             StringBuffer sql = new StringBuffer();
             if (datasourceUrl.contains("oracle")){
                 sql.append("DROP TABLE ");
+                // 删除原表名序列
+                String deleteSequenceSql = "drop sequence " + businessTable.getName().trim() + "_seq";
+                // 删除原表名触发器
+                String deleteTriggerSql = "drop trigger " + businessTable.getName().trim() + "_trigger";
+                jdbcTemplate.execute(deleteSequenceSql);
+                jdbcTemplate.execute(deleteTriggerSql);
             } else {
                 sql.append("DROP TABLE IF EXISTS ");
             }
