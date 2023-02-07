@@ -42,13 +42,13 @@ public class WeiChatUtils {
     /**
      * 服务号APPID
      */
-    @Value("${third-party.service.appid}")
+    @Value("${third-party.serviceNumber.appid}")
     private String serviceNumberAppid;
 
     /**
      * 服务号SERCRET
      */
-    @Value("${third-party.service.sercret}")
+    @Value("${third-party.serviceNumber.sercret}")
     private String serviceNumberSercret;
 
     /**

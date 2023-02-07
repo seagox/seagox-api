@@ -65,26 +65,6 @@ COMMENT ON COLUMN "public"."jelly_open_api"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_open_api"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_open_api" IS 'openApi';
 
-
-DROP TABLE IF EXISTS "public"."jelly_procedure";
-CREATE TABLE "public"."jelly_procedure"  (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-  	"name" VARCHAR(100) NOT NULL,
-  	"remark" VARCHAR(200) NOT NULL,
-  	"config" text,
-  	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_procedure"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_procedure"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_procedure"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_procedure"."remark" IS '备注';
-COMMENT ON COLUMN "public"."jelly_procedure"."config" IS '配置';
-COMMENT ON COLUMN "public"."jelly_procedure"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_procedure"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_procedure" IS '存储过程';
-
 DROP TABLE IF EXISTS "public"."jelly_inform";
 CREATE TABLE "public"."jelly_inform"  (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,

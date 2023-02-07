@@ -69,29 +69,6 @@ COMMENT ON COLUMN jelly_open_api.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_open_api.update_time IS '更新时间';
 COMMENT ON TABLE jelly_open_api IS 'openApi';
 
-
-CREATE TABLE jelly_procedure  (
-	id NUMBER(20) PRIMARY KEY NOT NULL,
-	company_id NUMBER(20) NOT NULL,
-  	name VARCHAR2(100) NOT NULL,
-  	remark VARCHAR2(200) NOT NULL,
-  	config clob,
-  	create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_procedure_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_procedure.id IS '主键';
-COMMENT ON COLUMN jelly_procedure.company_id IS '公司id';
-COMMENT ON COLUMN jelly_procedure.name IS '名称';
-COMMENT ON COLUMN jelly_procedure.remark IS '备注';
-COMMENT ON COLUMN jelly_procedure.config IS '配置';
-COMMENT ON COLUMN jelly_procedure.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_procedure.update_time IS '更新时间';
-COMMENT ON TABLE jelly_procedure IS '存储过程';
-
-
 CREATE TABLE jelly_inform  (
 	id NUMBER(20) PRIMARY KEY NOT NULL,
 	company_id NUMBER(20) NOT NULL,

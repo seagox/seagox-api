@@ -35,17 +35,6 @@ CREATE TABLE `jelly_open_api`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = 'openApi';
 
-DROP TABLE IF EXISTS `jelly_procedure`;
-CREATE TABLE `jelly_procedure`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `name` varchar(30) NOT NULL COMMENT '名称',
-    `remark` varchar(200) NOT NULL COMMENT '备注',
-    `config` text COMMENT '配置',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '存储过程';
-
 DROP TABLE IF EXISTS `jelly_inform`;
 CREATE TABLE `jelly_inform`  (
     `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',

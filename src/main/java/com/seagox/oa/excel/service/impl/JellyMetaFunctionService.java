@@ -6,10 +6,8 @@ import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyMetaFunction;
 import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.excel.service.IJellyMetaFunctionService;
-import com.seagox.oa.util.TreeUtils;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,8 +23,10 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
 
     @Override
     public ResultData queryByCompanyId(Long companyId) {
-    	List<Map<String, Object>> list = metaFunctionMapper.selectMapByCompanyId(companyId);
-        return ResultData.success(TreeUtils.categoryTreeHandle(list, "parentId", 0L));
+    	LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyMetaFunction::getCompanyId, companyId).orderByAsc(JellyMetaFunction::getPath);
+        List<JellyMetaFunction> list = metaFunctionMapper.selectList(qw);
+        return ResultData.success(list);
     }
 
     @Override
