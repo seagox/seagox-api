@@ -33,6 +33,16 @@ public class JellyMetaFunctionController {
                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, Long companyId, String name, String path) {
         return metaFunctionService.queryByPage(pageNo, pageSize, companyId, name, path);
     }
+    
+    /**
+     * 查询所有
+     *
+     * @param companyId 公司id
+     */
+    @GetMapping("/queryByCompanyId")
+    public ResultData queryByCompanyId(Long companyId) {
+        return metaFunctionService.queryByCompanyId(companyId);
+    }
 
     /**
      * 新增
