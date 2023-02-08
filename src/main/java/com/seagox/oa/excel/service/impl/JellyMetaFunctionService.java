@@ -1,6 +1,8 @@
 package com.seagox.oa.excel.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyMetaFunction;
@@ -13,20 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class JellyMetaFunctionService implements IJellyMetaFunctionService {
 
     @Autowired
     private JellyMetaFunctionMapper metaFunctionMapper;
-
-
+    
     @Override
-    public ResultData queryByCompanyId(Long companyId) {
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name, String path) {
     	LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
-        qw.eq(JellyMetaFunction::getCompanyId, companyId).orderByAsc(JellyMetaFunction::getPath);
+        qw.eq(JellyMetaFunction::getCompanyId, companyId)
+        .like(!StringUtils.isEmpty(name), JellyMetaFunction::getName, name)
+        .like(!StringUtils.isEmpty(path), JellyMetaFunction::getPath, path)
+        .orderByDesc(JellyMetaFunction::getCreateTime);
+        PageHelper.startPage(pageNo, pageSize);
         List<JellyMetaFunction> list = metaFunctionMapper.selectList(qw);
-        return ResultData.success(list);
+        PageInfo<JellyMetaFunction> pageInfo = new PageInfo<>(list);
+        return ResultData.success(pageInfo);
     }
 
     @Override
@@ -72,17 +79,18 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
     @Cacheable(value = "metaFunction", key = "#path")
     @Override
     public String queryByPath(String path) {
-        if (path.contains("/")) {
-            return metaFunctionMapper.queryMultiByPath(path.split("/")[0], path.split("/")[1]);
-        } else {
-            LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
-            qw.eq(JellyMetaFunction::getPath, path);
-            JellyMetaFunction metaFunction = metaFunctionMapper.selectOne(qw);
-            if (metaFunction != null) {
-                return metaFunction.getScript();
-            }
+    	LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyMetaFunction::getPath, path);
+        JellyMetaFunction metaFunction = metaFunctionMapper.selectOne(qw);
+        if (metaFunction != null) {
+            return metaFunction.getScript();
         }
         return null;
     }
+
+	@Override
+	public ResultData queryById(Long id) {
+		return ResultData.success(metaFunctionMapper.selectById(id));
+	}
 
 }

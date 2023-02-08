@@ -20,13 +20,18 @@ public class JellyMetaFunctionController {
     private IJellyMetaFunctionService metaFunctionService;
 
     /**
-     * 查询所有
+     * 分页查询
      *
+     * @param pageNo    起始页
+     * @param pageSize  每页大小
      * @param companyId 公司id
+     * @param name      名称
+     * @param path      路径
      */
-    @GetMapping("/queryByCompanyId")
-    public ResultData queryByCompanyId(Long companyId) {
-        return metaFunctionService.queryByCompanyId(companyId);
+    @GetMapping("/queryByPage")
+    public ResultData queryByPage(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
+                                  @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, Long companyId, String name, String path) {
+        return metaFunctionService.queryByPage(pageNo, pageSize, companyId, name, path);
     }
 
     /**
@@ -45,6 +50,14 @@ public class JellyMetaFunctionController {
     @SysLogPoint("修改元函数")
     public ResultData update(@Valid JellyMetaFunction metaFunction) {
         return metaFunctionService.update(metaFunction);
+    }
+    
+    /**
+     * 通过id获取
+     */
+    @GetMapping("/queryById/{id}")
+    public ResultData queryById(@PathVariable Long id) {
+        return metaFunctionService.queryById(id);
     }
 
     /**
