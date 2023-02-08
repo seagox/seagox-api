@@ -14,8 +14,6 @@ import com.seagox.oa.excel.service.IJellyFormService;
 import com.seagox.oa.exception.ConfirmException;
 import com.seagox.oa.exception.FormulaException;
 import com.seagox.oa.excel.entity.JellyImportRule;
-import com.seagox.oa.excel.mapper.JellyImportRuleDetailMapper;
-import com.seagox.oa.excel.mapper.JellyImportRuleMapper;
 import com.seagox.oa.flow.entity.SeaInstance;
 import com.seagox.oa.flow.mapper.SeaDefinitionMapper;
 import com.seagox.oa.flow.mapper.SeaInstanceMapper;
@@ -94,7 +92,7 @@ public class JellyFormService implements IJellyFormService {
     private JellyPrintMapper printMapper;
 
     @Autowired
-    private JellyBusinessRuleMapper businessRuleMapper;
+    private JellyMetaFunctionMapper metaFunctionMapper;
 
     @Autowired
     private JellyTableColumnMapper tableColumnMapper;
@@ -432,7 +430,7 @@ public class JellyFormService implements IJellyFormService {
         }
         // 新增前规则
         if (form.getInsertBeforeRule() != null) {
-            JellyBusinessRule insertBeforeRule = businessRuleMapper.selectById(form.getInsertBeforeRule());
+        	JellyMetaFunction insertBeforeRule = metaFunctionMapper.selectById(form.getInsertBeforeRule());
             Map<String, Object> params = new HashMap<>();
             params.put("temporaryStorage", request.getParameter("temporaryStorage"));
             try {
@@ -499,7 +497,7 @@ public class JellyFormService implements IJellyFormService {
 
         // 新增后规则
         if (form.getInsertAfterRule() != null) {
-            JellyBusinessRule insertAfterRule = businessRuleMapper.selectById(form.getInsertAfterRule());
+        	JellyMetaFunction insertAfterRule = metaFunctionMapper.selectById(form.getInsertAfterRule());
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertAfterRule.getScript());
                 Map<String, Object> ruleParams = new HashMap<>();
@@ -671,7 +669,7 @@ public class JellyFormService implements IJellyFormService {
         }
         // 更新前规则
         if (form.getUpdateBeforeRule() != null) {
-            JellyBusinessRule updateBeforeRule = businessRuleMapper.selectById(form.getUpdateBeforeRule());
+        	JellyMetaFunction updateBeforeRule = metaFunctionMapper.selectById(form.getUpdateBeforeRule());
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateBeforeRule.getScript());
                 groovyRule.execute(request, null);
@@ -747,7 +745,7 @@ public class JellyFormService implements IJellyFormService {
         }
         // 更新后规则
         if (form.getUpdateAfterRule() != null) {
-            JellyBusinessRule updateAfterRule = businessRuleMapper.selectById(form.getUpdateAfterRule());
+        	JellyMetaFunction updateAfterRule = metaFunctionMapper.selectById(form.getUpdateAfterRule());
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateAfterRule.getScript());
                 SysAccount user = userMapper.selectById(request.getParameter("userId"));
@@ -1223,7 +1221,7 @@ public class JellyFormService implements IJellyFormService {
 
         // 删除前规则
         if (form.getDeleteBeforeRule() != null) {
-            JellyBusinessRule deleteBeforeRule = businessRuleMapper.selectById(form.getDeleteBeforeRule());
+        	JellyMetaFunction deleteBeforeRule = metaFunctionMapper.selectById(form.getDeleteBeforeRule());
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
@@ -1262,7 +1260,7 @@ public class JellyFormService implements IJellyFormService {
         }
         // 删除后规则
         if (form.getDeleteAfterRule() != null) {
-            JellyBusinessRule deleteAfterRule = businessRuleMapper.selectById(form.getDeleteAfterRule());
+        	JellyMetaFunction deleteAfterRule = metaFunctionMapper.selectById(form.getDeleteAfterRule());
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
@@ -1435,7 +1433,7 @@ public class JellyFormService implements IJellyFormService {
         resultData.put("list", list);
         // 导出规则
         if (form.getExportRule() != null) {
-            JellyBusinessRule exportRule = businessRuleMapper.selectById(form.getExportRule());
+        	JellyMetaFunction exportRule = metaFunctionMapper.selectById(form.getExportRule());
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("list", list);
@@ -1867,7 +1865,7 @@ public class JellyFormService implements IJellyFormService {
 			JellyImportRule exportRule = importRuleMapper.selectById(ruleId);
 			// 导入前规则
 	        if (exportRule.getBeforeRuleId() != null) {
-	            JellyBusinessRule beforeRule = businessRuleMapper.selectById(exportRule.getBeforeRuleId());
+	        	JellyMetaFunction beforeRule = metaFunctionMapper.selectById(exportRule.getBeforeRuleId());
 	            Map<String, Object> params = new HashMap<>();
 	            try {
 	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(beforeRule.getScript());
@@ -1904,7 +1902,7 @@ public class JellyFormService implements IJellyFormService {
 	        }
 	        List<Map<String, Object>> result = new ArrayList<>();
 	        if (exportRule.getVerifyRuleId() != null) {
-	        	JellyBusinessRule verifyRule = businessRuleMapper.selectById(exportRule.getVerifyRuleId());
+	        	JellyMetaFunction verifyRule = metaFunctionMapper.selectById(exportRule.getVerifyRuleId());
 				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
 	        } else {
 				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, null);
@@ -1913,7 +1911,7 @@ public class JellyFormService implements IJellyFormService {
 			JdbcTemplateUtils.batchInsert(jdbcTemplate, businessTable.getName(), result);
 			// 导入后规则
 	        if (exportRule.getAfterRuleId() != null) {
-	            JellyBusinessRule afterRule = businessRuleMapper.selectById(exportRule.getAfterRuleId());
+	        	JellyMetaFunction afterRule = metaFunctionMapper.selectById(exportRule.getAfterRuleId());
 	            Map<String, Object> params = new HashMap<>();
 	            try {
 	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(afterRule.getScript());

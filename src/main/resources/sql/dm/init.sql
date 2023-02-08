@@ -405,24 +405,6 @@ COMMENT ON COLUMN "public"."jelly_dic_detail"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_dic_detail" IS '字典详情';
 
 
-DROP TABLE IF EXISTS "public"."jelly_business_rule";
-CREATE TABLE "public"."jelly_business_rule" (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"name" VARCHAR(100) NOT NULL,
-	"script" TEXT,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_business_rule"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_business_rule"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_business_rule"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_business_rule"."script" IS '规则脚本';
-COMMENT ON COLUMN "public"."jelly_business_rule"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_business_rule"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_business_rule" IS '业务规则';
-
-
 DROP TABLE IF EXISTS "public"."jelly_regions";
 CREATE TABLE "public"."jelly_regions" (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,

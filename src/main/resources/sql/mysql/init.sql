@@ -233,18 +233,6 @@ CREATE TABLE `jelly_dic_detail`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '字典详情';
 
 
-DROP TABLE IF EXISTS `jelly_business_rule`;
-CREATE TABLE `jelly_business_rule`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `name` varchar(30) NOT NULL COMMENT '名称',
-    `script` text DEFAULT NULL COMMENT '规则脚本',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '业务规则';
-
-
 DROP TABLE IF EXISTS `jelly_regions`;
 CREATE TABLE `jelly_regions`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',

@@ -9,10 +9,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.entity.JellyBusinessRule;
 import com.seagox.oa.excel.entity.JellyForm;
-import com.seagox.oa.excel.mapper.JellyBusinessRuleMapper;
+import com.seagox.oa.excel.entity.JellyMetaFunction;
 import com.seagox.oa.excel.mapper.JellyFormMapper;
+import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.exception.FlowException;
 import com.seagox.oa.exception.FlowManualSelectionException;
 import com.seagox.oa.exception.FlowOptionalException;
@@ -61,7 +61,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
     private UserRelateMapper userRelateMapper;
 
     @Autowired
-    private JellyBusinessRuleMapper businessRuleMapper;
+    private JellyMetaFunctionMapper metaFunctionMapper;
 
     @Autowired
     private JellyFormMapper formMapper;
@@ -660,7 +660,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
         if (form != null) {
             // 发起
             if (form.getProcessEndRule() != null) {
-                JellyBusinessRule processEndRule = businessRuleMapper.selectById(form.getProcessEndRule());
+            	JellyMetaFunction processEndRule = metaFunctionMapper.selectById(form.getProcessEndRule());
                 try {
                     Map<String, Object> params = new HashMap<>();
                     params.put("companyId", companyId);
@@ -720,7 +720,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
             // 前置条件判断
             JSONObject nodeCurMap = nodeMap.getJSONObject(currentNode.get("target").toString());
             if (!StringUtils.isEmpty(nodeCurMap.getString("precondition"))) {
-                JellyBusinessRule flowRule = businessRuleMapper.selectById(nodeCurMap.getString("precondition"));
+            	JellyMetaFunction flowRule = metaFunctionMapper.selectById(nodeCurMap.getString("precondition"));
                 if (flowRule != null) {
                     try {
                     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1300,7 +1300,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                 JellyForm form = formMapper.selectById(businessType);
                 // 审核规则
                 if (form.getAbandonRule() != null) {
-                    JellyBusinessRule abandonRule = businessRuleMapper.selectById(form.getAbandonRule());
+                	JellyMetaFunction abandonRule = metaFunctionMapper.selectById(form.getAbandonRule());
                     try {
                         Map<String, Object> params = new HashMap<>();
                         params.put("businessType", businessType);

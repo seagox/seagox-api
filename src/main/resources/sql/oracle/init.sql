@@ -434,26 +434,6 @@ COMMENT ON COLUMN jelly_dic_detail.update_time IS '更新时间';
 COMMENT ON TABLE jelly_dic_detail IS '字典详情';
 
 
-create table jelly_business_rule (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    name VARCHAR2(30) NOT NULL,
-    script clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_business_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_business_rule.id IS '主键';
-COMMENT ON COLUMN jelly_business_rule.company_id IS '公司id';
-COMMENT ON COLUMN jelly_business_rule.name IS '名称';
-COMMENT ON COLUMN jelly_business_rule.script IS '规则脚本';
-COMMENT ON COLUMN jelly_business_rule.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_business_rule.update_time IS '更新时间';
-COMMENT ON TABLE jelly_business_rule IS '业务规则';
-
-
 create table jelly_regions (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     code VARCHAR2(30) NOT NULL,
