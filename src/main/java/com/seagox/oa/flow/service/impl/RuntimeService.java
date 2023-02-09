@@ -670,7 +670,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                     groovyRule.execute(request, null);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    throw new RuntimeException();
+                    throw new RuntimeException(e.getMessage());
                 }
             }
         }

@@ -1,7 +1,10 @@
 package com.seagox.oa.excel.service;
 
+import java.util.List;
+
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyBusinessField;
+import com.seagox.oa.template.FieldModel;
 
 public interface IJellyBusinessFieldService {
 
@@ -34,5 +37,10 @@ public interface IJellyBusinessFieldService {
      * 根据业务表id查询
      */
     public ResultData queryByTableId(Long tableId);
+    
+    /**
+     * 导入处理
+     */
+    public ResultData importHandle(Long tableId, List<FieldModel> resultList);
 
 }

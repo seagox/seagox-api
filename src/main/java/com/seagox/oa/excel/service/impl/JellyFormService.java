@@ -703,7 +703,14 @@ public class JellyFormService implements IJellyFormService {
                     variables.put("status", request.getParameter("status"));
                     variables.put("comment", request.getParameter("comment"));
                     variables.put("rejectType", request.getParameter("rejectType"));
-                    runtimeService.complete(variables, request);
+                    try {
+                        runtimeService.complete(variables, request);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // 手动回滚
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+                    }
                 } else if (seaInstance.getStatus() == 3) {
                     runtimeService.restartProcess(variables, request);
                 }
@@ -1846,7 +1853,14 @@ public class JellyFormService implements IJellyFormService {
                         variables.put("status", request.getParameter("status"));
                         variables.put("comment", request.getParameter("comment"));
                         variables.put("rejectType", request.getParameter("rejectType"));
-                        runtimeService.complete(variables, request);
+                        try {
+                            runtimeService.complete(variables, request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // 手动回滚
+                            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                            return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+                        }
                         success++;
                     }
                 }
