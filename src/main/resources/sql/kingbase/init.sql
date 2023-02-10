@@ -898,7 +898,7 @@ COMMENT ON TABLE "public"."jelly_common_words" IS '常用语';
 
 
 BEGIN;
-INSERT INTO "public"."sys_company" VALUES (1, NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
+INSERT INTO "public"."sys_company" VALUES (1, NULL, 'seagox', '1001', '水母', '水母', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 select setval('sys_company_id_seq',(select max(id) from "public"."sys_company"));
 INSERT INTO "public"."sys_department" VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 select setval('sys_department_id_seq',(select max(id) from "public"."sys_department"));

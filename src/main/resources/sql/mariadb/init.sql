@@ -529,7 +529,7 @@ BEGIN;
 INSERT INTO sys_menu VALUES (1, 1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, '2021-07-01 11:33:27', '2021-07-01 11:33:27');
 INSERT INTO sys_menu VALUES (2, 1, 1, 4, '通讯录', 'el-icon-collection', 'contact', 1, 1, NULL, '2021-07-01 11:34:04', '2021-07-01 11:34:04');
 INSERT INTO sys_menu VALUES (3, 1, 1, 4, '角色管理', 'el-icon-coin', 'role', 1, 2, NULL, '2021-07-01 11:34:38', '2021-07-01 11:34:38');
-INSERT INTO sys_company VALUES (1, NULL, 'default', '1001', '默认单位', '默认单位', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
+INSERT INTO sys_company VALUES (1, NULL, 'seagox', '1001', '水母', '水母', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 INSERT INTO sys_department VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 INSERT INTO sys_role VALUES (1, 1, '默认角色', '1,2,3', '2021-07-01 11:31:22.25', '2021-07-01 11:31:22');
 INSERT INTO sys_account VALUES (1, NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');

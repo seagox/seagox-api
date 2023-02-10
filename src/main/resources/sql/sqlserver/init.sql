@@ -3642,7 +3642,7 @@ GO
 -- Records of sys_company
 -- ----------------------------
 
-INSERT INTO dbo.sys_company (parent_id, mark, code, name, alias, logo, create_time, update_time) VALUES (NULL, N'default', N'1001', N'默认单位', N'默认单位', N'avatar', N'2021-06-29 09:22:42.0000000', N'2021-06-29 09:22:42.0000000')
+INSERT INTO dbo.sys_company (parent_id, mark, code, name, alias, logo, create_time, update_time) VALUES (NULL, N'seagox', N'1001', N'水母', N'水母', N'avatar', N'2021-06-29 09:22:42.0000000', N'2021-06-29 09:22:42.0000000')
 GO
 
 
