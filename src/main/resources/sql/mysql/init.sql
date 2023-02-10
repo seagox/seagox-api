@@ -24,17 +24,6 @@ CREATE TABLE `jelly_import_rule_detail`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入规则明细';
 
-DROP TABLE IF EXISTS `jelly_open_api`;
-CREATE TABLE `jelly_open_api`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `appid` varchar(30) NOT NULL COMMENT 'appid',
-    `secret` varchar(50) NOT NULL COMMENT 'secret',
-    `remark` varchar(200) NOT NULL COMMENT '备注',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = 'openApi';
-
 DROP TABLE IF EXISTS `jelly_form_design`;
 CREATE TABLE `jelly_form_design`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',

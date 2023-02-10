@@ -46,25 +46,6 @@ COMMENT ON COLUMN "public"."jelly_import_rule_detail"."create_time" IS '创建�
 COMMENT ON COLUMN "public"."jelly_import_rule_detail"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_import_rule_detail" IS '导入规则明细';
 
-DROP TABLE IF EXISTS "public"."jelly_open_api";
-CREATE TABLE "public"."jelly_open_api"  (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-  	"appid" VARCHAR(30) NOT NULL,
-  	"secret" VARCHAR(50) NOT NULL,
-  	"remark" VARCHAR(200) NOT NULL,
-  	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_open_api"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_open_api"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_open_api"."appid" IS 'appid';
-COMMENT ON COLUMN "public"."jelly_open_api"."secret" IS 'secret';
-COMMENT ON COLUMN "public"."jelly_open_api"."remark" IS '备注';
-COMMENT ON COLUMN "public"."jelly_open_api"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_open_api"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_open_api" IS 'openApi';
-
 DROP TABLE IF EXISTS "public"."jelly_form_design";
 CREATE TABLE "public"."jelly_form_design" (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,

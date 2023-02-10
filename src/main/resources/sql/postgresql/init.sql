@@ -46,26 +46,6 @@ COMMENT ON COLUMN "jelly_import_rule_detail"."create_time" IS '创建时间';
 COMMENT ON COLUMN "jelly_import_rule_detail"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_import_rule_detail" IS '导入规则明细';
 
-DROP TABLE IF EXISTS "jelly_open_api";
-CREATE TABLE "jelly_open_api"  (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-  	"appid" VARCHAR(30) NOT NULL,
-  	"secret" VARCHAR(50) NOT NULL,
-  	"remark" VARCHAR(200) NOT NULL,
-  	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_open_api"."id" IS '主键';
-COMMENT ON COLUMN "jelly_open_api"."company_id" IS '公司id';
-COMMENT ON COLUMN "jelly_open_api"."appid" IS 'appid';
-COMMENT ON COLUMN "jelly_open_api"."secret" IS 'secret';
-COMMENT ON COLUMN "jelly_open_api"."remark" IS '备注';
-COMMENT ON COLUMN "jelly_open_api"."create_time" IS '创建时间';
-COMMENT ON COLUMN "jelly_open_api"."update_time" IS '更新时间';
-COMMENT ON TABLE "jelly_open_api" IS 'openApi';
-
-
 DROP TABLE IF EXISTS "jelly_form_design";
 CREATE TABLE "jelly_form_design" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,

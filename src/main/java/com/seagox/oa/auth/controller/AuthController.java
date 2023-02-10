@@ -5,18 +5,13 @@ import com.seagox.oa.annotation.SysLogPoint;
 import com.seagox.oa.auth.serivce.IAuthService;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.service.IJellyOpenApiService;
 import com.seagox.oa.groovy.IGroovyCloud;
-import com.seagox.oa.security.JwtTokenUtils;
 import com.seagox.oa.security.OnlineCounter;
 import com.seagox.oa.util.WeiChatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 认证
@@ -33,9 +28,6 @@ public class AuthController {
 
 	@Autowired
 	private WeiChatUtils weiChatUtils;
-
-	@Autowired
-	private IJellyOpenApiService openApiService;
 
 	@Autowired
 	private IGroovyCloud groovyCloud;
@@ -111,37 +103,6 @@ public class AuthController {
 	@GetMapping("/loginByOpenid/{openid}")
 	public ResultData loginByOpenid(@PathVariable String openid) {
 		return authService.loginByOpenid(openid);
-	}
-
-	/**
-	 * 获取toekn
-	 *
-	 * @param appid  appid
-	 * @param secret secret
-	 */
-	@GetMapping("/token")
-	@SysLogPoint("获取token")
-	public ResultData token(String appid, String secret) {
-		if (StringUtils.isEmpty(appid)) {
-			return ResultData.warn(ResultCode.OTHER_ERROR, "appid not empty");
-		}
-		if (StringUtils.isEmpty(secret)) {
-			return ResultData.warn(ResultCode.OTHER_ERROR, "secret not empty");
-		}
-		String realSecret = openApiService.queryByAppid(appid);
-		if (StringUtils.isEmpty(realSecret)) {
-			return ResultData.warn(ResultCode.OTHER_ERROR, "invalid appid");
-		}
-		if (!realSecret.equals(secret)) {
-			return ResultData.warn(ResultCode.OTHER_ERROR, "invalid secret");
-		}
-		Map<String, Object> claims = new HashMap<>();
-		claims.put("appid", appid);
-		String token = JwtTokenUtils.generateToken(claims, secret, System.currentTimeMillis() + 7200 * 1000);
-		JSONObject data = new JSONObject();
-		data.put("token", token);
-		data.put("expires_in", 7200);
-		return ResultData.success(data);
 	}
 
 	@RequestMapping("/testCloud")
