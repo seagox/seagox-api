@@ -16,6 +16,14 @@ public interface IAuthService {
 	 * @param avatar   头像
 	 */
 	public ResultData login(String account, String password, String openid, String avatar);
+	
+	/**
+	 * 登陆(控制台)
+	 *
+	 * @param name     用户名
+	 * @param password 密码
+	 */
+	public ResultData loginConsole(String account, String password);
 
 	/**
 	 * 获取区域数据

@@ -45,6 +45,18 @@ public class AuthController {
 	public ResultData login(String account, String password, String openid, String avatar) {
 		return authService.login(account, password, openid, avatar);
 	}
+	
+	/**
+	 * 登陆(控制台)
+	 *
+	 * @param account  用户名
+	 * @param password 密码
+	 */
+	@PostMapping("/loginConsole")
+	@SysLogPoint("登陆(控制台)")
+	public ResultData loginConsole(String account, String password) {
+		return authService.loginConsole(account, password);
+	}
 
 	/**
 	 * 获取当前实时在线人数(精确度为60s范围内)

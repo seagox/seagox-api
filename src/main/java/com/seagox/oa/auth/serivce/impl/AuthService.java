@@ -104,13 +104,6 @@ public class AuthService implements IAuthService {
 					routes = menuMapper.selectList(sysMenuQw);
 					permissions = StringUtils.join(menuMapper.queryUserMenuStr(permissions.split(",")), ",");
 				}
-				if (queryUser.getType() == 3) {
-					// 超级管理员
-					permissions = permissions + ",platformApplication,sysApplication";
-				} else if (queryUser.getType() == 2) {
-					// 管理员
-					permissions = permissions + ",sysApplication";
-				}
 				claims.put("routes", routes);
 				claims.put("permissions", permissions);
 				claims.put("roleIds", roleIds);
@@ -152,6 +145,113 @@ public class AuthService implements IAuthService {
 			if (sysTheme != null) {
 				claims.put("color", sysTheme.getColor());
 			}
+			if (datasourceUrl.contains("mysql")) {
+				claims.put("datasourceType", "mysql");
+			} else if (datasourceUrl.contains("postgresql")) {
+				claims.put("datasourceType", "postgresql");
+			} else if (datasourceUrl.contains("oracle")) {
+				claims.put("datasourceType", "oracle");
+			} else if (datasourceUrl.contains("sqlserver")) {
+				claims.put("datasourceType", "sqlserver");
+			} else if (datasourceUrl.contains("kingbase8")) {
+				claims.put("datasourceType", "kingbase8");
+			} else if (datasourceUrl.contains("dm")) {
+				claims.put("datasourceType", "dm");
+			}
+			return ResultData.success(claims);
+		}
+	}
+	
+	
+	@Override
+	public ResultData loginConsole(String account, String password) {
+		LambdaQueryWrapper<SysAccount> queryWrapper = new LambdaQueryWrapper<SysAccount>();
+		queryWrapper.eq(SysAccount::getAccount, account).eq(SysAccount::getPassword, EncryptUtils.md5Encode(password))
+				.eq(SysAccount::getStatus, 1);
+		SysAccount queryUser = userMapper.selectOne(queryWrapper);
+		if (queryUser == null) {
+			return ResultData.warn(ResultCode.PARAMETER_ERROR, "用户名或密码错误");
+		} else {
+			if(!queryUser.getAccount().equals("superAdmin")) {
+				return ResultData.warn(ResultCode.PARAMETER_ERROR, "不是超级管理员");
+			}
+			Map<String, Object> claims = new HashMap<String, Object>();
+			Map<String, Object> payload = new HashMap<String, Object>();
+			claims.put("userId", queryUser.getId());
+			payload.put("userId", queryUser.getId());
+			LambdaQueryWrapper<SysUserRelate> userRelateQueryWrapper = new LambdaQueryWrapper<>();
+			userRelateQueryWrapper.eq(SysUserRelate::getUserId, queryUser.getId())
+					.orderByDesc(SysUserRelate::getUpdateTime);
+			List<SysUserRelate> userRelateList = userRelateMapper.selectList(userRelateQueryWrapper);
+			if (userRelateList.size() > 0) {
+				String permissions = "";
+				String roleIds = "";
+				String roleNames = "";
+				List<String> companyIds = new ArrayList<>();
+				for (int i = 0; i < userRelateList.size(); i++) {
+					companyIds.add(String.valueOf(userRelateList.get(i).getCompanyId()));
+					if (!StringUtils.isEmpty(userRelateList.get(i).getRoleIds())) {
+						String[] roleArray = userRelateList.get(i).getRoleIds().split(",");
+						for (int j = 0; j < roleArray.length; j++) {
+							SysRole role = roleMapper.selectById(roleArray[j]);
+							if (StringUtils.isEmpty(permissions)) {
+								permissions = permissions + role.getPath();
+							} else {
+								permissions = permissions + "," + role.getPath();
+							}
+							if (StringUtils.isEmpty(roleIds)) {
+								roleIds = roleIds + role.getId();
+								roleNames = roleNames + role.getName();
+							} else {
+								roleIds = roleIds + "," + role.getId();
+								roleNames = roleNames + "," + role.getName();
+							}
+						}
+					}
+				}
+				List<SysMenu> routes = new ArrayList<>();
+				if (!org.springframework.util.StringUtils.isEmpty(permissions)) {
+					LambdaQueryWrapper<SysMenu> sysMenuQw = new LambdaQueryWrapper<>();
+					sysMenuQw.in(SysMenu::getType, Arrays.asList("4,7,9".split(","))).in(SysMenu::getId,
+							Arrays.asList(permissions.split(",")));
+					routes = menuMapper.selectList(sysMenuQw);
+					permissions = StringUtils.join(menuMapper.queryUserMenuStr(permissions.split(",")), ",");
+				}
+				claims.put("routes", routes);
+				claims.put("permissions", permissions);
+				claims.put("roleIds", roleIds);
+				claims.put("roleNames", roleNames);
+
+				List<Map<String, Object>> companyList = companyMapper.queryByIds(companyIds.toArray(new String[] {}),
+						StringUtils.join(companyIds, ","));
+				claims.put("companyId", companyList.get(0).get("id"));
+				payload.put("companyId", companyList.get(0).get("id"));
+				SysDepartment department = departmentMapper.selectById(userRelateList.get(0).getDepartmentId());
+				if (department != null) {
+					claims.put("departmentName", department.getName());
+				}
+				claims.put("company", companyList);
+				SysCompany company = companyMapper.selectById(companyList.get(0).get("id").toString());
+				claims.put("logo", company.getLogo());
+				claims.put("alias", company.getAlias());
+				claims.put("mark", company.getMark());
+			} else {
+				return ResultData.warn(ResultCode.PARAMETER_ERROR, "用户名未绑定单位");
+			}
+			payload.put("created", new Date());
+			payload.put("version", JwtTokenUtils.VERSION);
+			String accessToken = JwtTokenUtils.generateToken(payload, JwtTokenUtils.SECRET,
+					System.currentTimeMillis() + JwtTokenUtils.EXPIRATION * 1000);
+			claims.put("accessToken", accessToken);
+			claims.put("tokenType", JwtTokenUtils.TOKENHEAD);
+			claims.put("expiresIn", JwtTokenUtils.EXPIRATION);
+			claims.put("account", account);
+			claims.put("name", queryUser.getName());
+			claims.put("avatar", queryUser.getAvatar());
+			claims.put("phone", queryUser.getPhone());
+			claims.put("position", queryUser.getPosition());
+			claims.put("sex", queryUser.getSex());
+
 			if (datasourceUrl.contains("mysql")) {
 				claims.put("datasourceType", "mysql");
 			} else if (datasourceUrl.contains("postgresql")) {
