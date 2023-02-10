@@ -4,7 +4,7 @@
 	
 	<!--查询列表-->
     <select id="queryByCode" resultType="camelKeyMap">
-        SELECT a.id, a.name, a.excel_json as "excelJson", a.data_source as "dataSource"
+        SELECT a.id, a.name, a.excel_json as "excelJson"
         FROM jelly_print a 
         LEFT JOIN sys_company b ON b.id = a.company_id
         <where>

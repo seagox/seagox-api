@@ -65,29 +65,6 @@ COMMENT ON COLUMN "public"."jelly_open_api"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_open_api"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_open_api" IS 'openApi';
 
-DROP TABLE IF EXISTS "public"."jelly_inform";
-CREATE TABLE "public"."jelly_inform"  (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"type" INTEGER NOT NULL,
-	"code" VARCHAR(30) NOT NULL,
-  	"name" VARCHAR(100) NOT NULL,
-  	"data_source" BIGINT NOT NULL,
-  	"template_source" text NOT NULL,
-  	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_inform"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_inform"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_inform"."type" IS '类型(1:word;2:excel;)';
-COMMENT ON COLUMN "public"."jelly_inform"."code" IS '编码';
-COMMENT ON COLUMN "public"."jelly_inform"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_inform"."data_source" IS '数据源';
-COMMENT ON COLUMN "public"."jelly_inform"."template_source" IS '模板源';
-COMMENT ON COLUMN "public"."jelly_inform"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_inform"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_inform" IS '报告模板';
-
 DROP TABLE IF EXISTS "public"."jelly_form_design";
 CREATE TABLE "public"."jelly_form_design" (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -116,7 +93,6 @@ CREATE TABLE "public"."jelly_print" (
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(100) NOT NULL,
 	"excel_json" TEXT,
-	"data_source" VARCHAR(800) NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -124,7 +100,6 @@ COMMENT ON COLUMN "public"."jelly_print"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_print"."company_id" IS '公司id';
 COMMENT ON COLUMN "public"."jelly_print"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_print"."excel_json" IS 'excel配置';
-COMMENT ON COLUMN "public"."jelly_print"."data_source" IS '数据源配置';
 COMMENT ON COLUMN "public"."jelly_print"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_print"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_print" IS '打印模版';
@@ -546,37 +521,6 @@ COMMENT ON COLUMN "public"."jelly_template_engine"."script" IS '脚本';
 COMMENT ON COLUMN "public"."jelly_template_engine"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_template_engine"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_template_engine" IS '模版引擎';
-
-
-DROP TABLE IF EXISTS "public"."jelly_file_chunk";
-CREATE TABLE "public"."jelly_file_chunk"  (
-   "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-   "chunk_number" INTEGER DEFAULT NULL,
-   "chunk_size" FLOAT DEFAULT NULL,
-   "current_chunk_size" FLOAT DEFAULT NULL,
-   "total_chunk" INTEGER DEFAULT NULL,
-   "identifier" VARCHAR(45) DEFAULT NULL,
-   "file_name" VARCHAR(255) DEFAULT NULL,
-   "file_type" INTEGER DEFAULT NULL,
-   "relative_path" VARCHAR(255) DEFAULT NULL,
-   "part_e_tag" VARCHAR(500) DEFAULT NULL,
-   "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-COMMENT ON COLUMN "public"."jelly_file_chunk"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."chunk_number" IS '前分片，从1开始';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."chunk_size" IS '分片大小';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."current_chunk_size" IS '当前分片大小';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."total_chunk" IS '总分片数';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."identifier" IS '文件标识';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."file_name" IS '文件名';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."file_type" IS '文件类型(1:minio;2:阿里云)';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."relative_path" IS '相对路径';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."part_e_tag" IS '分片信息';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_file_chunk"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_file_chunk" IS '文件分片';
 
 DROP TABLE IF EXISTS "public"."sea_definition";
 CREATE TABLE "public"."sea_definition"  (

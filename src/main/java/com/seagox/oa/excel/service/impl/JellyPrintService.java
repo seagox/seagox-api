@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.entity.JellyBusinessTable;
 import com.seagox.oa.excel.entity.JellyPrint;
-import com.seagox.oa.excel.mapper.JellyBusinessFieldMapper;
-import com.seagox.oa.excel.mapper.JellyBusinessTableMapper;
 import com.seagox.oa.excel.mapper.JellyPrintMapper;
 import com.seagox.oa.excel.service.IJellyPrintService;
 import com.seagox.oa.sys.entity.SysCompany;
@@ -16,9 +13,7 @@ import com.seagox.oa.sys.mapper.CompanyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +22,6 @@ public class JellyPrintService implements IJellyPrintService {
 
     @Autowired
     private JellyPrintMapper printMapper;
-
-    @Autowired
-    private JellyBusinessTableMapper businessTableMapper;
-
-    @Autowired
-    private JellyBusinessFieldMapper businessFieldMapper;
 
     @Autowired
     private CompanyMapper companyMapper;
@@ -100,22 +89,5 @@ public class JellyPrintService implements IJellyPrintService {
         JellyPrint print = printMapper.selectById(id);
         return ResultData.success(print);
     }
-
-    @Override
-    public ResultData queryBusinessTable(Long id) {
-        JellyPrint print = printMapper.selectById(id);
-        LambdaQueryWrapper<JellyBusinessTable> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(!StringUtils.isEmpty(print.getDataSource()), JellyBusinessTable::getId, Arrays.asList(print.getDataSource().split(",")));
-        List<JellyBusinessTable> list = businessTableMapper.selectList(queryWrapper);
-        return ResultData.success(list);
-    }
-
-    @Override
-    public ResultData queryBusinessField(Long id) {
-        JellyPrint print = printMapper.selectById(id);
-        List<Map<String, Object>> businessFieldList = businessFieldMapper.queryByTableIds(print.getDataSource().split(","));
-        return ResultData.success(businessFieldList);
-    }
-
 
 }

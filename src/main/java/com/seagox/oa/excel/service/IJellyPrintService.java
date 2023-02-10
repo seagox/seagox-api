@@ -41,15 +41,4 @@ public interface IJellyPrintService {
      */
     public ResultData delete(Long id);
 
-    /**
-     * 查询业务表
-     */
-    public ResultData queryBusinessTable(Long id);
-
-    /**
-     * 查询业务字段
-     */
-    public ResultData queryBusinessField(Long id);
-
-
 }

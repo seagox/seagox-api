@@ -34,11 +34,6 @@ public class JellyPrint {
     private String excelJson;
     
     /**
-     * 数据源
-     */
-    private String dataSource;
-    
-    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -82,14 +77,6 @@ public class JellyPrint {
 
 	public void setExcelJson(String excelJson) {
 		this.excelJson = excelJson;
-	}
-
-	public String getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
 	}
 
 	public Date getCreateTime() {

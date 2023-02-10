@@ -76,20 +76,4 @@ public class JellyPrintController {
 		return printService.queryById(id);
 	}
 	
-	/**
-	 * 查询业务表
-	 */
-	@GetMapping("/queryBusinessTable/{id}")
-	public ResultData queryBusinessTable(@PathVariable Long id) {
-		return printService.queryBusinessTable(id);
-	}
-	
-	/**
-	 * 查询业务字段
-	 */
-	@GetMapping("/queryBusinessField/{id}")
-	public ResultData queryBusinessField(@PathVariable Long id) {
-		return printService.queryBusinessField(id);
-	}
-	
 }

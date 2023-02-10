@@ -35,19 +35,6 @@ CREATE TABLE `jelly_open_api`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = 'openApi';
 
-DROP TABLE IF EXISTS `jelly_inform`;
-CREATE TABLE `jelly_inform`  (
-    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `type` int(4) NOT NULL COMMENT '类型(1:word;2:excel;)',
-    `code` varchar(30) NOT NULL COMMENT '编码',
-    `name` varchar(30) NOT NULL COMMENT '名称',
-    `data_source` bigint(20) NOT NULL COMMENT '数据源',
-    `template_source` text NOT NULL COMMENT '模板据源',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '报告模板';
-
 DROP TABLE IF EXISTS `jelly_form_design`;
 CREATE TABLE `jelly_form_design`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -67,7 +54,6 @@ CREATE TABLE `jelly_print`  (
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `excel_json` text DEFAULT NULL COMMENT 'excel配置',
-    `data_source` varchar(255) NOT NULL COMMENT '数据源配置',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -319,23 +305,6 @@ CREATE TABLE `jelly_template_engine`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
 	PRIMARY KEY (`id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '模版引擎';
-
-DROP TABLE IF EXISTS `jelly_file_chunk`;
-CREATE TABLE `jelly_file_chunk`  (
-   	`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-   	`chunk_number` int DEFAULT NULL COMMENT '当前分片，从1开始',
-   	`chunk_size` float DEFAULT NULL COMMENT '分片大小',
-   	`current_chunk_size` float DEFAULT NULL COMMENT '当前分片大小',
-   	`total_chunk` int DEFAULT NULL COMMENT '总分片数',
-   	`identifier` varchar(45) DEFAULT NULL COMMENT '文件标识',
-   	`file_name` varchar(255) DEFAULT NULL COMMENT '文件名',
-   	`file_type` int DEFAULT NULL COMMENT '文件类型(1:minio;2:阿里云)',
-   	`relative_path` varchar(255) DEFAULT NULL COMMENT '相对路径',
-   	`part_e_tag` varchar(500) DEFAULT NULL COMMENT '分片信息',
-	`create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   	`update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-   	PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '文件分片';
 
 DROP TABLE IF EXISTS `sea_definition`;
 CREATE TABLE `sea_definition`  (
