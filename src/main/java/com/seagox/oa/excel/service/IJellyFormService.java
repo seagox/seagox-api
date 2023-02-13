@@ -95,11 +95,6 @@ public interface IJellyFormService {
     public ResultData deleteCustom(String businessType, String businessKey, HttpServletRequest request);
 
     /**
-     * 查询关联应用数据(自定义)
-     */
-    public ResultData queryRelation(String formId, String ids);
-
-    /**
      * 查询业务字段
      */
     public ResultData queryBusinessField(Long formId);
@@ -139,11 +134,6 @@ public interface IJellyFormService {
      * 查询区域文本
      */
     public ResultData queryRegionsByCode(String codeStr);
-
-    /**
-     * 打印预览
-     */
-    public void printPreview(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 获取业务应用数据

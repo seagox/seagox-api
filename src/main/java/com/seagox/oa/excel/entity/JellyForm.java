@@ -1,7 +1,6 @@
 package com.seagox.oa.excel.entity;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,9 +27,9 @@ public class JellyForm {
     private Long companyId;
     
     /**
-     * 设计ids
+     * 设计id
      */
-    private String designIds;
+    private Long designId;
     
     /**
      * 名称
@@ -132,6 +131,11 @@ public class JellyForm {
 	 * 联查json
 	 */
 	private String relateSearchJson;
+	
+	/**
+     * 数据表json
+     */
+    private String dataSheetTableJson;
     
     /**
      * 数据标题
@@ -154,16 +158,10 @@ public class JellyForm {
     private Date updateTime;
     
     /**
-     * 表单设计集合
+     * 表单设计
      */
     @TableField(exist = false)
-    private List<JellyFormDesign> formDesignList;
-    
-    /**
-     * 数据表json
-     */
-    @TableField(exist = false)
-    private String dataSheetTableJson;
+    private JellyFormDesign formDesign;
     
     /**
      * 打印json
@@ -220,12 +218,12 @@ public class JellyForm {
 		this.companyId = companyId;
 	}
 
-	public String getDesignIds() {
-		return designIds;
+	public Long getDesignId() {
+		return designId;
 	}
 
-	public void setDesignIds(String designIds) {
-		this.designIds = designIds;
+	public void setDesignIds(Long designId) {
+		this.designId = designId;
 	}
 
 	public String getName() {
@@ -372,12 +370,12 @@ public class JellyForm {
 		this.updateTime = updateTime;
 	}
 
-	public List<JellyFormDesign> getFormDesignList() {
-		return formDesignList;
+	public JellyFormDesign getFormDesign() {
+		return formDesign;
 	}
 
-	public void setFormDesignList(List<JellyFormDesign> formDesignList) {
-		this.formDesignList = formDesignList;
+	public void setFormDesign(JellyFormDesign formDesign) {
+		this.formDesign = formDesign;
 	}
 
 	public String getDataSheetTableJson() {

@@ -562,107 +562,6 @@ GO
 COMMIT
 GO
 
-
--- ----------------------------
--- Table structure for jelly_data_sheet
--- ----------------------------
-DROP TABLE IF EXISTS dbo.jelly_data_sheet;
-CREATE TABLE dbo.jelly_data_sheet (
-  id bigint PRIMARY KEY IDENTITY(1,1),
-  form_id bigint  NOT NULL,
-  single_flag int  NULL,
-  table_name nvarchar(50)  NOT NULL,
-  sort int  NULL,
-  relate_table nvarchar(50)  NULL,
-  relate_field nvarchar(50)  NULL,
-  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
-  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
-)
-GO
-
-ALTER TABLE dbo.jelly_data_sheet SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'主键',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'form_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'是否单条(1:是;2:否;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'single_flag'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'数据表名',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'table_name'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'排序',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'sort'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'关联表',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'relate_table'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'关联字段',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'relate_field'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'create_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet',
-'COLUMN', N'update_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'数据表设置',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_data_sheet'
-GO
-
-
--- ----------------------------
--- Records of jelly_data_sheet
--- ----------------------------
-BEGIN TRANSACTION
-GO
-
-COMMIT
-GO
-
-
 -- ----------------------------
 -- Table structure for jelly_dic_classify
 -- ----------------------------
@@ -931,7 +830,7 @@ DROP TABLE IF EXISTS dbo.jelly_form;
 CREATE TABLE dbo.jelly_form (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
-  design_ids nvarchar(255)  NOT NULL,
+  design_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
   icon nvarchar(30)  NOT NULL,
   color nvarchar(30)  NOT NULL,
@@ -952,6 +851,7 @@ CREATE TABLE dbo.jelly_form (
 	export_rule bigint  NULL,
   options nvarchar(max)  NULL,
   relate_search_json nvarchar(max)  NULL,
+  data_sheet_table_json nvarchar(max),
   data_title nvarchar(255)  NULL,
   authority nvarchar(max)  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
@@ -1121,6 +1021,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
 'COLUMN', N'relate_search_json'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'数据表json',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_form',
+'COLUMN', N'data_sheet_table_json'
 GO
 
 EXEC sp_addextendedproperty

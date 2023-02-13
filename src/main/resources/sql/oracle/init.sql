@@ -95,7 +95,7 @@ COMMENT ON TABLE jelly_print IS '打印模版';
 create table jelly_form (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
-    design_ids VARCHAR2(255) NOT NULL,
+    design_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     icon VARCHAR2(30) NOT NULL,
 	color VARCHAR2(30) NOT NULL,
@@ -117,6 +117,7 @@ create table jelly_form (
     abandon_rule NUMBER(20),
 	export_rule NUMBER(20),
     relate_search_json clob,
+    data_sheet_table_json clob,
     authority clob,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
@@ -126,7 +127,7 @@ create sequence jelly_form_seq increment by 1 start with 1 nomaxvalue minvalue 1
 
 COMMENT ON COLUMN jelly_form.id IS '主键';
 COMMENT ON COLUMN jelly_form.company_id IS '公司id';
-COMMENT ON COLUMN jelly_form.design_ids IS '设计ids';
+COMMENT ON COLUMN jelly_form.design_id IS '设计id';
 COMMENT ON COLUMN jelly_form.name IS '名称';
 COMMENT ON COLUMN jelly_form.icon IS '图标';
 COMMENT ON COLUMN jelly_form.color IS '颜色';
@@ -150,6 +151,7 @@ COMMENT ON COLUMN jelly_form.update_time IS '更新时间';
 COMMENT ON COLUMN jelly_form.abandon_rule IS '弃审规则';
 COMMENT ON COLUMN jelly_form.export_rule IS '导出规则';
 COMMENT ON COLUMN jelly_form.relate_search_json IS '联查json';
+COMMENT ON COLUMN jelly_form.data_sheet_table_json IS '数据表json';
 COMMENT ON COLUMN jelly_form.authority IS '权限';
 COMMENT ON TABLE jelly_form IS '表单管理';
 
@@ -179,32 +181,6 @@ COMMENT ON COLUMN jelly_report.template_source IS '模板源';
 COMMENT ON COLUMN jelly_report.search_json IS '搜索配置';
 COMMENT ON COLUMN jelly_report.export_path IS '导出路径';
 COMMENT ON TABLE jelly_report IS '报表管理';
-
-create table jelly_data_sheet (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    form_id NUMBER(20) NOT NULL,
-    single_flag NUMBER(4) DEFAULT 1,
-    table_name VARCHAR2(50) NOT NULL,
-    sort NUMBER(4) DEFAULT 1,
-    relate_table VARCHAR2(50),
-    relate_field VARCHAR2(50),
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_data_sheet_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_data_sheet.id IS '主键';
-COMMENT ON COLUMN jelly_data_sheet.form_id IS '表单id';
-COMMENT ON COLUMN jelly_data_sheet.single_flag IS '是否单条(1:是;2:否;)';
-COMMENT ON COLUMN jelly_data_sheet.table_name IS '数据表名';
-COMMENT ON COLUMN jelly_data_sheet.sort IS '排序';
-COMMENT ON COLUMN jelly_data_sheet.relate_table IS '关联表';
-COMMENT ON COLUMN jelly_data_sheet.relate_field IS '关联字段';
-COMMENT ON COLUMN jelly_data_sheet.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_data_sheet.update_time IS '更新时间';
-COMMENT ON TABLE jelly_data_sheet IS '数据表设置';
-
 
 create table jelly_table_classify (
     id NUMBER(20) PRIMARY KEY NOT NULL,

@@ -164,14 +164,6 @@ public class JellyFormController {
     }
 
     /**
-     * 查询关联应用数据(自定义)
-     */
-    @PostMapping("/queryRelation")
-    public ResultData queryRelation(String formId, String ids) {
-        return formService.queryRelation(formId, ids);
-    }
-
-    /**
      * 查询业务字段
      */
     @GetMapping("/queryBusinessField/{formId}")
@@ -230,14 +222,6 @@ public class JellyFormController {
     @GetMapping("/queryRegionsByCode")
     public ResultData queryRegionsByCode(String codeStr) {
         return formService.queryRegionsByCode(codeStr);
-    }
-
-    /**
-     * 打印预览
-     */
-    @GetMapping("/printPreview")
-    public void printPreview(HttpServletRequest request, HttpServletResponse response) {
-        formService.printPreview(request, response);
     }
 
     /**

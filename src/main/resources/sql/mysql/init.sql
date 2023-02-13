@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `jelly_form`;
 CREATE TABLE `jelly_form`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `design_ids` varchar(255) NOT NULL COMMENT '设计ids',
+    `design_id` bigint(20) NOT NULL COMMENT '设计id',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `icon` varchar(30) NOT NULL COMMENT '图标',
     `color` varchar(30) NOT NULL COMMENT '颜色',
@@ -73,6 +73,7 @@ CREATE TABLE `jelly_form`  (
 	`export_rule` bigint(20) DEFAULT NULL COMMENT '导出规则',
     `options` text DEFAULT NULL COMMENT '其他参数json',
     `relate_search_json` text DEFAULT NULL COMMENT '联查json',
+    `data_sheet_table_json` text NOT NULL COMMENT '数据表json',
     `data_title` varchar(255) DEFAULT NULL COMMENT '数据标题',
     `authority` text DEFAULT NULL COMMENT '权限',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -95,19 +96,6 @@ CREATE TABLE `jelly_report`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '报表管理';
 
-DROP TABLE IF EXISTS `jelly_data_sheet`;
-CREATE TABLE `jelly_data_sheet`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `form_id` bigint(20) NOT NULL COMMENT '表单id',
-    `single_flag` int(4) DEFAULT 1 COMMENT '是否单条(1:是;2:否;)',
-    `table_name` varchar(50) NOT NULL COMMENT '数据表名',
-    `sort` int(4) DEFAULT 1 COMMENT '排序',
-    `relate_table` varchar(50) DEFAULT NULL COMMENT '关联表',
-    `relate_field` varchar(50) DEFAULT NULL COMMENT '关联字段',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '数据表设置';
 
 DROP TABLE IF EXISTS `jelly_table_classify`;
 CREATE TABLE `jelly_table_classify`  (
@@ -517,7 +505,7 @@ DROP TABLE IF EXISTS `jelly_common_words`;
 CREATE TABLE `jelly_common_words`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
-		`user_id` bigint(20) NOT NULL COMMENT '用户id',
+	`user_id` bigint(20) NOT NULL COMMENT '用户id',
     `name` varchar(50) NOT NULL COMMENT '名称',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

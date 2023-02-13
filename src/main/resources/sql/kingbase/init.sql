@@ -90,7 +90,7 @@ DROP TABLE IF EXISTS "public"."jelly_form";
 CREATE TABLE "public"."jelly_form" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
 	"company_id" BIGINT NOT NULL,
-	"design_ids" VARCHAR(255) NOT NULL,
+	"design_id" BIGINT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
 	"icon" VARCHAR(30) NOT NULL,
 	"color" VARCHAR(30) NOT NULL,
@@ -114,11 +114,12 @@ CREATE TABLE "public"."jelly_form" (
 	"abandon_rule" BIGINT,
 	"export_rule" BIGINT,
 	"relate_search_json" TEXT,
+	"data_sheet_table_json" TEXT,
 	"authority" TEXT
 );
 COMMENT ON COLUMN "public"."jelly_form"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_form"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_form"."design_ids" IS '设计ids';
+COMMENT ON COLUMN "public"."jelly_form"."design_id" IS '设计id';
 COMMENT ON COLUMN "public"."jelly_form"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_form"."icon" IS '图标';
 COMMENT ON COLUMN "public"."jelly_form"."color" IS '颜色';
@@ -142,6 +143,7 @@ COMMENT ON COLUMN "public"."jelly_form"."update_time" IS '更新时间';
 COMMENT ON COLUMN "public"."jelly_form"."abandon_rule" IS '弃审规则';
 COMMENT ON COLUMN "public"."jelly_form"."export_rule" IS '导出规则';
 COMMENT ON COLUMN "public"."jelly_form"."relate_search_json" IS '联查json';
+COMMENT ON COLUMN "public"."jelly_form"."data_sheet_table_json" IS '数据表json';
 COMMENT ON COLUMN "public"."jelly_form"."authority" IS '权限';
 COMMENT ON TABLE "public"."jelly_form" IS '表单管理';
 
@@ -170,30 +172,6 @@ COMMENT ON COLUMN "public"."jelly_report"."template_source" IS '模板源';
 COMMENT ON COLUMN "public"."jelly_report"."search_json" IS '搜索配置';
 COMMENT ON COLUMN "public"."jelly_report"."export_path" IS '导出路径';
 COMMENT ON TABLE "public"."jelly_report" IS '报表管理';
-
-
-DROP TABLE IF EXISTS "public"."jelly_data_sheet";
-CREATE TABLE "public"."jelly_data_sheet" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"form_id" BIGINT NOT NULL,
-	"single_flag" INTEGER DEFAULT 1,
-	"table_name" VARCHAR(50) NOT NULL,
-	"sort" INTEGER DEFAULT 1,
-	"relate_table" VARCHAR(50),
-	"relate_field" VARCHAR(50),
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_data_sheet"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."form_id" IS '表单id';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."single_flag" IS '是否单条(1:是;2:否;)';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."table_name" IS '数据表名';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."sort" IS '排序';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."relate_table" IS '关联表';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."relate_field" IS '关联字段';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_data_sheet"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_data_sheet" IS '数据表设置';
 
 
 DROP TABLE IF EXISTS "public"."jelly_table_classify";
