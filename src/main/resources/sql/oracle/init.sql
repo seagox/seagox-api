@@ -182,7 +182,6 @@ create table jelly_business_table (
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(64) NOT NULL,
     remark VARCHAR2(64) NOT NULL,
-    is_virtual NUMBER(4) DEFAULT 0,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
 );
@@ -193,7 +192,6 @@ COMMENT ON COLUMN jelly_business_table.id IS '主键';
 COMMENT ON COLUMN jelly_business_table.company_id IS '公司id';
 COMMENT ON COLUMN jelly_business_table.name IS '名称';
 COMMENT ON COLUMN jelly_business_table.remark IS '注释';
-COMMENT ON COLUMN jelly_business_table.is_virtual IS '虚拟(1:是;0:否;)';
 COMMENT ON COLUMN jelly_business_table.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_business_table.update_time IS '更新时间';
 COMMENT ON TABLE jelly_business_table IS '业务表';
@@ -269,7 +267,7 @@ COMMENT ON COLUMN jelly_dic_detail.classify_id IS '字典分类id';
 COMMENT ON COLUMN jelly_dic_detail.code IS '编码';
 COMMENT ON COLUMN jelly_dic_detail.name IS '名称';
 COMMENT ON COLUMN jelly_dic_detail.sort IS '排序';
-COMMENT ON COLUMN jelly_dic_detail.status IS '状态((0:禁用：1:启用)';
+COMMENT ON COLUMN jelly_dic_detail.status IS '状态(0:禁用：1:启用)';
 COMMENT ON COLUMN jelly_dic_detail.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_dic_detail.update_time IS '更新时间';
 COMMENT ON TABLE jelly_dic_detail IS '字典详情';

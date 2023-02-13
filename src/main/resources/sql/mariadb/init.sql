@@ -101,7 +101,6 @@ CREATE TABLE `jelly_business_table`  (
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(64) NOT NULL COMMENT '名称',
     `remark` varchar(64) NOT NULL COMMENT '注释',
-    `is_virtual` int(4) DEFAULT 0 COMMENT '虚拟(1:是;0:否;)',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -142,7 +141,7 @@ CREATE TABLE `jelly_dic_detail`  (
     `code` varchar(30) NOT NULL COMMENT '编码',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `sort` int(4) DEFAULT 1 COMMENT '排序',
-    `status` int(4) DEFAULT 1 COMMENT '状态((0:禁用：1:启用)',
+    `status` int(4) DEFAULT 1 COMMENT '状态(0:禁用：1:启用)',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)

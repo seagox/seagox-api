@@ -412,7 +412,6 @@ CREATE TABLE dbo.jelly_business_table (
   company_id bigint  NOT NULL,
   name nvarchar(64)  NOT NULL,
   remark nvarchar(64)  NOT NULL,
-  is_virtual int  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -447,13 +446,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_business_table',
 'COLUMN', N'remark'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'虚拟(1:是;0:否;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_business_table',
-'COLUMN', N'is_virtual'
 GO
 
 EXEC sp_addextendedproperty
@@ -617,7 +609,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'状态((0:禁用：1:启用)',
+'MS_Description', N'状态(0:禁用：1:启用)',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_dic_detail',
 'COLUMN', N'status'

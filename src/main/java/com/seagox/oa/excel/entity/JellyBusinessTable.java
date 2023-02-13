@@ -35,11 +35,6 @@ public class JellyBusinessTable {
     private String remark;
     
     /**
-     * 虚拟(1:是;0:否;)
-     */
-    private Integer isVirtual;
-    
-    /**
      * 初始化
      */
     @TableField(exist = false)
@@ -89,14 +84,6 @@ public class JellyBusinessTable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public Integer isVirtual() {
-		return isVirtual;
-	}
-
-	public void setVirtual(Integer isVirtual) {
-		this.isVirtual = isVirtual;
 	}
 
 	public String getInitialize() {
