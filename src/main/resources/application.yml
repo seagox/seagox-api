@@ -75,7 +75,7 @@ third-party:
 platform:
   secret: 61e2znsKMY75Q9YjaI4719xHJcllvMRy
   token: /auth,/upload,/cloud/download,/cloud/openApi
-  sign: /auth,/upload,/cloud/download,/user/import
+  sign: /auth,/upload,/cloud/download,/user/import,/businessField/import
 
 #人大金仓数据库要配置postgresql
 #pagehelper:
