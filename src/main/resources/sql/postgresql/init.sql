@@ -857,23 +857,6 @@ COMMENT ON COLUMN "sys_theme"."create_time" IS '创建时间';
 COMMENT ON COLUMN "sys_theme"."update_time" IS '更新时间';
 COMMENT ON TABLE "sys_theme" IS '用户主题';
 
-DROP TABLE IF EXISTS "jelly_common_wopublics";
-CREATE TABLE "jelly_common_wopublics" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"user_id" BIGINT NOT NULL,
-	"name" VARCHAR(50) NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "jelly_common_wopublics"."id" IS '主键';
-COMMENT ON COLUMN "jelly_common_wopublics"."company_id" IS '公司id';
-COMMENT ON COLUMN "jelly_common_wopublics"."user_id" IS '用户id';
-COMMENT ON COLUMN "jelly_common_wopublics"."name" IS '名称';
-COMMENT ON COLUMN "jelly_common_wopublics"."create_time" IS '创建时间';
-COMMENT ON COLUMN "jelly_common_wopublics"."update_time" IS '更新时间';
-COMMENT ON TABLE "jelly_common_wopublics" IS '常用语';
-
 
 BEGIN;
 INSERT INTO "sys_company" VALUES (1, NULL, 'seagox', '1001', '水母', '水母', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');

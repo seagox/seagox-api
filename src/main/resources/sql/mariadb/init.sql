@@ -501,17 +501,6 @@ CREATE TABLE `sys_theme` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户主题';
 
-DROP TABLE IF EXISTS `jelly_common_words`;
-CREATE TABLE `jelly_common_words`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-	`user_id` bigint(20) NOT NULL COMMENT '用户id',
-    `name` varchar(50) NOT NULL COMMENT '名称',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '常用语';
-
 
 BEGIN;
 INSERT INTO sys_menu VALUES (1, 1, NULL, 5, '组织架构', 'el-icon-office-building', NULL, 1, 1, NULL, '2021-07-01 11:33:27', '2021-07-01 11:33:27');

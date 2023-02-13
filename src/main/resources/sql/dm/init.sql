@@ -857,24 +857,6 @@ COMMENT ON COLUMN "public"."sys_theme"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."sys_theme" IS '用户主题';
 
 
-DROP TABLE IF EXISTS "public"."jelly_common_words";
-CREATE TABLE "public"."jelly_common_words" (
-	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"user_id" BIGINT NOT NULL,
-	"name" VARCHAR(50) NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_common_words"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_common_words"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_common_words"."user_id" IS '用户id';
-COMMENT ON COLUMN "public"."jelly_common_words"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_common_words"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_common_words"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_common_words" IS '常用语';
-
-
 INSERT INTO "public"."sys_company" VALUES (NULL, 'seagox', '1001', '水母', '水母', 'avatar', '2021-06-29 09:22:42', '2021-06-29 09:22:42');
 INSERT INTO "public"."sys_department" VALUES (1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 INSERT INTO "public"."sys_account" VALUES (NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');

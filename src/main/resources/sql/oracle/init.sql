@@ -913,25 +913,6 @@ COMMENT ON COLUMN sys_theme.create_time IS '创建时间';
 COMMENT ON COLUMN sys_theme.update_time IS '更新时间';
 COMMENT ON TABLE sys_theme IS '用户主题';
 
-create table jelly_common_words (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-	company_id NUMBER(20) NOT NULL,
-    user_id NUMBER(20) NOT NULL,
-    name VARCHAR2(50) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence sjelly_common_words_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_common_words.id IS '主键';
-COMMENT ON COLUMN jelly_common_words.company_id IS '公司id';
-COMMENT ON COLUMN jelly_common_words.user_id IS '用户id';
-COMMENT ON COLUMN jelly_common_words.name IS '名称';
-COMMENT ON COLUMN jelly_common_words.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_common_words.update_time IS '更新时间';
-COMMENT ON TABLE jelly_common_words IS '常用语';
-
 
 INSERT INTO sys_company VALUES (1, NULL, 'seagox', '1001', '水母', '水母', 'avatar', TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO sys_department VALUES (1, 1, NULL, '1001', '默认部门', NULL, NULL, TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-06 10:23:34', 'SYYYY-MM-DD HH24:MI:SS'));
