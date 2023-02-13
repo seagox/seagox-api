@@ -99,26 +99,12 @@ create table jelly_form (
     name VARCHAR2(30) NOT NULL,
     icon VARCHAR2(30) NOT NULL,
 	color VARCHAR2(30) NOT NULL,
+	flow_id NUMBER(20) DEFAULT NULL,
+	data_source clob,
+	search_json clob,
     table_header NUMBER(20),
-    list_export_path clob,
-    detail_export_path clob,
-    flow_id NUMBER(20) DEFAULT NULL,
-    data_source clob,
-    search_json clob,
-    insert_before_rule NUMBER(20),
-    insert_after_rule NUMBER(20),
-    update_before_rule NUMBER(20),
-    update_after_rule NUMBER(20),
-    delete_before_rule NUMBER(20),
-    delete_after_rule NUMBER(20),
-    process_end_rule NUMBER(20),
+   	data_sheet_table_json clob,
     options clob,
-    data_title VARCHAR2(255),
-    abandon_rule NUMBER(20),
-	export_rule NUMBER(20),
-    relate_search_json clob,
-    data_sheet_table_json clob,
-    authority clob,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
 );
@@ -131,28 +117,14 @@ COMMENT ON COLUMN jelly_form.design_id IS '设计id';
 COMMENT ON COLUMN jelly_form.name IS '名称';
 COMMENT ON COLUMN jelly_form.icon IS '图标';
 COMMENT ON COLUMN jelly_form.color IS '颜色';
-COMMENT ON COLUMN jelly_form.table_header IS '表格表头';
-COMMENT ON COLUMN jelly_form.list_export_path IS '列表导出文件路径';
-COMMENT ON COLUMN jelly_form.detail_export_path IS '详情导出文件路径';
 COMMENT ON COLUMN jelly_form.flow_id IS '流程id';
 COMMENT ON COLUMN jelly_form.data_source IS '数据源配置';
 COMMENT ON COLUMN jelly_form.search_json IS '搜索配置';
-COMMENT ON COLUMN jelly_form.insert_before_rule IS '新增前规则';
-COMMENT ON COLUMN jelly_form.insert_after_rule IS '新增后规则';
-COMMENT ON COLUMN jelly_form.update_before_rule IS '更新前规则';
-COMMENT ON COLUMN jelly_form.update_after_rule IS '更新后规则';
-COMMENT ON COLUMN jelly_form.delete_before_rule IS '删除前规则';
-COMMENT ON COLUMN jelly_form.delete_after_rule IS '删除后规则';
-COMMENT ON COLUMN jelly_form.process_end_rule IS '流程结束后规则';
+COMMENT ON COLUMN jelly_form.table_header IS '表格表头';
+COMMENT ON COLUMN jelly_form.data_sheet_table_json IS '数据表json';
 COMMENT ON COLUMN jelly_form.options IS '其他参数';
-COMMENT ON COLUMN jelly_form.data_title IS '数据标题';
 COMMENT ON COLUMN jelly_form.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_form.update_time IS '更新时间';
-COMMENT ON COLUMN jelly_form.abandon_rule IS '弃审规则';
-COMMENT ON COLUMN jelly_form.export_rule IS '导出规则';
-COMMENT ON COLUMN jelly_form.relate_search_json IS '联查json';
-COMMENT ON COLUMN jelly_form.data_sheet_table_json IS '数据表json';
-COMMENT ON COLUMN jelly_form.authority IS '权限';
 COMMENT ON TABLE jelly_form IS '表单管理';
 
 CREATE TABLE jelly_report  (
@@ -182,72 +154,13 @@ COMMENT ON COLUMN jelly_report.search_json IS '搜索配置';
 COMMENT ON COLUMN jelly_report.export_path IS '导出路径';
 COMMENT ON TABLE jelly_report IS '报表管理';
 
-create table jelly_table_classify (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    name VARCHAR2(30) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_table_classify_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_table_classify.id IS '主键';
-COMMENT ON COLUMN jelly_table_classify.company_id IS '公司id';
-COMMENT ON COLUMN jelly_table_classify.name IS '名称';
-COMMENT ON COLUMN jelly_table_classify.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_table_classify.update_time IS '更新时间';
-COMMENT ON TABLE jelly_table_classify IS '表头分类';
-
-
-create table jelly_table_column (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    classify_id NUMBER(20) NOT NULL,
-    parent_id NUMBER(20),
-    prop VARCHAR2(30) NOT NULL,
-    label VARCHAR2(30) NOT NULL,
-    width NUMBER(4),
-    locking NUMBER(4) DEFAULT 3,
-    summary NUMBER(4) DEFAULT 2,
-	total NUMBER(4) DEFAULT 2,
-    target NUMBER(4) DEFAULT 0 NOT NULL,
-    formatter NUMBER(20),
-    options clob,
-    sort NUMBER(4) DEFAULT 1,
-    formula clob,
-    router_json clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_table_column_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_table_column.id IS '主键';
-COMMENT ON COLUMN jelly_table_column.classify_id IS '分类id';
-COMMENT ON COLUMN jelly_table_column.parent_id IS '上级id';
-COMMENT ON COLUMN jelly_table_column.prop IS '字段名';
-COMMENT ON COLUMN jelly_table_column.label IS '标题';
-COMMENT ON COLUMN jelly_table_column.width IS '宽度';
-COMMENT ON COLUMN jelly_table_column.locking IS '锁定(1:左;2:右;3:无)';
-COMMENT ON COLUMN jelly_table_column.summary IS '汇总(1:是;2:否;)';
-COMMENT ON COLUMN jelly_table_column.total IS '合计(1:是;2:否;)';
-COMMENT ON COLUMN jelly_table_column.target IS '格式对象(0:无;1:数据字典;2:区域数据;)';
-COMMENT ON COLUMN jelly_table_column.formatter IS '格式化';
-COMMENT ON COLUMN jelly_table_column.options IS '格式化数据源';
-COMMENT ON COLUMN jelly_table_column.sort IS '排序';
-COMMENT ON COLUMN jelly_table_column.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_table_column.update_time IS '更新时间';
-COMMENT ON COLUMN jelly_table_column.formula IS '公式';
-COMMENT ON COLUMN jelly_table_column.router_json IS '路由json';
-COMMENT ON TABLE jelly_table_column IS '表格表头';
-
 
 create table jelly_table_column_config (
     id NUMBER(20) PRIMARY KEY NOT NULL,
+    company_id NUMBER(20) NOT NULL,
     user_id NUMBER(20) NOT NULL,
-    table_column_id NUMBER(20) NOT NULL,
-    display NUMBER(4) DEFAULT 1,
-    sort NUMBER(4) DEFAULT 1,
+    form_id NUMBER(20) NOT NULL,
+    config clob,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
 );
@@ -255,10 +168,10 @@ create table jelly_table_column_config (
 create sequence jelly_table_column_config_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_table_column_config.id IS '主键';
+COMMENT ON COLUMN jelly_table_column_config.company_id IS '公司id';
 COMMENT ON COLUMN jelly_table_column_config.user_id IS '用户id';
-COMMENT ON COLUMN jelly_table_column_config.table_column_id IS '表头id';
-COMMENT ON COLUMN jelly_table_column_config.display IS '显示(1:显示;2:隐藏;)';
-COMMENT ON COLUMN jelly_table_column_config.sort IS '排序';
+COMMENT ON COLUMN jelly_table_column_config.form_id IS '表单id';
+COMMENT ON COLUMN jelly_table_column_config.config IS '配置';
 COMMENT ON COLUMN jelly_table_column_config.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_table_column_config.update_time IS '更新时间';
 COMMENT ON TABLE jelly_table_column_config IS '表头配置';

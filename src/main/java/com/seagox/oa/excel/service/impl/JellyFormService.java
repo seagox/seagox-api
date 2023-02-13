@@ -29,7 +29,6 @@ import com.seagox.oa.sys.entity.SysUserRelate;
 import com.seagox.oa.sys.mapper.*;
 import com.seagox.oa.util.ImportUtils;
 import com.seagox.oa.util.ExportUtils;
-import com.seagox.oa.util.FormulaUtils;
 import com.seagox.oa.util.JdbcTemplateUtils;
 import com.seagox.oa.util.TreeUtils;
 import com.seagox.oa.util.XmlUtils;
@@ -90,9 +89,6 @@ public class JellyFormService implements IJellyFormService {
 
     @Autowired
     private JellyMetaFunctionMapper metaFunctionMapper;
-
-    @Autowired
-    private JellyTableColumnMapper tableColumnMapper;
 
     @Autowired
     private CompanyMapper companyMapper;
@@ -215,8 +211,7 @@ public class JellyFormService implements IJellyFormService {
     public ResultData queryById(Long userId, Long id) {
         JellyForm form = formMapper.selectById(id);
         form.setDataSheetTableJson(JSON.toJSONString(form.getDataSheetTableJson()));
-        form.setTableHeaderJson(
-                JSON.toJSONString(tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId)));
+        //form.setTableHeaderJson(JSON.toJSONString(tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId)));
         return ResultData.success(form);
     }
 
@@ -384,8 +379,9 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         // 新增前规则
-        if (form.getInsertBeforeRule() != null) {
-        	JellyMetaFunction insertBeforeRule = metaFunctionMapper.selectById(form.getInsertBeforeRule());
+        JSONObject options = JSONObject.parseObject(form.getOptions());
+        if (options.containsKey("insertBeforeRule")) {
+        	JellyMetaFunction insertBeforeRule = metaFunctionMapper.selectById(options.getLong("insertBeforeRule"));
             Map<String, Object> params = new HashMap<>();
             params.put("temporaryStorage", request.getParameter("temporaryStorage"));
             try {
@@ -408,20 +404,9 @@ public class JellyFormService implements IJellyFormService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("companyId", request.getParameter("companyId"));
             variables.put("userId", request.getParameter("userId"));
-            if (StringUtils.isEmpty(form.getDataTitle())) {
-                Date date = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                variables.put("title", form.getName() + "上报" + "(" + user.getName() + " " + sdf.format(date) + ")");
-            } else {
-                try {
-                    Map<String, Object> formulaParams = FormulaUtils.getAllRequestParam(request);
-                    formulaParams.put("sponsor", user.getName());
-                    formulaParams.put("formName", form.getName());
-                    variables.put("title", FormulaUtils.calculate(form.getDataTitle(), formulaParams));
-                } catch (Exception e) {
-                    throw new FormulaException("数据标题公式设置有误");
-                }
-            }
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            variables.put("title", form.getName() + "上报" + "(" + user.getName() + " " + sdf.format(date) + ")");
             variables.put("resource", seaDefinitionMapper.selectById(form.getFlowId()).getResources());
             variables.put("businessType", formId);
             variables.put("businessKey", businessKey);
@@ -452,8 +437,8 @@ public class JellyFormService implements IJellyFormService {
         }
 
         // 新增后规则
-        if (form.getInsertAfterRule() != null) {
-        	JellyMetaFunction insertAfterRule = metaFunctionMapper.selectById(form.getInsertAfterRule());
+        if (options.containsKey("insertAfterRule")) {
+        	JellyMetaFunction insertAfterRule = metaFunctionMapper.selectById(options.getLong("insertAfterRule"));
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertAfterRule.getScript());
                 Map<String, Object> ruleParams = new HashMap<>();
@@ -622,8 +607,9 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         // 更新前规则
-        if (form.getUpdateBeforeRule() != null) {
-        	JellyMetaFunction updateBeforeRule = metaFunctionMapper.selectById(form.getUpdateBeforeRule());
+        JSONObject options = JSONObject.parseObject(form.getOptions());
+        if (options.containsKey("updateBeforeRule")) {
+        	JellyMetaFunction updateBeforeRule = metaFunctionMapper.selectById(options.getLong("updateBeforeRule"));
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateBeforeRule.getScript());
                 groovyRule.execute(request, null);
@@ -675,19 +661,8 @@ public class JellyFormService implements IJellyFormService {
                 variables.put("userId", request.getParameter("userId"));
                 SysAccount user = userMapper.selectById(request.getParameter("userId"));
                 Date date = new Date();
-                if (StringUtils.isEmpty(form.getDataTitle())) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    variables.put("title", form.getName() + "上报" + "(" + user.getName() + " " + sdf.format(date) + ")");
-                } else {
-                    try {
-                        Map<String, Object> formulaParams = FormulaUtils.getAllRequestParam(request);
-                        formulaParams.put("sponsor", user.getName());
-                        formulaParams.put("formName", form.getName());
-                        variables.put("title", FormulaUtils.calculate(form.getDataTitle(), formulaParams));
-                    } catch (Exception e) {
-                        throw new FormulaException("数据标题公式设置有误");
-                    }
-                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                variables.put("title", form.getName() + "上报" + "(" + user.getName() + " " + sdf.format(date) + ")");
 
                 variables.put("resource", seaDefinitionMapper.selectById(form.getFlowId()).getResources());
                 variables.put("businessType", form.getId());
@@ -705,8 +680,8 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         // 更新后规则
-        if (form.getUpdateAfterRule() != null) {
-        	JellyMetaFunction updateAfterRule = metaFunctionMapper.selectById(form.getUpdateAfterRule());
+        if (options.containsKey("updateAfterRule")) {
+        	JellyMetaFunction updateAfterRule = metaFunctionMapper.selectById(options.getLong("updateAfterRule"));
             try {
                 IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateAfterRule.getScript());
                 SysAccount user = userMapper.selectById(request.getParameter("userId"));
@@ -861,8 +836,7 @@ public class JellyFormService implements IJellyFormService {
         resultData.put("options", form.getOptions());
 
         resultData.put("searchJson", form.getSearchJson());
-        resultData.put("tableHeaderJson", TreeUtils.categoryTreeHandle(
-                tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId), "parent_id", 0L));
+        //resultData.put("tableHeaderJson", TreeUtils.categoryTreeHandle(tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId), "parent_id", 0L));
 
         String sql = form.getDataSource();
 
@@ -1017,7 +991,8 @@ public class JellyFormService implements IJellyFormService {
         form.setDisableButtonFlag(queryDisableButtonFlag(form.getAuthority(), form.getCompanyId(), userId));
         JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
         form.setFormDesign(formDesign);
-        JellyPrint print = printMapper.selectById(form.getDetailExportPath());
+        JSONObject options = JSONObject.parseObject(form.getOptions());
+        JellyPrint print = printMapper.selectById(options.getString("printId"));
         if (print != null) {
             form.setPrintJson(print.getExcelJson());
         }
@@ -1173,8 +1148,9 @@ public class JellyFormService implements IJellyFormService {
         JellyForm form = formMapper.selectById(businessType);
 
         // 删除前规则
-        if (form.getDeleteBeforeRule() != null) {
-        	JellyMetaFunction deleteBeforeRule = metaFunctionMapper.selectById(form.getDeleteBeforeRule());
+        JSONObject options = JSONObject.parseObject(form.getOptions());
+        if (options.containsKey("deleteBeforeRule")) {
+        	JellyMetaFunction deleteBeforeRule = metaFunctionMapper.selectById(options.getLong("deleteBeforeRule"));
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
@@ -1208,8 +1184,8 @@ public class JellyFormService implements IJellyFormService {
             jdbcTemplate.update(sql);
         }
         // 删除后规则
-        if (form.getDeleteAfterRule() != null) {
-        	JellyMetaFunction deleteAfterRule = metaFunctionMapper.selectById(form.getDeleteAfterRule());
+        if (options.containsKey("deleteAfterRule")) {
+        	JellyMetaFunction deleteAfterRule = metaFunctionMapper.selectById(options.getLong("deleteAfterRule"));
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("businessKey", businessKey);
@@ -1364,8 +1340,9 @@ public class JellyFormService implements IJellyFormService {
         Map<String, Object> resultData = new HashMap<>();
         resultData.put("list", list);
         // 导出规则
-        if (form.getExportRule() != null) {
-        	JellyMetaFunction exportRule = metaFunctionMapper.selectById(form.getExportRule());
+        JSONObject options = JSONObject.parseObject(form.getOptions());
+        if (options.containsKey("exportRule")) {
+        	JellyMetaFunction exportRule = metaFunctionMapper.selectById(options.getLong("exportRule"));
             try {
                 Map<String, Object> params = new HashMap<>();
                 params.put("list", list);
@@ -1381,36 +1358,9 @@ public class JellyFormService implements IJellyFormService {
             }
         }
 
-        JSONArray jsonArray = JSON.parseArray(form.getListExportPath());
+        JSONArray jsonArray = options.getJSONArray("exportPath");
         ExportUtils.exportExcel(jsonArray.getJSONObject(0).getString("url"), form.getName(), resultData, request,
                 response);
-    }
-
-    @Override
-    public void detailExport(HttpServletRequest request, HttpServletResponse response) {
-        JellyForm form = formMapper.selectById(request.getParameter("businessType"));
-
-        Map<String, Object> claims = new HashMap<String, Object>();
-        // 有流程
-        if (form.getFlowId() != null) {
-            LambdaQueryWrapper<SeaInstance> qw = new LambdaQueryWrapper<>();
-            qw.eq(SeaInstance::getBusinessType, request.getParameter("businessType"))
-                    .eq(SeaInstance::getBusinessKey, request.getParameter("businessKey"));
-            SeaInstance seaInstance = seaProcdefMapper.selectOne(qw);
-            if (seaInstance != null) {
-                claims.put("flow.id", seaInstance.getId());
-                claims.put("flow.version", seaInstance.getVersion());
-                excute(JSONObject.parseObject(seaInstance.getResources()), claims);
-            }
-        }
-        JSONArray jsonArray = JSON.parseArray(form.getDetailExportPath());
-        String fileName = jsonArray.getJSONObject(0).getString("url");
-        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        if ("doc".equals(fileType) || "docx".equals(fileType)) {
-            ExportUtils.exportWord(fileName, form.getName(), claims, request, response);
-        } else if ("xls".equals(fileType) || "xlsx".equals(fileType)) {
-            ExportUtils.exportExcel(fileName, form.getName(), claims, request, response);
-        }
     }
 
     @Override

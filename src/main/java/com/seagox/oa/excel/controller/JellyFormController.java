@@ -199,14 +199,6 @@ public class JellyFormController {
     }
 
     /**
-     * 详情导出
-     */
-    @PostMapping("/detailExport")
-    public void detailExport(HttpServletRequest request, HttpServletResponse response) {
-        formService.detailExport(request, response);
-    }
-
-    /**
      * 查询区域数据
      *
      * @param 1:省;2:省市;3:省市区;4:省市区-街道

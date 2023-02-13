@@ -56,26 +56,12 @@ CREATE TABLE `jelly_form`  (
     `name` varchar(30) NOT NULL COMMENT '名称',
     `icon` varchar(30) NOT NULL COMMENT '图标',
     `color` varchar(30) NOT NULL COMMENT '颜色',
+    `flow_id` bigint(20) DEFAULT NULL COMMENT '流程id',
     `data_source` text DEFAULT NULL COMMENT '数据源配置',
     `search_json` text DEFAULT NULL COMMENT '搜索配置',
-    `table_header` bigint(20) NOT NULL COMMENT '表格表头',
-    `list_export_path` text DEFAULT NULL COMMENT '列表导出文件路径',
-    `detail_export_path` text DEFAULT NULL COMMENT '详情导出文件路径',
-    `flow_id` bigint(20) DEFAULT NULL COMMENT '流程id',
-    `insert_before_rule` bigint(20) DEFAULT NULL COMMENT '新增前规则',
-    `insert_after_rule` bigint(20) DEFAULT NULL COMMENT '新增后规则',
-    `update_before_rule` bigint(20) DEFAULT NULL COMMENT '更新前规则',
-    `update_after_rule` bigint(20) DEFAULT NULL COMMENT '更新后规则',
-    `delete_before_rule` bigint(20) DEFAULT NULL COMMENT '删除前规则',
-    `delete_after_rule` bigint(20) DEFAULT NULL COMMENT '删除后规则',
-    `process_end_rule` bigint(20) DEFAULT NULL COMMENT '流程结束后规则',
-    `abandon_rule` bigint(20) DEFAULT NULL COMMENT '弃审规则',
-	`export_rule` bigint(20) DEFAULT NULL COMMENT '导出规则',
-    `options` text DEFAULT NULL COMMENT '其他参数json',
-    `relate_search_json` text DEFAULT NULL COMMENT '联查json',
+    `table_header` text NOT NULL COMMENT '表格表头',
     `data_sheet_table_json` text NOT NULL COMMENT '数据表json',
-    `data_title` varchar(255) DEFAULT NULL COMMENT '数据标题',
-    `authority` text DEFAULT NULL COMMENT '权限',
+    `options` text DEFAULT NULL COMMENT '其他参数json',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -96,47 +82,13 @@ CREATE TABLE `jelly_report`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '报表管理';
 
-
-DROP TABLE IF EXISTS `jelly_table_classify`;
-CREATE TABLE `jelly_table_classify`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `name` varchar(30) NOT NULL COMMENT '名称',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '表头分类';
-
-
-DROP TABLE IF EXISTS `jelly_table_column`;
-CREATE TABLE `jelly_table_column` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `classify_id` bigint(20) NOT NULL COMMENT '分类id',
-  `parent_id` bigint(20) DEFAULT NULL COMMENT '上级id',
-  `prop` varchar(30) NOT NULL COMMENT '字段名',
-  `label` varchar(30) NOT NULL COMMENT '标题',
-  `width` int(4) DEFAULT NULL COMMENT '宽度',
-  `locking` int(4) DEFAULT 3 COMMENT '锁定(1:左;2:右;3:无)',
-  `summary` int(4) DEFAULT 2 COMMENT '汇总(1:是;2:否;)',
-  `total` int(4) DEFAULT 2 COMMENT '合计(1:是;2:否;)',
-  `target` int(4) DEFAULT 0 COMMENT '格式对象(0:无;1:数据字典;2:区域数据;)',
-  `formatter` bigint(20) DEFAULT NULL COMMENT '格式化',
-  `options` text DEFAULT NULL COMMENT '格式化数据源',
-  `sort` int(4) DEFAULT 1 COMMENT '排序',
-  `formula` text DEFAULT NULL COMMENT '公式',
-  `router_json` TEXT DEFAULT NULL COMMENT '路由json',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='表格表头';
-
 DROP TABLE IF EXISTS `jelly_table_column_config`;
 CREATE TABLE `jelly_table_column_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `company_id` bigint(20) NOT NULL COMMENT '公司id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `table_column_id` bigint(20) NOT NULL COMMENT '表头id',
-  `display` int(4) DEFAULT 1 COMMENT '显示(1:显示;2:隐藏;)',
-  `sort` int(4) DEFAULT 1 COMMENT '排序',
+  `form_id` bigint(20) NOT NULL COMMENT '表单id',
+  `config` text COMMENT '配置',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)

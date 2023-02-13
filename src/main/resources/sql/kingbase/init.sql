@@ -94,28 +94,14 @@ CREATE TABLE "public"."jelly_form" (
 	"name" VARCHAR(30) NOT NULL,
 	"icon" VARCHAR(30) NOT NULL,
 	"color" VARCHAR(30) NOT NULL,
-	"table_header" BIGINT,
-	"list_export_path" TEXT,
-	"detail_export_path" TEXT,
 	"flow_id" BIGINT DEFAULT NULL,
 	"data_source" TEXT,
 	"search_json" TEXT,
-	"insert_before_rule" BIGINT,
-	"insert_after_rule" BIGINT,
-	"update_before_rule" BIGINT,
-	"update_after_rule" BIGINT,
-	"delete_before_rule" BIGINT,
-	"delete_after_rule" BIGINT,
-	"process_end_rule" BIGINT,
-	"options" TEXT,
-	"data_title" VARCHAR(255),
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"abandon_rule" BIGINT,
-	"export_rule" BIGINT,
-	"relate_search_json" TEXT,
+	"table_header" BIGINT,
 	"data_sheet_table_json" TEXT,
-	"authority" TEXT
+	"options" TEXT,
+	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON COLUMN "public"."jelly_form"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_form"."company_id" IS '公司id';
@@ -123,28 +109,13 @@ COMMENT ON COLUMN "public"."jelly_form"."design_id" IS '设计id';
 COMMENT ON COLUMN "public"."jelly_form"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_form"."icon" IS '图标';
 COMMENT ON COLUMN "public"."jelly_form"."color" IS '颜色';
-COMMENT ON COLUMN "public"."jelly_form"."table_header" IS '表格表头';
-COMMENT ON COLUMN "public"."jelly_form"."list_export_path" IS '列表导出文件路径';
-COMMENT ON COLUMN "public"."jelly_form"."detail_export_path" IS '详情导出文件路径';
 COMMENT ON COLUMN "public"."jelly_form"."flow_id" IS '流程id';
 COMMENT ON COLUMN "public"."jelly_form"."data_source" IS '数据源配置';
 COMMENT ON COLUMN "public"."jelly_form"."search_json" IS '搜索配置';
-COMMENT ON COLUMN "public"."jelly_form"."insert_before_rule" IS '新增前规则';
-COMMENT ON COLUMN "public"."jelly_form"."insert_after_rule" IS '新增后规则';
-COMMENT ON COLUMN "public"."jelly_form"."update_before_rule" IS '更新前规则';
-COMMENT ON COLUMN "public"."jelly_form"."update_after_rule" IS '更新后规则';
-COMMENT ON COLUMN "public"."jelly_form"."delete_before_rule" IS '删除前规则';
-COMMENT ON COLUMN "public"."jelly_form"."delete_after_rule" IS '删除后规则';
-COMMENT ON COLUMN "public"."jelly_form"."process_end_rule" IS '流程结束后规则';
-COMMENT ON COLUMN "public"."jelly_form"."options" IS '其他参数';
-COMMENT ON COLUMN "public"."jelly_form"."data_title" IS '数据标题';
-COMMENT ON COLUMN "public"."jelly_form"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_form"."update_time" IS '更新时间';
-COMMENT ON COLUMN "public"."jelly_form"."abandon_rule" IS '弃审规则';
-COMMENT ON COLUMN "public"."jelly_form"."export_rule" IS '导出规则';
-COMMENT ON COLUMN "public"."jelly_form"."relate_search_json" IS '联查json';
+COMMENT ON COLUMN "public"."jelly_form"."table_header" IS '表格表头';
 COMMENT ON COLUMN "public"."jelly_form"."data_sheet_table_json" IS '数据表json';
-COMMENT ON COLUMN "public"."jelly_form"."authority" IS '权限';
+COMMENT ON COLUMN "public"."jelly_form"."options" IS '其他参数';
+COMMENT ON COLUMN "public"."jelly_form"."create_time" IS '创建时间';
 COMMENT ON TABLE "public"."jelly_form" IS '表单管理';
 
 
@@ -174,77 +145,22 @@ COMMENT ON COLUMN "public"."jelly_report"."export_path" IS '导出路径';
 COMMENT ON TABLE "public"."jelly_report" IS '报表管理';
 
 
-DROP TABLE IF EXISTS "public"."jelly_table_classify";
-CREATE TABLE "public"."jelly_table_classify" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"name" VARCHAR(30) NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_table_classify"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_table_classify"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_table_classify"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_table_classify"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_table_classify"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_table_classify" IS '表头分类';
-
-
-DROP TABLE IF EXISTS "public"."jelly_table_column";
-CREATE TABLE "public"."jelly_table_column" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"classify_id" BIGINT NOT NULL,
-	"parent_id" BIGINT,
-	"prop" VARCHAR(30) NOT NULL,
-	"label" VARCHAR(30) NOT NULL,
-	"width" INTEGER,
-	"locking" INTEGER DEFAULT 3,
-	"summary" INTEGER DEFAULT 2,
-	"total" INTEGER DEFAULT 2,
-	"target" INTEGER DEFAULT 0 NOT NULL,
-	"formatter" BIGINT,
-	"options" TEXT,
-	"sort" INTEGER DEFAULT 1,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"formula" TEXT,
-	"router_json" TEXT
-);
-COMMENT ON COLUMN "public"."jelly_table_column"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_table_column"."classify_id" IS '分类id';
-COMMENT ON COLUMN "public"."jelly_table_column"."parent_id" IS '上级id';
-COMMENT ON COLUMN "public"."jelly_table_column"."prop" IS '字段名';
-COMMENT ON COLUMN "public"."jelly_table_column"."label" IS '标题';
-COMMENT ON COLUMN "public"."jelly_table_column"."width" IS '宽度';
-COMMENT ON COLUMN "public"."jelly_table_column"."locking" IS '锁定(1:左;2:右;3:无)';
-COMMENT ON COLUMN "public"."jelly_table_column"."summary" IS '汇总(1:是;2:否;)';
-COMMENT ON COLUMN "public"."jelly_table_column"."total" IS '合计(1:是;2:否;)';
-COMMENT ON COLUMN "public"."jelly_table_column"."target" IS '格式对象(0:无;1:数据字典;2:区域数据;)';
-COMMENT ON COLUMN "public"."jelly_table_column"."formatter" IS '格式化';
-COMMENT ON COLUMN "public"."jelly_table_column"."options" IS '格式化数据源';
-COMMENT ON COLUMN "public"."jelly_table_column"."sort" IS '排序';
-COMMENT ON COLUMN "public"."jelly_table_column"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_table_column"."update_time" IS '更新时间';
-COMMENT ON COLUMN "public"."jelly_table_column"."formula" IS '公式';
-COMMENT ON COLUMN "public"."jelly_table_column"."router_json" IS '路由json';
-COMMENT ON TABLE "public"."jelly_table_column" IS '表格表头';
-
 
 DROP TABLE IF EXISTS "public"."jelly_table_column_config";
 CREATE TABLE "public"."jelly_table_column_config" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
+	"company_id" BIGINT NOT NULL,
 	"user_id" BIGINT NOT NULL,
-	"table_column_id" BIGINT NOT NULL,
-	"display" INTEGER DEFAULT 1,
-	"sort" INTEGER DEFAULT 1,
+	"form_id" BIGINT NOT NULL,
+	"config" TEXT,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON COLUMN "public"."jelly_table_column_config"."id" IS '主键';
+COMMENT ON COLUMN "public"."jelly_table_column_config"."company_id" IS '公司id';
 COMMENT ON COLUMN "public"."jelly_table_column_config"."user_id" IS '用户id';
-COMMENT ON COLUMN "public"."jelly_table_column_config"."table_column_id" IS '表头id';
-COMMENT ON COLUMN "public"."jelly_table_column_config"."display" IS '显示(1:显示;2:隐藏;)';
-COMMENT ON COLUMN "public"."jelly_table_column_config"."sort" IS '排序';
+COMMENT ON COLUMN "public"."jelly_table_column_config"."form_id" IS '表单id';
+COMMENT ON COLUMN "public"."jelly_table_column_config"."config" IS '配置';
 COMMENT ON COLUMN "public"."jelly_table_column_config"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_table_column_config"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_table_column_config" IS '表头配置';

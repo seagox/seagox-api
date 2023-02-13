@@ -1,6 +1,5 @@
 package com.seagox.oa.excel.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -8,7 +7,6 @@ import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyDicDetail;
 import com.seagox.oa.excel.mapper.JellyDicDetailMapper;
-import com.seagox.oa.excel.mapper.JellyTableColumnMapper;
 import com.seagox.oa.excel.service.IJellyDicDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,6 @@ public class JellyDicDetailService implements IJellyDicDetailService {
 
     @Autowired
     private JellyDicDetailMapper dicDetailMapper;
-
-    @Autowired
-    private JellyTableColumnMapper tableColumnMapper;
 
     /**
      * 分页查询
@@ -61,7 +56,7 @@ public class JellyDicDetailService implements IJellyDicDetailService {
 
         LambdaQueryWrapper<JellyDicDetail> qwAll = new LambdaQueryWrapper<>();
         qwAll.eq(JellyDicDetail::getClassifyId, dicDetail.getClassifyId());
-        tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
+        //tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
         return ResultData.success(null);
     }
 
@@ -74,7 +69,7 @@ public class JellyDicDetailService implements IJellyDicDetailService {
 
             LambdaQueryWrapper<JellyDicDetail> qwAll = new LambdaQueryWrapper<>();
             qwAll.eq(JellyDicDetail::getClassifyId, dicDetail.getClassifyId());
-            tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
+            //tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
             return ResultData.success(null);
         } else {
             LambdaQueryWrapper<JellyDicDetail> qw = new LambdaQueryWrapper<>();
@@ -86,7 +81,7 @@ public class JellyDicDetailService implements IJellyDicDetailService {
 
                 LambdaQueryWrapper<JellyDicDetail> qwAll = new LambdaQueryWrapper<>();
                 qwAll.eq(JellyDicDetail::getClassifyId, dicDetail.getClassifyId());
-                tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
+                //tableColumnMapper.updateByFormatter(dicDetail.getClassifyId(), JSON.toJSONString(dicDetailMapper.selectMaps(qwAll)));
                 return ResultData.success(null);
             } else {
                 return ResultData.warn(ResultCode.PARAMETER_ERROR, "字典值已经存在");

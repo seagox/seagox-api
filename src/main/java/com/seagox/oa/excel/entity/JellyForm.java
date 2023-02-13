@@ -58,90 +58,14 @@ public class JellyForm {
     private Long flowId;
     
     /**
-     * 列表导出路径
-     */
-    private String listExportPath;
-    
-    /**
-     * 详情导出路径
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String detailExportPath;
-    
-    /**
-     * 新增前规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String insertBeforeRule;
-    
-    /**
-     * 新增后规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String insertAfterRule;
-    
-    /**
-     * 更新前规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String updateBeforeRule;
-    
-    /**
-     * 更新后规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String updateAfterRule;
-    
-    /**
-     * 删除前规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String deleteBeforeRule;
-    
-    /**
-     * 删除后规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String deleteAfterRule;
-    
-    /**
-     * 流程结束后规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String processEndRule;
-    
-    /**
-     * 弃审规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String abandonRule;
-    
-    /**
-     * 导出规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String exportRule;
-    
-    /**
      * 其他参数json
      */
     private String options;
-
-	/**
-	 * 联查json
-	 */
-	private String relateSearchJson;
 	
 	/**
      * 数据表json
      */
     private String dataSheetTableJson;
-    
-    /**
-     * 数据标题
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String dataTitle;
     
     /**
      * 创建时间
@@ -266,92 +190,12 @@ public class JellyForm {
 		this.flowId = flowId;
 	}
 
-	public String getInsertBeforeRule() {
-		return insertBeforeRule;
-	}
-
-	public void setInsertBeforeRule(String insertBeforeRule) {
-		this.insertBeforeRule = insertBeforeRule;
-	}
-
-	public String getInsertAfterRule() {
-		return insertAfterRule;
-	}
-
-	public void setInsertAfterRule(String insertAfterRule) {
-		this.insertAfterRule = insertAfterRule;
-	}
-
-	public String getUpdateBeforeRule() {
-		return updateBeforeRule;
-	}
-
-	public void setUpdateBeforeRule(String updateBeforeRule) {
-		this.updateBeforeRule = updateBeforeRule;
-	}
-
-	public String getUpdateAfterRule() {
-		return updateAfterRule;
-	}
-
-	public void setUpdateAfterRule(String updateAfterRule) {
-		this.updateAfterRule = updateAfterRule;
-	}
-
-	public String getDeleteBeforeRule() {
-		return deleteBeforeRule;
-	}
-
-	public void setDeleteBeforeRule(String deleteBeforeRule) {
-		this.deleteBeforeRule = deleteBeforeRule;
-	}
-
-	public String getDeleteAfterRule() {
-		return deleteAfterRule;
-	}
-
-	public void setDeleteAfterRule(String deleteAfterRule) {
-		this.deleteAfterRule = deleteAfterRule;
-	}
-
-	public String getProcessEndRule() {
-		return processEndRule;
-	}
-
-	public void setProcessEndRule(String processEndRule) {
-		this.processEndRule = processEndRule;
-	}
-
-	public String getAbandonRule() {
-		return abandonRule;
-	}
-
-	public void setAbandonRule(String abandonRule) {
-		this.abandonRule = abandonRule;
-	}
-
-	public String getExportRule() {
-		return exportRule;
-	}
-
-	public void setExportRule(String exportRule) {
-		this.exportRule = exportRule;
-	}
-
 	public String getOptions() {
 		return options;
 	}
 
 	public void setOptions(String options) {
 		this.options = options;
-	}
-
-	public String getDataTitle() {
-		return dataTitle;
-	}
-
-	public void setDataTitle(String dataTitle) {
-		this.dataTitle = dataTitle;
 	}
 
 	public Date getCreateTime() {
@@ -400,30 +244,6 @@ public class JellyForm {
 
 	public void setTableHeaderJson(String tableHeaderJson) {
 		this.tableHeaderJson = tableHeaderJson;
-	}
-
-	public String getRelateSearchJson() {
-		return relateSearchJson;
-	}
-
-	public void setRelateSearchJson(String relateSearchJson) {
-		this.relateSearchJson = relateSearchJson;
-	}
-
-	public String getListExportPath() {
-		return listExportPath;
-	}
-
-	public void setListExportPath(String listExportPath) {
-		this.listExportPath = listExportPath;
-	}
-
-	public String getDetailExportPath() {
-		return detailExportPath;
-	}
-
-	public void setDetailExportPath(String detailExportPath) {
-		this.detailExportPath = detailExportPath;
 	}
 
 	public String getAuthority() {

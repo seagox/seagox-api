@@ -9,9 +9,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.entity.JellyForm;
 import com.seagox.oa.excel.entity.JellyMetaFunction;
-import com.seagox.oa.excel.mapper.JellyFormMapper;
 import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.exception.FlowException;
 import com.seagox.oa.exception.FlowManualSelectionException;
@@ -32,7 +30,6 @@ import com.seagox.oa.util.FormulaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -62,9 +59,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
 
     @Autowired
     private JellyMetaFunctionMapper metaFunctionMapper;
-
-    @Autowired
-    private JellyFormMapper formMapper;
 
     @Autowired
     private CompanyMapper companyMapper;
@@ -144,8 +138,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
         if (variables.containsKey("flowFlag") && (boolean) variables.get("flowFlag")) {
             seaInstance.setStatus(1);
             seaInstance.setEndTime(new Date());
-            // 流程结束规则
-            endRule(variables, request);
         }
         if (StringUtils.isEmpty(variables.get("currentAgent"))) {
             seaInstance.setCurrentAgent("");
@@ -645,38 +637,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
     }
 
     /**
-     * 流程结束后规则
-     *
-     * @param companyId    公司id
-     * @param businessType 业务类型
-     * @param businessKey  业务唯一值
-     */
-    public void endRule(Map<String, Object> variables, HttpServletRequest request) {
-        String businessType = variables.get("businessType").toString();
-        String businessKey = variables.get("businessKey").toString();
-        String companyId = variables.get("companyId").toString();
-
-        JellyForm form = formMapper.selectById(businessType);
-        if (form != null) {
-            // 发起
-            if (form.getProcessEndRule() != null) {
-            	JellyMetaFunction processEndRule = metaFunctionMapper.selectById(form.getProcessEndRule());
-                try {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("companyId", companyId);
-                    params.put("formId", businessType);
-                    params.put("businessKey", businessKey);
-                    IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(processEndRule.getScript());
-                    groovyRule.execute(request, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e.getMessage());
-                }
-            }
-        }
-    }
-
-    /**
      * 审批流程
      *
      * @param businessType 业务类型
@@ -796,8 +756,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                     if (variables.containsKey("flowFlag") && (boolean) variables.get("flowFlag")) {
                         seaInstance.setStatus(1);
                         seaInstance.setEndTime(new Date());
-                        // 流程结束规则
-                        endRule(variables, request);
                     }
                     if (StringUtils.isEmpty(variables.get("currentAgent"))) {
                         seaInstance.setCurrentAgent("");
@@ -835,7 +793,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                             if (variables.containsKey("flowFlag") && (boolean) variables.get("flowFlag")) {
                                 seaInstance.setStatus(status);
                                 seaInstance.setEndTime(new Date());
-                                endRule(variables, request);
                             } else {
                                 seaInstance.setStatus(0);
                             }
@@ -858,7 +815,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                                 if (variables.containsKey("flowFlag") && (boolean) variables.get("flowFlag")) {
                                     seaInstance.setStatus(status);
                                     seaInstance.setEndTime(new Date());
-                                    endRule(variables, request);
                                 } else {
                                     seaInstance.setStatus(0);
                                 }
@@ -1141,8 +1097,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                     if (variables.containsKey("flowFlag") && (boolean) variables.get("flowFlag")) {
                         seaInstance.setStatus(1);
                         seaInstance.setEndTime(new Date());
-                        // 流程结束规则
-                        endRule(variables, request);
                     }
                     if (StringUtils.isEmpty(variables.get("currentAgent"))) {
                         seaInstance.setCurrentAgent("");
@@ -1296,25 +1250,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                 LambdaQueryWrapper<SeaNodeDetail> seaNodeDetailQueryWrapper = new LambdaQueryWrapper<>();
                 seaNodeDetailQueryWrapper.eq(SeaNodeDetail::getNodeId, currentNode.get("id"));
                 List<SeaNodeDetail> seaNodeDetailList = seaNodeDetailMapper.selectList(seaNodeDetailQueryWrapper);
-
-                JellyForm form = formMapper.selectById(businessType);
-                // 审核规则
-                if (form.getAbandonRule() != null) {
-                	JellyMetaFunction abandonRule = metaFunctionMapper.selectById(form.getAbandonRule());
-                    try {
-                        Map<String, Object> params = new HashMap<>();
-                        params.put("businessType", businessType);
-                        params.put("businessKey", businessKey);
-                        params.put("currentNodeId", currentNode.get("id"));
-                        params.put("assignee", assignee);
-                        IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(abandonRule.getScript());
-                        groovyRule.execute(null, params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                        throw new FlowException(e.getMessage());
-                    }
-                }
 
                 if (updateNodeFlag) {
                     // 更新下一条节点状态

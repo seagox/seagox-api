@@ -758,26 +758,12 @@ CREATE TABLE dbo.jelly_form (
   name nvarchar(30)  NOT NULL,
   icon nvarchar(30)  NOT NULL,
   color nvarchar(30)  NOT NULL,
+  flow_id bigint  NULL,
   data_source nvarchar(max)  NULL,
   search_json nvarchar(max)  NULL,
   table_header bigint  NOT NULL,
-  list_export_path nvarchar(max)  NULL,
-  detail_export_path nvarchar(max)  NULL,
-  flow_id bigint  NULL,
-  insert_before_rule bigint  NULL,
-  insert_after_rule bigint  NULL,
-  update_before_rule bigint  NULL,
-  update_after_rule bigint  NULL,
-  delete_before_rule bigint  NULL,
-  delete_after_rule bigint  NULL,
-  process_end_rule bigint  NULL,
-  abandon_rule bigint  NULL,
-	export_rule bigint  NULL,
-  options nvarchar(max)  NULL,
-  relate_search_json nvarchar(max)  NULL,
   data_sheet_table_json nvarchar(max),
-  data_title nvarchar(255)  NULL,
-  authority nvarchar(max)  NULL,
+  options nvarchar(max)  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -801,10 +787,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'设计ids',
+'MS_Description', N'设计id',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
-'COLUMN', N'design_ids'
+'COLUMN', N'design_id'
 GO
 
 EXEC sp_addextendedproperty
@@ -829,6 +815,13 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
+'MS_Description', N'流程id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_form',
+'COLUMN', N'flow_id'
+GO
+
+EXEC sp_addextendedproperty
 'MS_Description', N'数据源配置',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
@@ -850,104 +843,6 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'列表导出文件路径',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'list_export_path'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'详情导出文件路径',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'detail_export_path'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'流程id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'flow_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'新增前规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'insert_before_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'新增后规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'insert_after_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新前规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'update_before_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新后规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'update_after_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'删除前规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'delete_before_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'删除后规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'delete_after_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'流程结束后规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'process_end_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'弃审规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'abandon_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'导出规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'export_rule'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'其他参数json',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'options'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'联查json',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'relate_search_json'
-GO
-
-EXEC sp_addextendedproperty
 'MS_Description', N'数据表json',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
@@ -955,17 +850,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'数据标题',
+'MS_Description', N'其他参数json',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
-'COLUMN', N'data_title'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'权限',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'authority'
+'COLUMN', N'options'
 GO
 
 EXEC sp_addextendedproperty
@@ -1579,237 +1467,6 @@ COMMIT
 GO
 
 
--- ----------------------------
--- Table structure for jelly_table_classify
--- ----------------------------
-DROP TABLE IF EXISTS dbo.jelly_table_classify;
-CREATE TABLE dbo.jelly_table_classify (
-  id bigint PRIMARY KEY IDENTITY(1,1),
-  company_id bigint  NOT NULL,
-  name nvarchar(30)  NOT NULL,
-  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
-  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
-)
-GO
-
-ALTER TABLE dbo.jelly_table_classify SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'主键',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify',
-'COLUMN', N'id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'公司id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify',
-'COLUMN', N'company_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'名称',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify',
-'COLUMN', N'name'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify',
-'COLUMN', N'create_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify',
-'COLUMN', N'update_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表头分类',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_classify'
-GO
-
-
--- ----------------------------
--- Records of jelly_table_classify
--- ----------------------------
-BEGIN TRANSACTION
-GO
-
-COMMIT
-GO
-
-
--- ----------------------------
--- Table structure for jelly_table_column
--- ----------------------------
-DROP TABLE IF EXISTS dbo.jelly_table_column;
-CREATE TABLE dbo.jelly_table_column (
-  id bigint PRIMARY KEY IDENTITY(1,1),
-  classify_id bigint  NOT NULL,
-  parent_id bigint  NULL,
-  prop nvarchar(30)  NOT NULL,
-  label nvarchar(30)  NOT NULL,
-  width int  NULL,
-  locking int  NULL,
-  summary int  NULL,
-  total int  NULL,
-  target int  NULL,
-  formatter bigint  NULL,
-  options nvarchar(max)  NULL,
-  sort int  NULL,
-  formula nvarchar(max)  NULL,
-  router_json nvarchar(max)  NULL,
-  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
-  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
-)
-GO
-
-ALTER TABLE dbo.jelly_table_column SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'主键',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'分类id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'classify_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'上级id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'parent_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'字段名',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'prop'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'标题',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'label'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'宽度',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'width'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'锁定(1:左;2:右;3:无)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'locking'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'汇总(1:是;2:否;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'summary'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'汇总(1:是;2:否;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'total'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'格式对象(0:无;1:数据字典;2:区域数据;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'target'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'格式化',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'formatter'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'格式化数据源',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'options'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'排序',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'sort'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'公式',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'formula'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'路由json',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'router_json'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'create_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column',
-'COLUMN', N'update_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表格表头',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column'
-GO
-
-
--- ----------------------------
--- Records of jelly_table_column
--- ----------------------------
-BEGIN TRANSACTION
-GO
-
-COMMIT
-GO
-
 
 -- ----------------------------
 -- Table structure for jelly_table_column_config
@@ -1817,10 +1474,10 @@ GO
 DROP TABLE IF EXISTS dbo.jelly_table_column_config;
 CREATE TABLE dbo.jelly_table_column_config (
   id bigint PRIMARY KEY IDENTITY(1,1),
+  company_id bigint  NOT NULL,
   user_id bigint  NOT NULL,
-  table_column_id bigint  NOT NULL,
-  display int  NULL,
-  sort int  NULL,
+  form_id bigint  NOT NULL,
+  config nvarchar(max),
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -1837,6 +1494,13 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
+'MS_Description', N'公司id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_table_column_config',
+'COLUMN', N'company_id'
+GO
+
+EXEC sp_addextendedproperty
 'MS_Description', N'用户id',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_table_column_config',
@@ -1844,24 +1508,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'表头id',
+'MS_Description', N'表单id',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_table_column_config',
-'COLUMN', N'table_column_id'
+'COLUMN', N'form_id'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'显示(1:显示;2:隐藏;)',
+'MS_Description', N'配置',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_table_column_config',
-'COLUMN', N'display'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'排序',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_table_column_config',
-'COLUMN', N'sort'
+'COLUMN', N'config'
 GO
 
 EXEC sp_addextendedproperty
