@@ -42,7 +42,7 @@ public class FieldModel extends ImportModel {
      */
     @Excel(name = "长度")
     @Min(value = 0, message = "不能低于0")
-    @Max(value = 3000, message = "不能超过3000")
+    @Max(value = 4000, message = "不能超过4000")
     private Integer length;
     
     /**
