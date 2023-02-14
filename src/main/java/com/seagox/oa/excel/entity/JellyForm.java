@@ -1,7 +1,6 @@
 package com.seagox.oa.excel.entity;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -109,12 +108,6 @@ public class JellyForm {
      */
     @TableField(exist = false)
     private String authority;
-
-	/**
-	 * 禁用按钮权限
-	 */
-	@TableField(exist = false)
-	private Map<String,Object> disableButtonFlag;
 
 	public Long getId() {
 		return id;
@@ -250,14 +243,6 @@ public class JellyForm {
 
 	public void setAuthority(String authority) {
 		this.authority = authority;
-	}
-
-	public Map<String, Object> getDisableButtonFlag() {
-		return disableButtonFlag;
-	}
-
-	public void setDisableButtonFlag(Map<String, Object> disableButtonFlag) {
-		this.disableButtonFlag = disableButtonFlag;
 	}
     
 }

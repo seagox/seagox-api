@@ -1,5 +1,9 @@
 package com.seagox.oa.auth.serivce;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.seagox.oa.common.ResultData;
 
 /**
@@ -54,5 +58,10 @@ public interface IAuthService {
 	 * @param openid openid
 	 */
 	public ResultData loginByOpenid(String openid);
+	
+	/**
+     * 导入
+     */
+    public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId);
 
 }

@@ -1,9 +1,9 @@
 package com.seagox.oa.auth.controller;
 
 import com.seagox.oa.annotation.SysLogPoint;
+import com.seagox.oa.auth.serivce.IAuthService;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.service.IJellyFormService;
 import com.seagox.oa.util.DocumentConverterUtils;
 import com.seagox.oa.util.UploadUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -46,7 +46,7 @@ public class UploadController {
     private DocumentConverterUtils documentConverterUtils;
     
     @Autowired
-    private IJellyFormService formService;
+	private IAuthService authService;
 
     /**
      * 文件上传
@@ -185,7 +185,7 @@ public class UploadController {
      */
     @PostMapping("/import")
     public ResultData importExcel(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-    	return formService.importExcel(file, request, request.getParameter("ruleId"));
+    	return authService.importExcel(file, request, request.getParameter("ruleId"));
     }
 
 }

@@ -1,20 +1,41 @@
 package com.seagox.oa.auth.serivce.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.seagox.oa.auth.serivce.IAuthService;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
+import com.seagox.oa.excel.entity.JellyBusinessTable;
+import com.seagox.oa.excel.entity.JellyImportRule;
+import com.seagox.oa.excel.entity.JellyMetaFunction;
+import com.seagox.oa.excel.mapper.JellyBusinessTableMapper;
+import com.seagox.oa.excel.mapper.JellyDicClassifyMapper;
+import com.seagox.oa.excel.mapper.JellyImportRuleDetailMapper;
+import com.seagox.oa.excel.mapper.JellyImportRuleMapper;
+import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.excel.service.IJellyRegionsService;
+import com.seagox.oa.exception.FormulaException;
+import com.seagox.oa.groovy.GroovyFactory;
+import com.seagox.oa.groovy.IGroovyRule;
 import com.seagox.oa.security.JwtTokenUtils;
 import com.seagox.oa.sys.entity.*;
 import com.seagox.oa.sys.mapper.*;
 import com.seagox.oa.util.EncryptUtils;
+import com.seagox.oa.util.ImportUtils;
+import com.seagox.oa.util.JdbcTemplateUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthService implements IAuthService {
@@ -45,6 +66,24 @@ public class AuthService implements IAuthService {
 
 	@Autowired
 	private IJellyRegionsService regionsService;
+	
+	@Autowired
+    private JellyMetaFunctionMapper metaFunctionMapper;
+	
+	@Autowired
+    private JellyImportRuleMapper importRuleMapper;
+    
+    @Autowired
+    private JellyImportRuleDetailMapper importRuleDetailMapper;
+    
+    @Autowired
+    private JellyBusinessTableMapper businessTableMapper;
+    
+    @Autowired
+    private JellyDicClassifyMapper dicClassifyMapper;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public ResultData login(String account, String password, String openid, String avatar) {
@@ -568,5 +607,75 @@ public class AuthService implements IAuthService {
 			}
 			return ResultData.success(claims);
 		}
+	}
+	
+	@Override
+	public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId) {
+		try {
+			JellyImportRule exportRule = importRuleMapper.selectById(ruleId);
+			// 导入前规则
+	        if (exportRule.getBeforeRuleId() != null) {
+	        	JellyMetaFunction beforeRule = metaFunctionMapper.selectById(exportRule.getBeforeRuleId());
+	            Map<String, Object> params = new HashMap<>();
+	            try {
+	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(beforeRule.getScript());
+	                groovyRule.execute(request, params);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+	            }
+	        }
+	        // 验证规则 
+	        JSONObject rule = new JSONObject();
+	        List<Map<String, Object>> exportRuleDetailList = importRuleDetailMapper.queryByRuleId(exportRule.getId());
+	        for(int i=0; i<exportRuleDetailList.size();i++) {
+	        	Map<String, Object> exportRuleDetail = exportRuleDetailList.get(i);
+	        	JSONObject fieldJson = new JSONObject();
+	        	fieldJson.put("field", exportRuleDetail.get("name"));
+	        	if(!org.springframework.util.StringUtils.isEmpty(exportRuleDetail.get("rule"))) {
+	        		JSONArray ruleArray = JSONArray.parseArray(exportRuleDetail.get("rule").toString());
+	        		for(int j=0; j<ruleArray.size();j++) {
+	        			JSONObject ruleJson = ruleArray.getJSONObject(j);
+	        			String annotation = ruleJson.getString("rule");
+	        			if(annotation.startsWith("@Replace")) {
+	        				List<Map<String, Object>> dicList = dicClassifyMapper.queryByName(Long.valueOf(request.getParameter("companyId")), annotation.substring(10, annotation.length() - 2));
+	        				JSONObject options = new JSONObject();
+	        				for(int k=0; k<dicList.size();k++) {
+	        					options.put(dicList.get(k).get("name").toString(), dicList.get(k).get("code"));
+	        				}
+	        				ruleJson.put("options", options);
+	        			}
+	        		}
+	        		fieldJson.put("rule", ruleArray);
+	        	}
+	        	rule.put(exportRuleDetail.get("col").toString(), fieldJson);
+	        }
+	        List<Map<String, Object>> result = new ArrayList<>();
+	        if (exportRule.getVerifyRuleId() != null) {
+	        	JellyMetaFunction verifyRule = metaFunctionMapper.selectById(exportRule.getVerifyRuleId());
+				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
+	        } else {
+				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, null);
+	        }
+	        JellyBusinessTable businessTable = businessTableMapper.selectById(exportRule.getDataSource());
+			JdbcTemplateUtils.batchInsert(jdbcTemplate, businessTable.getName(), result);
+			// 导入后规则
+	        if (exportRule.getAfterRuleId() != null) {
+	        	JellyMetaFunction afterRule = metaFunctionMapper.selectById(exportRule.getAfterRuleId());
+	            Map<String, Object> params = new HashMap<>();
+	            try {
+	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(afterRule.getScript());
+	                groovyRule.execute(request, params);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+	            }
+	        }
+		} catch (FormulaException e) {
+			throw new FormulaException(e.getMessage());
+        } catch (Exception e) {
+			return ResultData.error(ResultCode.INTERNAL_SERVER_ERROR);
+		}
+		return ResultData.success(null);
 	}
 }

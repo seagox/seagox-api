@@ -139,14 +139,6 @@ public class JellyFormController {
     }
 
     /**
-     * 验证sql
-     */
-    @PostMapping("/verifySql")
-    public ResultData verifySql(Long userId, String sql) {
-        return formService.verifySql(userId, sql);
-    }
-
-    /**
      * 表单详情(自定义)
      */
     @GetMapping("/queryDetail")
@@ -249,16 +241,6 @@ public class JellyFormController {
     @GetMapping("/queryBusinessTypes")
     public ResultData queryBusinessTypes(Long companyId) {
         return formService.queryBusinessTypes(companyId);
-    }
-
-
-    /**
-     * 批量审核
-     */
-    @PostMapping("/batchAudit")
-    @SysLogPoint("批量审核")
-    public ResultData batchAudit(HttpServletRequest request) {
-        return formService.batchAudit(request);
     }
 
 }

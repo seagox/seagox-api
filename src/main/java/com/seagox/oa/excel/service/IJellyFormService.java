@@ -6,8 +6,6 @@ import com.seagox.oa.excel.entity.JellyForm;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public interface IJellyFormService {
 
     /**
@@ -80,11 +78,6 @@ public interface IJellyFormService {
     public ResultData queryListById(Long companyId, Long userId, Long id, Integer pageNo, Integer pageSize, String search);
 
     /**
-     * 验证sql
-     */
-    public ResultData verifySql(Long userId, String sql);
-
-    /**
      * 获取表单详情(自定义)
      */
     public ResultData queryDetail(Long userId, Long formId, Long id);
@@ -142,15 +135,5 @@ public interface IJellyFormService {
      * @return
      */
     public ResultData queryBusinessTypes(Long companyId);
-
-    /**
-     * 批量审核
-     */
-    public ResultData batchAudit(HttpServletRequest request);
-    
-    /**
-     * 导入
-     */
-    public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId);
     
 }

@@ -36,14 +36,31 @@
     
     <!--查询必填字段全部表单id-->
 	<select id="queryRequiredByFormId" resultType="camelKeyMap">
-        SELECT b.name as "tableName", c.name, c.remark FROM jelly_data_sheet a
-        	LEFT JOIN jelly_business_table b ON  b.name = a.table_name
-        	LEFT JOIN jelly_business_field c ON c.business_table_id = b.id
+        SELECT a.name as "tableName", b.name, b.remark
+        	FROM jelly_business_table a
+        	LEFT JOIN jelly_business_field b ON b.business_table_id = a.id
         <where>
-        	a.form_id = #{formId}
-            AND a.single_flag = 1
-            AND c.not_null = 1
+        	a.id IN
+            <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+            AND b.not_null = 1
         </where>
+    </select>
+    
+    <!--获取数据表关联关系通过表ids-->
+	<select id="queryRelateByTableIds" resultType="camelKeyMap">
+        SELECT DISTINCT a.name as "tableName", b.target_table_id as "tartgetTableId", c.name as "relateTable", d.name as "relateField" FROM jelly_business_table a 
+        	LEFT JOIN jelly_business_field b ON a.id = b.business_table_id
+        	LEFT JOIN jelly_business_table c ON c.id = b.target_table_id
+        	LEFT JOIN jelly_business_field d ON d.business_table_id = c.id
+        <where>
+            a.id IN
+            <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+        </where>
+        ORDER BY b.target_table_id DESC
     </select>
     
 </mapper>
