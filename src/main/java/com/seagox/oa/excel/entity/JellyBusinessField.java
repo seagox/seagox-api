@@ -67,6 +67,12 @@ public class JellyBusinessField {
     private String defaultValue;
     
     /**
+     * 目标模型
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private Long targetTableId;
+    
+    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -158,6 +164,14 @@ public class JellyBusinessField {
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+
+	public Long getTargetTableId() {
+		return targetTableId;
+	}
+
+	public void setTargetTableId(Long targetTableId) {
+		this.targetTableId = targetTableId;
 	}
 
 	public Date getCreateTime() {

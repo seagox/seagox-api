@@ -98,7 +98,6 @@ CREATE TABLE "public"."jelly_form" (
 	"data_source" TEXT,
 	"search_json" TEXT,
 	"table_header" BIGINT,
-	"data_sheet_table_json" TEXT,
 	"options" TEXT,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -113,7 +112,6 @@ COMMENT ON COLUMN "jelly_form"."flow_id" IS '流程id';
 COMMENT ON COLUMN "jelly_form"."data_source" IS '数据源配置';
 COMMENT ON COLUMN "jelly_form"."search_json" IS '搜索配置';
 COMMENT ON COLUMN "jelly_form"."table_header" IS '表格表头';
-COMMENT ON COLUMN "jelly_form"."data_sheet_table_json" IS '数据表json';
 COMMENT ON COLUMN "jelly_form"."options" IS '其他参数';
 COMMENT ON COLUMN "jelly_form"."create_time" IS '创建时间';
 COMMENT ON TABLE "jelly_form" IS '表单管理';
@@ -195,6 +193,7 @@ CREATE TABLE "jelly_business_field" (
 	"decimals" INTEGER DEFAULT 0,
 	"not_null" INTEGER DEFAULT 0,
 	"default_value" VARCHAR(200),
+	"target_table_id" BIGINT DEFAULT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -208,6 +207,7 @@ COMMENT ON COLUMN "jelly_business_field"."length" IS '长度';
 COMMENT ON COLUMN "jelly_business_field"."decimals" IS '小数';
 COMMENT ON COLUMN "jelly_business_field"."not_null" IS '不为空(1:是;0:否;)';
 COMMENT ON COLUMN "jelly_business_field"."default_value" IS '默认值';
+COMMENT ON COLUMN "jelly_business_field"."target_table_id" IS '目标模型';
 COMMENT ON COLUMN "jelly_business_field"."create_time" IS '创建时间';
 COMMENT ON COLUMN "jelly_business_field"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_business_field" IS '业务字段';

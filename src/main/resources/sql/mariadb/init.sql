@@ -60,7 +60,6 @@ CREATE TABLE `jelly_form`  (
     `data_source` text DEFAULT NULL COMMENT '数据源配置',
     `search_json` text DEFAULT NULL COMMENT '搜索配置',
     `table_header` text NOT NULL COMMENT '表格表头',
-    `data_sheet_table_json` text NOT NULL COMMENT '数据表json',
     `options` text DEFAULT NULL COMMENT '其他参数json',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -118,6 +117,7 @@ CREATE TABLE `jelly_business_field`  (
     `decimals` int(4) DEFAULT 0 COMMENT '小数',
     `not_null` int(4) DEFAULT 0 COMMENT '不为空(0:否;1:是;)',
     `default_value` varchar(200) DEFAULT NULL COMMENT '默认值',
+    `target_table_id` bigint(20) DEFAULT NULL COMMENT '目标模型',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)

@@ -4,10 +4,10 @@ CREATE TABLE "public"."jelly_import_rule"  (
     "company_id" BIGINT NOT NULL,
     "code" varchar(30) NOT NULL,
     "name" varchar(100) NOT NULL,
-    "data_source" bigint NOT NULL,
-    "before_rule_id" bigint DEFAULT NULL,
-    "after_rule_id" bigint DEFAULT NULL,
-    "verify_rule_id" bigint DEFAULT NULL,
+    "data_source" BIGINT NOT NULL,
+    "before_rule_id" BIGINT DEFAULT NULL,
+    "after_rule_id" BIGINT DEFAULT NULL,
+    "verify_rule_id" BIGINT DEFAULT NULL,
     "template_source" text,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -98,7 +98,6 @@ CREATE TABLE "public"."jelly_form" (
 	"data_source" TEXT,
 	"search_json" TEXT,
 	"table_header" BIGINT,
-	"data_sheet_table_json" TEXT,
 	"options" TEXT,
 	"data_title" VARCHAR(800),
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -114,7 +113,6 @@ COMMENT ON COLUMN "public"."jelly_form"."flow_id" IS '流程id';
 COMMENT ON COLUMN "public"."jelly_form"."data_source" IS '数据源配置';
 COMMENT ON COLUMN "public"."jelly_form"."search_json" IS '搜索配置';
 COMMENT ON COLUMN "public"."jelly_form"."table_header" IS '表格表头';
-COMMENT ON COLUMN "public"."jelly_form"."data_sheet_table_json" IS '数据表json';
 COMMENT ON COLUMN "public"."jelly_form"."options" IS '其他参数';
 COMMENT ON COLUMN "public"."jelly_form"."data_title" IS '数据标题';
 COMMENT ON COLUMN "public"."jelly_form"."create_time" IS '创建时间';
@@ -131,9 +129,9 @@ CREATE TABLE "public"."jelly_report"  (
 	"icon" VARCHAR(30) NOT NULL,
 	"color" VARCHAR(30) NOT NULL,
     "data_source" BIGINT NOT NULL,
-    "template_source" text NOT NULL,
-    "search_json" text DEFAULT NULL,
-	"export_path" text DEFAULT NULL,
+    "template_source" TEXT NOT NULL,
+    "search_json" TEXT DEFAULT NULL,
+	"export_path" TEXT DEFAULT NULL,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -199,6 +197,7 @@ CREATE TABLE "public"."jelly_business_field" (
 	"decimals" INTEGER DEFAULT 0,
 	"not_null" INTEGER DEFAULT 0,
 	"default_value" VARCHAR(200),
+	"target_table_id" BIGINT DEFAULT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -212,6 +211,7 @@ COMMENT ON COLUMN "public"."jelly_business_field"."length" IS '长度';
 COMMENT ON COLUMN "public"."jelly_business_field"."decimals" IS '小数';
 COMMENT ON COLUMN "public"."jelly_business_field"."not_null" IS '不为空(1:是;0:否;)';
 COMMENT ON COLUMN "public"."jelly_business_field"."default_value" IS '默认值';
+COMMENT ON COLUMN "public"."jelly_business_field"."target_table_id" IS '目标模型';
 COMMENT ON COLUMN "public"."jelly_business_field"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_business_field"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_business_field" IS '业务字段';

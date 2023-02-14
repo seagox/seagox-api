@@ -61,11 +61,6 @@ public class JellyForm {
      * 其他参数json
      */
     private String options;
-	
-	/**
-     * 数据表json
-     */
-    private String dataSheetTableJson;
     
     /**
      * 创建时间
@@ -220,14 +215,6 @@ public class JellyForm {
 
 	public void setFormDesign(JellyFormDesign formDesign) {
 		this.formDesign = formDesign;
-	}
-
-	public String getDataSheetTableJson() {
-		return dataSheetTableJson;
-	}
-
-	public void setDataSheetTableJson(String dataSheetTableJson) {
-		this.dataSheetTableJson = dataSheetTableJson;
 	}
 
 	public String getHistoryJson() {

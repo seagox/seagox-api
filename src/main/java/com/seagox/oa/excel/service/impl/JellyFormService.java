@@ -210,7 +210,6 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryById(Long userId, Long id) {
         JellyForm form = formMapper.selectById(id);
-        form.setDataSheetTableJson(JSON.toJSONString(form.getDataSheetTableJson()));
         //form.setTableHeaderJson(JSON.toJSONString(tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId)));
         return ResultData.success(form);
     }
@@ -224,8 +223,6 @@ public class JellyFormService implements IJellyFormService {
         // 表单设计
         JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
         form.setFormDesign(formDesign);
-
-        form.setDataSheetTableJson(JSON.toJSONString(form.getDataSheetTableJson()));
         return ResultData.success(form);
     }
 
@@ -397,7 +394,7 @@ public class JellyFormService implements IJellyFormService {
 
         Map<String, Object> params = new HashMap<>();
         params.put("formId", formId);
-        params.put("dataSheetTableJson", form.getDataSheetTableJson());
+        //params.put("dataSheetTableJson", form.getDataSheetTableJson());
         String businessKey = insertLogic(request, params);
         SysAccount user = userMapper.selectById(request.getParameter("userId"));
         if (form.getFlowId() != null) {
@@ -620,7 +617,7 @@ public class JellyFormService implements IJellyFormService {
                 return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
             }
         }
-        updateLogic(request, form.getDataSheetTableJson());
+        updateLogic(request, null);//form.getDataSheetTableJson());
         if (form.getFlowId() != null) {
             LambdaQueryWrapper<SeaInstance> qw = new LambdaQueryWrapper<>();
             qw.eq(SeaInstance::getBusinessType, form.getId())
@@ -1000,7 +997,7 @@ public class JellyFormService implements IJellyFormService {
 
         Map<String, Object> tableMap = new HashMap<String, Object>();
         int isValid = 0;
-        JSONArray dataSheetList = JSON.parseArray(form.getDataSheetTableJson());
+        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
         for (int i = 0; i < dataSheetList.size(); i++) {
             JSONObject dataSheet = dataSheetList.getJSONObject(i);
             if (dataSheet.getIntValue("singleFlag") == 1 && StringUtils.isEmpty(dataSheet.getString("relateTable"))
@@ -1162,7 +1159,7 @@ public class JellyFormService implements IJellyFormService {
             }
         }
 
-        JSONArray dataSheetList = JSON.parseArray(form.getDataSheetTableJson());
+        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
 
         Map<String, Object> map = new HashMap<>();
         for (int i = 0; i < dataSheetList.size(); i++) {
@@ -1202,7 +1199,7 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryBusinessField(Long formId) {
     	JellyForm form = formMapper.selectById(formId);
-        JSONArray dataSheetList = JSON.parseArray(form.getDataSheetTableJson());
+        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
         List<Map<String, Object>> businessFieldList = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < dataSheetList.size(); i++) {
             List<Map<String, Object>> businessFieldItem = businessFieldMapper
@@ -1228,7 +1225,7 @@ public class JellyFormService implements IJellyFormService {
     public ResultData queryBill(Long id, String field, String prefix, String billDate, int digit) {
         JellyForm form = formMapper.selectById(id);
 
-        JSONArray dataSheetList = JSON.parseArray(form.getDataSheetTableJson());
+        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
         for (int i = 0; i < dataSheetList.size(); i++) {
             JSONObject dataSheet = dataSheetList.getJSONObject(i);
             if (StringUtils.isEmpty(dataSheet.getString("relateField")) && StringUtils.isEmpty(dataSheet.getString("relateTable"))) {
@@ -1510,7 +1507,7 @@ public class JellyFormService implements IJellyFormService {
     public ResultData queryOptions(String value, String source, String showField) {
         JellyForm form = formMapper.selectById(source);
         if (form != null) {
-        	JSONArray dataSheetList = JSON.parseArray(form.getDataSheetTableJson());
+        	JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
             if (dataSheetList.size() > 0) {
             	JSONObject dataSheet = dataSheetList.getJSONObject(0);
                 String sql = "SELECT * FROM " + dataSheet.getString("tableName") + " WHERE FIND_IN_SET(id,'" + value + "')";

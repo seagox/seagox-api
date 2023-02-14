@@ -294,6 +294,7 @@ CREATE TABLE dbo.jelly_business_field (
   decimals int  NULL,
   not_null int  NULL,
   default_value nvarchar(200)  NULL,
+  target_table_id bigint  DEFAULT NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -370,6 +371,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_business_field',
 'COLUMN', N'default_value'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'业务表id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_business_field',
+'COLUMN', N'target_table_id'
 GO
 
 EXEC sp_addextendedproperty
@@ -754,7 +762,6 @@ CREATE TABLE dbo.jelly_form (
   data_source nvarchar(max)  NULL,
   search_json nvarchar(max)  NULL,
   table_header bigint  NOT NULL,
-  data_sheet_table_json nvarchar(max),
   options nvarchar(max)  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
@@ -832,13 +839,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
 'COLUMN', N'table_header'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'数据表json',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form',
-'COLUMN', N'data_sheet_table_json'
 GO
 
 EXEC sp_addextendedproperty
