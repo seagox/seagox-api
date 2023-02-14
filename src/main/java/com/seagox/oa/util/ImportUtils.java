@@ -636,107 +636,109 @@ public class ImportUtils {
            	 		String cellValue = getCellValue(cell);
            	 		// 验证规则
            	 		JSONObject fieldRule = exportRule.getJSONObject(letterList.get(colIx));
-           	 		JSONArray ruleList  = fieldRule.getJSONArray("rule");
-           	 		if(ruleList != null) {
-	           	 		for(int j=0;j<ruleList.size();j++) {
-	           	 			JSONObject ruleJson = ruleList.getJSONObject(j);
-	           	 			String annotation = ruleJson.getString("rule");
-	           	 			if(annotation.startsWith("@NotNull")) {
-	           	 				JSONObject annotationJson = new JSONObject();
-	           	 				String[] annotationAry = annotation.substring(9, annotation.length()-1).split(",");
-	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
-	           	 				}
-	           	 				if(StringUtils.isEmpty(cellValue)) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
-	           	 				}
-	           	 				rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Length")) {
-		           	 			JSONObject annotationJson = new JSONObject();
-	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
-	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
-	           	 				}
-		           	 			if(annotationJson.containsKey("min")) {
-		           	 				if(cellValue.length() <= annotationJson.getInteger("min")) {
+           	 		if(fieldRule != null) {
+	           	 		JSONArray ruleList  = fieldRule.getJSONArray("rule");
+	           	 		if(ruleList != null) {
+		           	 		for(int j=0;j<ruleList.size();j++) {
+		           	 			JSONObject ruleJson = ruleList.getJSONObject(j);
+		           	 			String annotation = ruleJson.getString("rule");
+		           	 			if(annotation.startsWith("@NotNull")) {
+		           	 				JSONObject annotationJson = new JSONObject();
+		           	 				String[] annotationAry = annotation.substring(9, annotation.length()-1).split(",");
+		           	 				for(int k=0;k<annotationAry.length;k++) {
+		           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+		           	 				}
+		           	 				if(StringUtils.isEmpty(cellValue)) {
 		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
 		           	 				}
-		           	 			}
-			           	 		if(annotationJson.containsKey("max")) {
-				           	 		if(cellValue.length() > annotationJson.getInteger("max")) {
+		           	 				rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Length")) {
+			           	 			JSONObject annotationJson = new JSONObject();
+		           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
+		           	 				for(int k=0;k<annotationAry.length;k++) {
+		           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+		           	 				}
+			           	 			if(annotationJson.containsKey("min")) {
+			           	 				if(cellValue.length() <= annotationJson.getInteger("min")) {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+			           	 				}
+			           	 			}
+				           	 		if(annotationJson.containsKey("max")) {
+					           	 		if(cellValue.length() > annotationJson.getInteger("max")) {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+			           	 				}
+			           	 			}
+				           	 		rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Min")) {
+		           	 				int min = Integer.valueOf(annotation.substring(5, annotation.length()-1));
+			           	 			if(Integer.valueOf(cellValue) <= min) {
+		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能小于" + min);
+		           	 				}
+			           	 			rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Max")) {
+			           	 			int max = Integer.valueOf(annotation.substring(5, annotation.length()-1));
+			           	 			if(Integer.valueOf(cellValue) > max) {
+		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能大于" + max);
+		           	 				}
+			           	 			rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@DecimalMin")) {
+			           	 			double decimalMin = Double.valueOf(annotation.substring(5, annotation.length()-1));
+			           	 			if(Double.valueOf(cellValue) <= decimalMin) {
+		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能小于" + decimalMin);
+		           	 				}
+			           	 			rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@DecimalMax")) {
+			           	 			double decimalMax = Double.valueOf(annotation.substring(5, annotation.length()-1));
+			           	 			if(Double.valueOf(cellValue) <= decimalMax) {
+		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能大于" + decimalMax);
+		           	 				}
+			           	 			rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Range")) {
+			           	 			JSONObject annotationJson = new JSONObject();
+		           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
+		           	 				for(int k=0;k<annotationAry.length;k++) {
+		           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+		           	 				}
+			           	 			if(annotationJson.containsKey("min")) {
+			           	 				if(Integer.valueOf(cellValue) <= annotationJson.getInteger("min")) {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+			           	 				}
+			           	 			}
+				           	 		if(annotationJson.containsKey("max")) {
+					           	 		if(Integer.valueOf(cellValue) > annotationJson.getInteger("max")) {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+			           	 				}
+			           	 			}
+				           	 		rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Pattern")) {
+			           	 			JSONObject annotationJson = new JSONObject();
+		           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
+		           	 				for(int k=0;k<annotationAry.length;k++) {
+		           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+		           	 				}
+		           	 				String regexp = annotationJson.getString("regexp");
+		           	 				if(!Pattern.matches(regexp, cellValue)) {
 		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
 		           	 				}
-		           	 			}
-			           	 		rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Min")) {
-	           	 				int min = Integer.valueOf(annotation.substring(5, annotation.length()-1));
-		           	 			if(Integer.valueOf(cellValue) <= min) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能小于" + min);
-	           	 				}
-		           	 			rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Max")) {
-		           	 			int max = Integer.valueOf(annotation.substring(5, annotation.length()-1));
-		           	 			if(Integer.valueOf(cellValue) > max) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能大于" + max);
-	           	 				}
-		           	 			rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@DecimalMin")) {
-		           	 			double decimalMin = Double.valueOf(annotation.substring(5, annotation.length()-1));
-		           	 			if(Double.valueOf(cellValue) <= decimalMin) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能小于" + decimalMin);
-	           	 				}
-		           	 			rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@DecimalMax")) {
-		           	 			double decimalMax = Double.valueOf(annotation.substring(5, annotation.length()-1));
-		           	 			if(Double.valueOf(cellValue) <= decimalMax) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值不能大于" + decimalMax);
-	           	 				}
-		           	 			rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Range")) {
-		           	 			JSONObject annotationJson = new JSONObject();
-	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
-	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
-	           	 				}
-		           	 			if(annotationJson.containsKey("min")) {
-		           	 				if(Integer.valueOf(cellValue) <= annotationJson.getInteger("min")) {
-		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
-		           	 				}
-		           	 			}
-			           	 		if(annotationJson.containsKey("max")) {
-				           	 		if(Integer.valueOf(cellValue) > annotationJson.getInteger("max")) {
-		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
-		           	 				}
-		           	 			}
-			           	 		rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Pattern")) {
-		           	 			JSONObject annotationJson = new JSONObject();
-	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
-	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
-	           	 				}
-	           	 				String regexp = annotationJson.getString("regexp");
-	           	 				if(!Pattern.matches(regexp, cellValue)) {
-	           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
-	           	 				}
-	           	 				rowJson.put(fieldRule.getString("field"), cellValue);
-	           	 			} else if (annotation.startsWith("@Replace")) {
-	           	 				JSONObject options = ruleJson.getJSONObject("options");
-	           	 				if(StringUtils.isEmpty(options)) {
-	           	 					throw new FormulaException("无效注解@Replace");
-	           	 				} else {
-		           	 				if(!StringUtils.isEmpty(options.get(cellValue))) {
-		           	 					rowJson.put(fieldRule.getString("field"), options.get(cellValue));
+		           	 				rowJson.put(fieldRule.getString("field"), cellValue);
+		           	 			} else if (annotation.startsWith("@Replace")) {
+		           	 				JSONObject options = ruleJson.getJSONObject("options");
+		           	 				if(StringUtils.isEmpty(options)) {
+		           	 					throw new FormulaException("无效注解@Replace");
 		           	 				} else {
-		           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数据字典无相应值");
+			           	 				if(!StringUtils.isEmpty(options.get(cellValue))) {
+			           	 					rowJson.put(fieldRule.getString("field"), options.get(cellValue));
+			           	 				} else {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数据字典无相应值");
+			           	 				}
 		           	 				}
-	           	 				}
-	           	 			} else {
-	           	 				throw new FormulaException("无效注解");
-	           	 			}
+		           	 			} else {
+		           	 				throw new FormulaException("无效注解");
+		           	 			}
+		           	 		}
+	           	 		} else {
+	           	 			rowJson.put(fieldRule.getString("field"), cellValue);
 	           	 		}
-           	 		} else {
-           	 			rowJson.put(fieldRule.getString("field"), cellValue);
            	 		}
            	 	}
            	 	if(!StringUtils.isEmpty(verifyScript)) {
