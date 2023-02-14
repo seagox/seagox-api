@@ -97,7 +97,7 @@ CREATE TABLE "public"."jelly_form" (
 	"flow_id" BIGINT DEFAULT NULL,
 	"data_source" TEXT,
 	"search_json" TEXT,
-	"table_header" BIGINT,
+	"table_header" TEXT,
 	"options" TEXT,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP

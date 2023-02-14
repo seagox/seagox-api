@@ -102,7 +102,7 @@ create table jelly_form (
 	flow_id NUMBER(20) DEFAULT NULL,
 	data_source clob,
 	search_json clob,
-    table_header NUMBER(20),
+    table_header clob,
     options clob,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP

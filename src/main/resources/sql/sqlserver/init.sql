@@ -761,7 +761,7 @@ CREATE TABLE dbo.jelly_form (
   flow_id bigint  NULL,
   data_source nvarchar(max)  NULL,
   search_json nvarchar(max)  NULL,
-  table_header bigint  NOT NULL,
+  table_header nvarchar(max)  NOT NULL,
   options nvarchar(max)  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP

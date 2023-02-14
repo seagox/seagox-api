@@ -27,14 +27,35 @@ public class JellyForm {
     private Long companyId;
     
     /**
+     * 名称
+     */
+    private String name;
+    
+    /**
      * 设计id
      */
     private Long designId;
     
     /**
-     * 名称
+     * 图标
      */
-    private String name;
+    private String icon;
+    
+    /**
+     * 颜色
+     */
+    private String color;
+    
+    /**
+     * 流程json
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private Long flowId;
+    
+    /**
+     * 表格表头
+     */
+    private String tableHeader;
     
     /**
      * 数据源
@@ -45,18 +66,7 @@ public class JellyForm {
      * 搜索配置
      */
     private String searchJson;
-    
-    /**
-     * 表格表头
-     */
-    private Long tableHeader;
-    
-    /**
-     * 流程json
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private Long flowId;
-    
+
     /**
      * 其他参数json
      */
@@ -95,32 +105,17 @@ public class JellyForm {
     private String historyJson;
     
     /**
-     * 表头json
-     */
-    @TableField(exist = false)
-    private String tableHeaderJson;
-    
-    /**
      * 权限
      */
+    @TableField(exist = false)
     private String authority;
-    
-    /**
-     * 图标
-     */
-    private String icon;
-    
-    /**
-     * 颜色
-     */
-    private String color;
 
 	/**
 	 * 禁用按钮权限
 	 */
 	@TableField(exist = false)
 	private Map<String,Object> disableButtonFlag;
-    
+
 	public Long getId() {
 		return id;
 	}
@@ -137,20 +132,52 @@ public class JellyForm {
 		this.companyId = companyId;
 	}
 
-	public Long getDesignId() {
-		return designId;
-	}
-
-	public void setDesignIds(Long designId) {
-		this.designId = designId;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Long getDesignId() {
+		return designId;
+	}
+
+	public void setDesignId(Long designId) {
+		this.designId = designId;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public Long getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(Long flowId) {
+		this.flowId = flowId;
+	}
+
+	public String getTableHeader() {
+		return tableHeader;
+	}
+
+	public void setTableHeader(String tableHeader) {
+		this.tableHeader = tableHeader;
 	}
 
 	public String getDataSource() {
@@ -167,22 +194,6 @@ public class JellyForm {
 
 	public void setSearchJson(String searchJson) {
 		this.searchJson = searchJson;
-	}
-
-	public Long getTableHeader() {
-		return tableHeader;
-	}
-
-	public void setTableHeader(Long tableHeader) {
-		this.tableHeader = tableHeader;
-	}
-
-	public Long getFlowId() {
-		return flowId;
-	}
-
-	public void setFlowId(Long flowId) {
-		this.flowId = flowId;
 	}
 
 	public String getOptions() {
@@ -217,20 +228,20 @@ public class JellyForm {
 		this.formDesign = formDesign;
 	}
 
+	public String getPrintJson() {
+		return printJson;
+	}
+
+	public void setPrintJson(String printJson) {
+		this.printJson = printJson;
+	}
+
 	public String getHistoryJson() {
 		return historyJson;
 	}
 
 	public void setHistoryJson(String historyJson) {
 		this.historyJson = historyJson;
-	}
-
-	public String getTableHeaderJson() {
-		return tableHeaderJson;
-	}
-
-	public void setTableHeaderJson(String tableHeaderJson) {
-		this.tableHeaderJson = tableHeaderJson;
 	}
 
 	public String getAuthority() {
@@ -241,30 +252,6 @@ public class JellyForm {
 		this.authority = authority;
 	}
 
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getPrintJson() {
-		return printJson;
-	}
-
-	public void setPrintJson(String printJson) {
-		this.printJson = printJson;
-	}
-
 	public Map<String, Object> getDisableButtonFlag() {
 		return disableButtonFlag;
 	}
@@ -272,4 +259,5 @@ public class JellyForm {
 	public void setDisableButtonFlag(Map<String, Object> disableButtonFlag) {
 		this.disableButtonFlag = disableButtonFlag;
 	}
+    
 }

@@ -164,6 +164,7 @@ public class JellyFormService implements IJellyFormService {
         } else if (datasourceUrl.contains("dm")) {
             params.put("_databaseId", "dm");
         }
+        System.out.println(form.getDesignId());
         XmlUtils.sqlAnalysis(dataSource, params, null);
         formMapper.insert(form);
 
