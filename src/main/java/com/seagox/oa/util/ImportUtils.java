@@ -25,8 +25,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -732,6 +734,36 @@ public class ImportUtils {
 			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数据字典无相应值");
 			           	 				}
 		           	 				}
+		           	 			} else if (annotation.startsWith("@DateTimeFormat")) {
+			           	 			JSONObject annotationJson = new JSONObject();
+		           	 				String[] annotationAry = annotation.substring(16, annotation.length()-1).split(",");
+		           	 				for(int k=0;k<annotationAry.length;k++) {
+		           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+		           	 				}
+			           	 			if(annotationJson.containsKey("pattern")) {
+		           	 					try {
+		           	 						String pattern = annotationJson.getString("pattern");
+		           	 						SimpleDateFormat sdf = new SimpleDateFormat (pattern);
+		           	 						Date date = null;
+				           	 				if (!StringUtils.isEmpty(cellValue)) {
+				           	 					date = sdf.parse(cellValue);
+				           	 				}
+			                   	 			rowJson.put(fieldRule.getString("field"), date);
+										} catch (Exception e) {
+											e.printStackTrace();
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "日期格式错误");
+										}
+			           	 			}
+		           	 			} else if (annotation.startsWith("@Decimal")) {
+			           	 			if (!StringUtils.isEmpty(cellValue)) {
+			           	 				try {
+											rowJson.put(fieldRule.getString("field"), Double.valueOf(cellValue));
+										} catch (NumberFormatException e) {
+			           	 					throw new FormulaException("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "数值转换错误");
+										}
+			           	 			} else {
+			           	 				rowJson.put(fieldRule.getString("field"), null);
+			           	 			}
 		           	 			} else {
 		           	 				throw new FormulaException("无效注解");
 		           	 			}
