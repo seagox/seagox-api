@@ -48,7 +48,7 @@ public class FieldModel extends ImportModel {
     /**
      * 小数
      */
-    @Excel(name = "小数")
+    @Excel(name = "小数点")
     @Min(value = 0, message = "不能低于0")
     @Max(value = 30, message = "不能超过30")
     private Integer decimals;
