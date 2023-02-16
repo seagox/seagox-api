@@ -2,6 +2,9 @@ package com.seagox.oa.excel.service;
 
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyPrint;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PathVariable;
 
 public interface IJellyPrintService {
@@ -40,5 +43,10 @@ public interface IJellyPrintService {
      * 删除
      */
     public ResultData delete(Long id);
+    
+    /**
+     * 预览
+     */
+    public String preview(Long id, HttpServletRequest request);
 
 }

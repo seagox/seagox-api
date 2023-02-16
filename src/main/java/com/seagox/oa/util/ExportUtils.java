@@ -2,6 +2,7 @@ package com.seagox.oa.util;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlEngine;
@@ -17,8 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ExportUtils {
 
@@ -83,8 +84,9 @@ public class ExportUtils {
      * @param params        参数
      * @param request       request
      * @param response      response
+     * @param policyList    表格参数
      */
-    public static void exportWord(String templateUrl, String fileName, Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) {
+    public static void exportWord(String templateUrl, String fileName, Map<String, Object> params, HttpServletRequest request, HttpServletResponse response, List<String> policyList) {
         OutputStream out = null;
         InputStream in = null;
 
@@ -95,16 +97,64 @@ public class ExportUtils {
             in = new URL(templateUrl).openStream();
             out = response.getOutputStream();
             HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
-            Set<String> set = params.keySet();
-            String key = null;
-            if (set.iterator().hasNext()) {
-                key = set.iterator().next();
+            if(policyList != null) {
+            	ConfigureBuilder configureBuilder = Configure.newBuilder();
+            	for(int i=0;i<policyList.size();i++) {
+            		configureBuilder.bind(policyList.get(i), policy);
+            	}
+            	Configure config = configureBuilder.build();
+
+            	XWPFTemplate template = XWPFTemplate.compile(templateUrl, config).render(params);
+            	template.write(out);
+                template.close();
+            } else {
+            	XWPFTemplate template = XWPFTemplate.compile(in).render(params);
+            	template.write(out);
+                template.close();
             }
-            Configure config = Configure.newBuilder().bind(key, policy).build();
-            XWPFTemplate template = XWPFTemplate.compile(in, config)
-                    .render(params);
-            template.write(out);
-            template.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /***
+     * word导出公共方法
+     * @param templateUrl  模板地址
+     * @param params        参数
+     * @param out           输出流
+     * @param policyList    表格参数
+     */
+    public static void exportWord(String templateUrl, Map<String, Object> params, OutputStream out, List<String> policyList) {
+    	InputStream in = null;
+    	try {
+            in = new URL(templateUrl).openStream();
+            HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+            if(policyList != null) {
+            	ConfigureBuilder configureBuilder = Configure.newBuilder();
+            	for(int i=0;i<policyList.size();i++) {
+            		configureBuilder.bind(policyList.get(i), policy);
+            	}
+            	Configure config = configureBuilder.build();
+
+            	XWPFTemplate template = XWPFTemplate.compile(templateUrl, config).render(params);
+            	template.write(out);
+                template.close();
+            } else {
+            	XWPFTemplate template = XWPFTemplate.compile(in).render(params);
+            	template.write(out);
+                template.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

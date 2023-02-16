@@ -4,6 +4,7 @@ import com.seagox.oa.annotation.SysLogPoint;
 import com.seagox.oa.auth.serivce.IAuthService;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
+import com.seagox.oa.excel.service.IJellyPrintService;
 import com.seagox.oa.util.DocumentConverterUtils;
 import com.seagox.oa.util.UploadUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,6 +49,9 @@ public class UploadController {
     
     @Autowired
 	private IAuthService authService;
+    
+    @Autowired
+    private IJellyPrintService printService;
 
     /**
      * 文件上传
@@ -187,5 +192,40 @@ public class UploadController {
     public ResultData importExcel(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
     	return authService.importExcel(file, request, request.getParameter("ruleId"));
     }
+    
+    /**
+	 * 打印
+	 */
+	@GetMapping("/print/{id}")
+	public void preview(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		OutputStream outputStream = null;
+        InputStream inputStream = null;
+        try {
+        	String path = printService.preview(id, request);
+        	//使用response,将pdf文件以流的方式发送的前端浏览器上
+            response.setHeader("Content-Disposition", "filename=" + new String(("test.pdf").getBytes("GBK"), "ISO-8859-1"));
+            response.setContentType("application/pdf");
+            outputStream = response.getOutputStream();
+            inputStream = new FileInputStream(path);
+            documentConverterUtils.convert("docx", inputStream, outputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+	}
 
 }

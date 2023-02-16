@@ -1331,7 +1331,8 @@ CREATE TABLE dbo.jelly_print (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
-  excel_json nvarchar(max)  NULL,
+  data_source bigint  NOT NULL,
+  template_source nvarchar(max) NOT NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -1362,10 +1363,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'excel配置',
+'MS_Description', N'数据源',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_print',
-'COLUMN', N'excel_json'
+'COLUMN', N'data_source'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'模板源',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_print',
+'COLUMN', N'template_source'
 GO
 
 EXEC sp_addextendedproperty
@@ -1387,6 +1395,7 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_print'
 GO
+
 
 
 -- ----------------------------

@@ -42,7 +42,8 @@ CREATE TABLE `jelly_print`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(30) NOT NULL COMMENT '名称',
-    `excel_json` text DEFAULT NULL COMMENT 'excel配置',
+    `data_source` bigint(20) NOT NULL COMMENT '数据源',
+    `template_source` text NOT NULL COMMENT '模板源',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)

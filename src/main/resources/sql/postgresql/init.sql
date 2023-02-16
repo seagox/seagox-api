@@ -73,14 +73,16 @@ CREATE TABLE "jelly_print" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
-	"excel_json" TEXT,
+	"data_source" BIGINT NOT NULL,
+  	"template_source" text NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON COLUMN "jelly_print"."id" IS '主键';
 COMMENT ON COLUMN "jelly_print"."company_id" IS '公司id';
 COMMENT ON COLUMN "jelly_print"."name" IS '名称';
-COMMENT ON COLUMN "jelly_print"."excel_json" IS 'excel配置';
+COMMENT ON COLUMN "jelly_print"."data_source" IS '数据源';
+COMMENT ON COLUMN "jelly_print"."template_source" IS '模板源';
 COMMENT ON COLUMN "jelly_print"."create_time" IS '创建时间';
 COMMENT ON COLUMN "jelly_print"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_print" IS '打印模版';

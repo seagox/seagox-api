@@ -29,9 +29,14 @@ public class JellyPrint {
     private String name;
     
     /**
-     * excel配置
+     * 数据源
      */
-    private String excelJson;
+    private Long dataSource;
+    
+    /**
+     * 模板源
+     */
+    private String templateSource;
     
     /**
      * 创建时间
@@ -71,12 +76,20 @@ public class JellyPrint {
 		this.name = name;
 	}
 
-	public String getExcelJson() {
-		return excelJson;
+	public Long getDataSource() {
+		return dataSource;
 	}
 
-	public void setExcelJson(String excelJson) {
-		this.excelJson = excelJson;
+	public void setDataSource(Long dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public String getTemplateSource() {
+		return templateSource;
+	}
+
+	public void setTemplateSource(String templateSource) {
+		this.templateSource = templateSource;
 	}
 
 	public Date getCreateTime() {
