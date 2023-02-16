@@ -75,6 +75,54 @@ public class ExportUtils {
             }
         }
     }
+    
+    /***
+     * excel导出公共方法
+     * @param templateUrl  模板地址
+     * @param params        参数
+     * @param out       输出流
+     * 
+     */
+    public static void exportExcel(String templateUrl, Map<String, Object> params, OutputStream out) {
+        InputStream in = null;
+        try {
+            Context context = new Context();
+            if (params != null) {
+                for (String key : params.keySet()) {
+                    context.putVar(key, params.get(key));
+                }
+            }
+            in = new URL(templateUrl).openStream();
+            JxlsHelper jxlsHelper = JxlsHelper.getInstance();
+            Transformer transformer = jxlsHelper.createTransformer(in, out);
+            //获得配置
+            JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator) transformer.getTransformationConfig().getExpressionEvaluator();
+            //函数强制，自定义功能
+            Map<String, Object> funcs = new HashMap<String, Object>();
+            funcs.put("utils", new JxlsUtils()); //添加自定义功能
+            JexlBuilder jb = new JexlBuilder();
+            jb.namespaces(funcs);
+            jb.silent(true); //设置静默模式，不报警告
+            JexlEngine je = jb.create();
+            evaluator.setJexlEngine(je);
+            //必须要这个，否者表格函数统计会错乱
+            jxlsHelper.setUseFastFormulaProcessor(false)
+                    .processTemplate(context, transformer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                	out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
     /***
