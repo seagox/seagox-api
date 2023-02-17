@@ -13,10 +13,10 @@ public class DataSourceUtils {
 	
 	public JdbcTemplate getDynamicJdbcTemplate(String url, String userName, String password, String driverClassName) {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/oa?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true");
-		dataSource.setUsername("root");
-		dataSource.setPassword("123456");
-		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		dataSource.setUrl(url);
+		dataSource.setUsername(userName);
+		dataSource.setPassword(password);
+		dataSource.setDriverClassName(driverClassName);
 		jdbcTemplate.setDataSource(dataSource);
 		return jdbcTemplate;
 	}
