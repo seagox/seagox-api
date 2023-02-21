@@ -15,8 +15,9 @@ public interface IJellyMetaFunctionService {
      * @param companyId 公司id
      * @param name      名称
      * @param path      路径
+     * @param type      类型
      */
-    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name, String path);
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name, String path, Integer type);
     
     /**
      * 查询所有

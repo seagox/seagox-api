@@ -387,6 +387,7 @@ COMMENT ON TABLE jelly_meta_page IS '元页面';
 CREATE TABLE jelly_meta_function  (
 	id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
+    type NUMBER(4) DEFAULT 1,
 	name VARCHAR2(30) NOT NULL,
 	path VARCHAR2(30) NOT NULL,
 	script clob DEFAULT NULL,
@@ -398,6 +399,7 @@ create sequence jelly_meta_function_seq increment by 1 start with 1 nomaxvalue m
 
 COMMENT ON COLUMN jelly_meta_function.id IS '主键';
 COMMENT ON COLUMN jelly_meta_function.company_id IS '公司id';
+COMMENT ON COLUMN jelly_meta_function.type IS '类型(1:元函数;2:规则引擎)';
 COMMENT ON COLUMN jelly_meta_function.name IS '名称';
 COMMENT ON COLUMN jelly_meta_function.path IS '路径';
 COMMENT ON COLUMN jelly_meta_function.script IS '脚本';

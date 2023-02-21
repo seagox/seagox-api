@@ -216,6 +216,7 @@ DROP TABLE IF EXISTS `jelly_meta_function`;
 CREATE TABLE `jelly_meta_function`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
+    `type` int(4) DEFAULT 1 COMMENT '类型(1:元函数;2:规则引擎)',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `path` varchar(30) NOT NULL COMMENT '路径',
     `script` text DEFAULT NULL COMMENT '脚本',

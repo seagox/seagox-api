@@ -1146,6 +1146,7 @@ DROP TABLE IF EXISTS dbo.jelly_meta_function;
 CREATE TABLE dbo.jelly_meta_function (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
+  type int DEFAULT 1,
   name nvarchar(30)  NOT NULL,
   path nvarchar(30)  NOT NULL,
   script nvarchar(max)  NULL,
@@ -1169,6 +1170,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_meta_function',
 'COLUMN', N'company_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'类型(1:元函数;2:规则引擎)',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_meta_function',
+'COLUMN', N'type'
 GO
 
 EXEC sp_addextendedproperty

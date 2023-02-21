@@ -364,6 +364,7 @@ DROP TABLE IF EXISTS "public"."jelly_meta_function";
 CREATE TABLE "public"."jelly_meta_function"  (
 	"id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     "company_id" BIGINT NOT NULL,
+    "type" INTEGER DEFAULT 1,
 	"name" VARCHAR(30) NOT NULL,
 	"path" VARCHAR(30) NOT NULL,
 	"script" TEXT DEFAULT NULL,
@@ -373,6 +374,7 @@ CREATE TABLE "public"."jelly_meta_function"  (
 
 COMMENT ON COLUMN "public"."jelly_meta_function"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_meta_function"."company_id" IS '公司id';
+COMMENT ON COLUMN "public"."jelly_meta_function"."type" IS '类型(1:元函数;2:规则引擎)';
 COMMENT ON COLUMN "public"."jelly_meta_function"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_meta_function"."path" IS '路径';
 COMMENT ON COLUMN "public"."jelly_meta_function"."script" IS '脚本';

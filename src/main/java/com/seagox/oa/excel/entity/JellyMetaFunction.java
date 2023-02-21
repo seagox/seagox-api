@@ -24,6 +24,11 @@ public class JellyMetaFunction {
     private Long companyId;
     
     /**
+	 * 类型(1:元函数;2:规则引擎;)
+	 */
+	private Integer type;
+    
+    /**
      * 名称
      */
     private String name;
@@ -66,6 +71,14 @@ public class JellyMetaFunction {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String getName() {

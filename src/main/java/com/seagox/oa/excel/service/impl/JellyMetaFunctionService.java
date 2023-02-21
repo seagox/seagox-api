@@ -24,9 +24,10 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
     private JellyMetaFunctionMapper metaFunctionMapper;
     
     @Override
-    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name, String path) {
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name, String path, Integer type) {
     	LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyMetaFunction::getCompanyId, companyId)
+        .eq(!StringUtils.isEmpty(type), JellyMetaFunction::getType, type)
         .like(!StringUtils.isEmpty(name), JellyMetaFunction::getName, name)
         .like(!StringUtils.isEmpty(path), JellyMetaFunction::getPath, path)
         .orderByDesc(JellyMetaFunction::getCreateTime);
