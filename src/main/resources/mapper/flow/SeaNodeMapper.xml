@@ -14,9 +14,14 @@
             AND a.version = #{version}
             AND c.status = 0
             AND c.assignee = #{assignee}
+            <if test="_databaseId == 'oracle'">
+		        AND ROWNUM = 1
+	        </if>
         </where>
         ORDER BY a.create_time desc 
-        LIMIT 1
+        <if test="_databaseId != 'oracle'">
+	        LIMIT 1
+        </if>
     </select>
     
     <!--查询是否可撤回-->
@@ -44,9 +49,14 @@
             AND a.version = b.version
             AND c.assignee = #{assignee}
             AND c.status in (0,1,2,3,4,5)
+            <if test="_databaseId == 'oracle'">
+		        AND ROWNUM = 1
+	        </if>
         </where>
         ORDER BY a.create_time desc
-        LIMIT 1
+        <if test="_databaseId != 'oracle'">
+	        LIMIT 1
+        </if>
     </select>
 
     <!--根据下一节点-->

@@ -693,6 +693,7 @@ public class JellyFormService implements IJellyFormService {
         } else if (datasourceUrl.contains("dm")) {
             searchObject.put("_databaseId", "dm");
         }
+        searchObject.put("companyId", companyId);
         searchObject.put("userId", userId);
         sql = XmlUtils.sqlAnalysis(sql, searchObject, null);
 
