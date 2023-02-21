@@ -52,8 +52,7 @@ public class JdbcTemplateUtils {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(sql.toString(), new String[]{"id"});
                 for (int k = 0; k < valueArray.size(); k++) {
-                    ps.setString(k + 1, String.valueOf(valueArray.get(k)));
-                    //valueArray.get(k).getClass().getTypeName();
+                    ps.setObject(k + 1, valueArray.get(k));
                 }
                 return ps;
             }

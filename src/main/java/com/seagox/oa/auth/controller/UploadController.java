@@ -207,7 +207,8 @@ public class UploadController {
             response.setContentType("application/pdf");
             outputStream = response.getOutputStream();
             inputStream = new FileInputStream(path);
-            documentConverterUtils.convert("docx", inputStream, outputStream);
+            String suffix = path.substring(path.lastIndexOf(".") + 1).toLowerCase();
+            documentConverterUtils.convert(suffix, inputStream, outputStream);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
