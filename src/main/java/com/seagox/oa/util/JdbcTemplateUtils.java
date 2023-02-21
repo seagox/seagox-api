@@ -110,7 +110,7 @@ public class JdbcTemplateUtils {
                             ps.setNull(k + 1, Types.VARCHAR);
                         }
                     } else {
-                        ps.setString(k + 1, String.valueOf(valueArray.get(k)));
+                        ps.setObject(k + 1, valueArray.get(k));
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class JdbcTemplateUtils {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Map<String, Object> map = list.get(i);
                 for (int k = 0; k < valueArray.size(); k++) {
-                    ps.setString(k + 1, String.valueOf(map.get(valueArray.get(k))));
+                    ps.setObject(k + 1, map.get(valueArray.get(k)));
                 }
             }
 
