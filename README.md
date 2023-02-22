@@ -46,4 +46,4 @@ Seagox 是一个基于云原生的、完全容器化的工具和平台，用于�
 - superAdmin/123456
 
 ## 演示图
-![](https://www.showdoc.com.cn/server/api/attachment/visitFile?sign=e340d3ab16b6eabae632532cffe316a1&file=file.png)
+![](https://oss.seagox.com/sea-oss/59e18c9acd55c6fb2d1104b00f68e7a2.png)
