@@ -193,7 +193,7 @@ CREATE TABLE dbo.jelly_report  (
 )
 GO
 
-ALTER TABLE dbo.jelly_business_field SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE dbo.jelly_report SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
@@ -374,7 +374,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'业务表id',
+'MS_Description', N'目标模型 ',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_business_field',
 'COLUMN', N'target_table_id'
