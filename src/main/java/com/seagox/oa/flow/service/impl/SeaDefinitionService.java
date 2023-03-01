@@ -103,7 +103,7 @@ public class SeaDefinitionService implements ISeaDefinitionService {
                 map.put("tableComment", businessFieldList.get(j).get("tableComment"));
                 map.put("authority", 2);
                 map.put("field", businessFieldList.get(j).get("name"));
-                map.put("comment", businessFieldList.get(j).get("comment"));
+                map.put("comment", businessFieldList.get(j).get("remark"));
                 operationAuthority.add(map);
             }
         }

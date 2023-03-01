@@ -12,6 +12,8 @@ import com.seagox.oa.excel.entity.*;
 import com.seagox.oa.excel.mapper.*;
 import com.seagox.oa.excel.service.IJellyFormService;
 import com.seagox.oa.exception.ConfirmException;
+import com.seagox.oa.exception.FlowManualSelectionException;
+import com.seagox.oa.exception.FlowOptionalException;
 import com.seagox.oa.flow.entity.SeaInstance;
 import com.seagox.oa.flow.mapper.SeaDefinitionMapper;
 import com.seagox.oa.flow.mapper.SeaInstanceMapper;
@@ -482,7 +484,11 @@ public class JellyFormService implements IJellyFormService {
                     variables.put("rejectType", request.getParameter("rejectType"));
                     try {
                         runtimeService.complete(variables, request);
-                    } catch (Exception e) {
+                    } catch (FlowManualSelectionException e) {
+                        throw new FlowManualSelectionException(e.getMessage());
+                    } catch (FlowOptionalException e) {
+                        throw new FlowOptionalException(e.getMessage());
+                    }catch (Exception e) {
                         e.printStackTrace();
                         // 手动回滚
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
