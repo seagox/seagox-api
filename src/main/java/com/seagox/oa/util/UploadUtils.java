@@ -17,7 +17,8 @@ import io.minio.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,8 @@ public class UploadUtils {
      * minio上传
      */
     public static String minioOss(String endpoint, String accessKey, String secretKey, MultipartFile file, String bucketName) {
-        try {
+    	InputStream inputStream = null;
+    	try {
             MinioClient minioClient = MinioClient.builder().endpoint(endpoint)
                     .credentials(accessKey, secretKey)
                     .build();
@@ -49,26 +51,36 @@ public class UploadUtils {
                 config.put("Statement", statements);
                 minioClient.setBucketPolicy(SetBucketPolicyArgs.builder().bucket(bucketName).config(config.toJSONString()).build());
             }
+            
+            inputStream = file.getInputStream();
 
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-            String fileName = DigestUtils.md5Hex(file.getBytes()) + "." + suffix;
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(file.getBytes());
+            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
             Map<String, String> headers = new HashMap<>();
             headers.put("x-amz-acl", "public-read-write");
-            minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(byteArrayInputStream, byteArrayInputStream.available(), -1).contentType(file.getContentType()).headers(headers).build());
+            minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(inputStream, inputStream.available(), -1).contentType(file.getContentType()).headers(headers).build());
 
             return endpoint + "/" + bucketName + "/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
+        } finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
     }
 
     /**
      * 阿里云oss上传
      */
     public static String aliyunOss(String endpoint, String accessKey, String secretKey, MultipartFile file, String bucketName) {
-        // 创建OSSClient实例。
+    	InputStream inputStream = null;
+    	// 创建OSSClient实例。
         OSSClient ossClient = new OSSClient(endpoint, accessKey, secretKey);
         try {
             boolean isExist = ossClient.doesBucketExist(bucketName);
@@ -77,14 +89,15 @@ public class UploadUtils {
                 createBucketRequest.setCannedACL(CannedAccessControlList.PublicReadWrite);
                 ossClient.createBucket(createBucketRequest);
             }
+            inputStream = file.getInputStream();
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
             // 创建上传Object的Metadata
             ObjectMetadata meta = new ObjectMetadata();
             // 设置上传的内容类型
             meta.setContentType(file.getContentType());
-            String fileName = DigestUtils.md5Hex(file.getBytes()) + "." + suffix;
+            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
             // 上传文件流。
-            ossClient.putObject(bucketName, fileName, new ByteArrayInputStream(file.getBytes()), meta);
+            ossClient.putObject(bucketName, fileName, inputStream, meta);
             if (endpoint.startsWith("https")) {
                 return "https://" + bucketName + "." + endpoint.substring(8, endpoint.length()) + "/" + fileName;
             } else {
@@ -94,6 +107,13 @@ public class UploadUtils {
             e.printStackTrace();
             return null;
         } finally {
+        	if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
             // 关闭OSSClient。
             ossClient.shutdown();
         }
@@ -103,7 +123,8 @@ public class UploadUtils {
      * 移动云oss上传
      */
     public static String ecloudOss(String endpoint, String accessKey, String secretKey, MultipartFile file, String bucketName) {
-        try {
+    	InputStream inputStream = null;
+    	try {
             ClientConfiguration opts = new ClientConfiguration();
             opts.setSignerOverride("S3SignerType");
             AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -118,18 +139,27 @@ public class UploadUtils {
                 createBucketRequest.setCannedAcl(com.amazonaws.services.s3.model.CannedAccessControlList.PublicReadWrite);
                 s3.createBucket(createBucketRequest);
             }
+            inputStream = file.getInputStream();
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
             com.amazonaws.services.s3.model.ObjectMetadata meta = new com.amazonaws.services.s3.model.ObjectMetadata();
             meta.setContentType(file.getContentType());
             meta.setContentLength(file.getSize());
             meta.setHeader("x-amz-acl", com.amazonaws.services.s3.model.CannedAccessControlList.PublicReadWrite);
-            String fileName = DigestUtils.md5Hex(file.getBytes()) + "." + suffix;
-            s3.putObject(bucketName, fileName, new ByteArrayInputStream(file.getBytes()), meta);
+            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
+            s3.putObject(bucketName, fileName, inputStream, meta);
             return endpoint + "/" + bucketName + "/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
+        } finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
     }
 
 }
