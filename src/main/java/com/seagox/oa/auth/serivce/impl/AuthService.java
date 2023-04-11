@@ -15,20 +15,18 @@ import com.seagox.oa.excel.mapper.JellyImportRuleDetailMapper;
 import com.seagox.oa.excel.mapper.JellyImportRuleMapper;
 import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.excel.service.IJellyRegionsService;
-import com.seagox.oa.exception.FormulaException;
 import com.seagox.oa.groovy.GroovyFactory;
-import com.seagox.oa.groovy.IGroovyRule;
+import com.seagox.oa.groovy.IGroovyImportHandle;
 import com.seagox.oa.security.JwtTokenUtils;
 import com.seagox.oa.sys.entity.*;
 import com.seagox.oa.sys.mapper.*;
 import com.seagox.oa.util.EncryptUtils;
-import com.seagox.oa.util.ImportUtils;
-import com.seagox.oa.util.JdbcTemplateUtils;
+import com.seagox.oa.util.ExcelUtils;
+import com.seagox.oa.util.ImportResult;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,7 +81,7 @@ public class AuthService implements IAuthService {
     private JellyDicClassifyMapper dicClassifyMapper;
     
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private IGroovyImportHandle importHandle;
 
 	@Override
 	public ResultData login(String account, String password, String openid, String avatar) {
@@ -612,20 +610,8 @@ public class AuthService implements IAuthService {
 	@Override
 	public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId) {
 		try {
-			JellyImportRule exportRule = importRuleMapper.selectById(ruleId);
-			// 导入前规则
-	        if (exportRule.getBeforeRuleId() != null) {
-	        	JellyMetaFunction beforeRule = metaFunctionMapper.selectById(exportRule.getBeforeRuleId());
-	            Map<String, Object> params = new HashMap<>();
-	            try {
-	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(beforeRule.getScript());
-	                groovyRule.execute(request, params);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-	            }
-	        }
-	        // 验证规则 
+			JellyImportRule exportRule = importRuleMapper.selectById(request.getParameter("ruleId"));
+	        // 验证规则
 	        JSONObject rule = new JSONObject();
 	        List<Map<String, Object>> exportRuleDetailList = importRuleDetailMapper.queryByRuleId(exportRule.getId());
 	        for(int i=0; i<exportRuleDetailList.size();i++) {
@@ -650,30 +636,39 @@ public class AuthService implements IAuthService {
 	        	}
 	        	rule.put(exportRuleDetail.get("col").toString(), fieldJson);
 	        }
-	        List<Map<String, Object>> result = new ArrayList<>();
+	        ImportResult importResult = new ImportResult();
 	        if (exportRule.getVerifyRuleId() != null) {
 	        	JellyMetaFunction verifyRule = metaFunctionMapper.selectById(exportRule.getVerifyRuleId());
-				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
+	        	importResult = ExcelUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
 	        } else {
-				result = ImportUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, null);
+	        	importResult = ExcelUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, null);
 	        }
-	        JellyBusinessTable businessTable = businessTableMapper.selectById(exportRule.getDataSource());
-			JdbcTemplateUtils.batchInsert(jdbcTemplate, businessTable.getName(), result);
-			// 导入后规则
-	        if (exportRule.getAfterRuleId() != null) {
-	        	JellyMetaFunction afterRule = metaFunctionMapper.selectById(exportRule.getAfterRuleId());
-	            Map<String, Object> params = new HashMap<>();
-	            try {
-	                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(afterRule.getScript());
-	                groovyRule.execute(request, params);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+	        // 判断是否有错误
+	        if(importResult.isVerifyFail()) {
+	        	for (String errorMsg : importResult.getFailList()) {
+					return ResultData.warn(ResultCode.OTHER_ERROR, errorMsg);
+				}
+	        } else {
+	        	JellyBusinessTable businessTable = businessTableMapper.selectById(exportRule.getDataSource());
+	            // 处理导入数据
+	        	Map<String, Object> params = new HashMap<String, Object>();
+	        	params.put("datasourceUrl", datasourceUrl);
+	        	params.put("tableName", businessTable.getName());
+	            if (exportRule.getHandleRuleId() != null) {
+	                JellyMetaFunction groovyImportRule = metaFunctionMapper.selectById(exportRule.getHandleRuleId());
+	                try {
+	                    IGroovyImportHandle groovyRule = GroovyFactory.getInstance().getIImportHandleFromCode(groovyImportRule.getScript());
+	                    return groovyRule.importHandle(request, importResult.getList(), params);
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                    return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+	                }
+	            } else {
+	                return importHandle.importHandle(request, importResult.getList(), params);
 	            }
 	        }
-		} catch (FormulaException e) {
-			throw new FormulaException(e.getMessage());
-        } catch (Exception e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return ResultData.error(ResultCode.INTERNAL_SERVER_ERROR);
 		}
 		return ResultData.success(null);

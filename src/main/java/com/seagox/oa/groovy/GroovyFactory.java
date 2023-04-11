@@ -3,6 +3,9 @@ package com.seagox.oa.groovy;
 import groovy.lang.GroovyClassLoader;
 import org.quartz.Job;
 
+import com.seagox.oa.groovy.IGroovyImportHandle;
+import com.seagox.oa.groovy.IGroovyImportVerifyRule;
+
 public class GroovyFactory {
 
     private static GroovyFactory groovyFactory = new GroovyFactory();
@@ -91,6 +94,48 @@ public class GroovyFactory {
             if (instance != null) {
                 if (instance instanceof IGroovyUpload) {
                     return (IGroovyUpload) instance;
+                }
+            }
+        }
+        groovyClassLoader.clearCache();
+        throw new IllegalArgumentException("读取groovy脚本异常");
+    }
+    
+    /**
+     * 根据脚本内容生成IGroovyImportVerifyRule的实现
+     *
+     * @param code
+     * @return
+     * @throws Exception
+     */
+    public IGroovyImportVerifyRule getIGroovyImportVerifyRuleFromCode(String code) throws Exception {
+        Class<?> clazz = groovyClassLoader.parseClass(code);
+        if (clazz != null) {
+            Object instance = clazz.newInstance();
+            if (instance != null) {
+                if (instance instanceof IGroovyImportVerifyRule) {
+                    return (IGroovyImportVerifyRule) instance;
+                }
+            }
+        }
+        groovyClassLoader.clearCache();
+        throw new IllegalArgumentException("读取groovy脚本异常");
+    }
+    
+    /**
+     * 根据脚本内容生成IGroovyImportHandle的实现
+     *
+     * @param code
+     * @return
+     * @throws Exception
+     */
+    public IGroovyImportHandle getIImportHandleFromCode(String code) throws Exception {
+        Class<?> clazz = groovyClassLoader.parseClass(code);
+        if (clazz != null) {
+            Object instance = clazz.newInstance();
+            if (instance != null) {
+                if (instance instanceof IGroovyImportHandle) {
+                    return (IGroovyImportHandle) instance;
                 }
             }
         }

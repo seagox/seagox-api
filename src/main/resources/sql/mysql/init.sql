@@ -5,9 +5,8 @@ CREATE TABLE `jelly_import_rule`  (
     `code` varchar(30) NOT NULL COMMENT '编码',
     `name` varchar(100) NOT NULL COMMENT '名称',
     `data_source` bigint(20) NOT NULL COMMENT '数据源',
-    `before_rule_id` bigint(20) COMMENT '导入前规则id',
     `verify_rule_id` bigint(20) COMMENT '校验规则id',
-    `after_rule_id` bigint(20) COMMENT '导入后规则id',
+    `handle_rule_id` bigint(20) COMMENT '处理规则',
     `template_source` text NOT NULL COMMENT '模板据源',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'

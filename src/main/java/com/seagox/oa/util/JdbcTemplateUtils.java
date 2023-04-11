@@ -1,5 +1,13 @@
 package com.seagox.oa.util;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -12,22 +20,30 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class JdbcTemplateUtils {
 
     public static long insert(JdbcTemplate jdbcTemplate, String tableName, Map<String, Object> params) {
+        boolean oracleDbFlag = false;
+        Number idKeyNum = null;
+        if ("oracle".equals(params.get("_databaseId"))){
+            oracleDbFlag = true;
+            idKeyNum = jdbcTemplate.queryForObject("select " + tableName + "_seq.nextval as id from dual", Number.class);
+            if (null == idKeyNum){
+                throw new RuntimeException("获取序列值为空");
+            }
+        }
+        if (null != params.get("_databaseId")){
+            params.remove("_databaseId");
+        }
         List<Object> valueArray = new ArrayList<>();
         StringBuffer sql = new StringBuffer();
         sql.append("INSERT INTO ");
         sql.append(tableName);
-        sql.append("(");
+        if (oracleDbFlag){
+            sql.append("(id,");
+        } else {
+            sql.append("(");
+        }
 
         StringBuffer fieldSql = new StringBuffer();
         StringBuffer valueSql = new StringBuffer();
@@ -41,28 +57,55 @@ public class JdbcTemplateUtils {
             }
         }
         sql.append(fieldSql.substring(0, fieldSql.length() - 1));
-        sql.append(") values(");
+        if (oracleDbFlag){
+            sql.append(") values(").append(idKeyNum.longValue()).append(",");
+        } else {
+            sql.append(") values(");
+        }
 
         sql.append(valueSql.substring(0, valueSql.length() - 1));
         sql.append(")");
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(sql.toString(), new String[]{"id"});
-                for (int k = 0; k < valueArray.size(); k++) {
-                    ps.setObject(k + 1, valueArray.get(k));
+        if (oracleDbFlag) {
+            jdbcTemplate.update(new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                    PreparedStatement ps = connection.prepareStatement(sql.toString(), new String[]{"id"});
+                    for (int k = 0; k < valueArray.size(); k++) {
+                        ps.setObject(k + 1, valueArray.get(k));
+                    }
+                    return ps;
                 }
-                return ps;
-            }
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+            });
+            return idKeyNum.longValue();
+        } else {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                    PreparedStatement ps = connection.prepareStatement(sql.toString(), new String[]{"id"});
+                    for (int k = 0; k < valueArray.size(); k++) {
+                        ps.setString(k + 1, String.valueOf(valueArray.get(k)));
+                        //valueArray.get(k).getClass().getTypeName();
+                    }
+                    return ps;
+                }
+            }, keyHolder);
+            return keyHolder.getKey().longValue();
+        }
     }
 
     public static int updateById(JdbcTemplate jdbcTemplate, String tableName, Map<String, Object> params) {
-    	JSONObject columnType = new JSONObject();
-    	SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM " + tableName + " LIMIT 0");
+        JSONObject columnType = new JSONObject();
+        SqlRowSet sqlRowSet = null;
+        if ("oracle".equals(params.get("_databaseId"))){
+            sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM " + tableName + " WHERE ROWNUM = 0");
+        } else {
+            sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM " + tableName + " LIMIT 0");
+        }
+        if (null != params.get("_databaseId")){
+            params.remove("_databaseId");
+        }
     	SqlRowSetMetaData sqlRowSetMetaData = sqlRowSet.getMetaData();
     	int columnCount = sqlRowSetMetaData.getColumnCount();
     	for (int i = 1; i <= columnCount; i++) {
@@ -110,7 +153,7 @@ public class JdbcTemplateUtils {
                             ps.setNull(k + 1, Types.VARCHAR);
                         }
                     } else {
-                        ps.setObject(k + 1, valueArray.get(k));
+                        ps.setString(k + 1, String.valueOf(valueArray.get(k)));
                     }
                 }
             }
@@ -146,7 +189,7 @@ public class JdbcTemplateUtils {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Map<String, Object> map = list.get(i);
                 for (int k = 0; k < valueArray.size(); k++) {
-                    ps.setObject(k + 1, map.get(valueArray.get(k)));
+                    ps.setString(k + 1, String.valueOf(map.get(valueArray.get(k))));
                 }
             }
 
@@ -157,4 +200,47 @@ public class JdbcTemplateUtils {
         });
     }
 
+    public static void batchInsert(JdbcTemplate jdbcTemplate, String tableName, List<Map<String, Object>> list, String dbType) {
+        Map<String, Object> params = list.get(0);
+        List<Object> valueArray = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("INSERT INTO ");
+        sql.append(tableName);
+        sql.append("(");
+
+        StringBuffer fieldSql = new StringBuffer();
+        StringBuffer valueSql = new StringBuffer();
+        if ("oracle".equalsIgnoreCase(dbType)) {
+        	fieldSql.append("id");
+            fieldSql.append(",");
+            valueSql.append(tableName + "_SEQ.NEXTVAL");
+            valueSql.append(",");
+        }
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            fieldSql.append(entry.getKey());
+            fieldSql.append(",");
+            valueSql.append("?");
+            valueSql.append(",");
+            valueArray.add(entry.getKey());
+        }
+        sql.append(fieldSql.substring(0, fieldSql.length() - 1));
+        sql.append(") values(");
+
+        sql.append(valueSql.substring(0, valueSql.length() - 1));
+        sql.append(")");
+        jdbcTemplate.batchUpdate(sql.toString(), new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Map<String, Object> map = list.get(i);
+                for (int k = 0; k < valueArray.size(); k++) {
+                    ps.setObject(k + 1, map.get(valueArray.get(k)));
+                }
+            }
+
+            @Override
+            public int getBatchSize() {
+                return list.size();
+            }
+        });
+    }
 }

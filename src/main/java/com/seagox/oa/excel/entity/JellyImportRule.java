@@ -35,18 +35,6 @@ public class JellyImportRule {
     private String name;
 
     /**
-     * 导入前规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private Long beforeRuleId;
-
-    /**
-     * 导入后规则
-     */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private Long afterRuleId;
-
-    /**
      * 数据源
      */
     private Long dataSource;
@@ -60,7 +48,13 @@ public class JellyImportRule {
      * 校验规则
      */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String verifyRuleId;
+    private Long verifyRuleId;
+    
+    /**
+     * 处理规则
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private Long handleRuleId;
 
     /**
      * 创建时间
@@ -108,22 +102,6 @@ public class JellyImportRule {
 		this.name = name;
 	}
 
-	public Long getBeforeRuleId() {
-		return beforeRuleId;
-	}
-
-	public void setBeforeRuleId(Long beforeRuleId) {
-		this.beforeRuleId = beforeRuleId;
-	}
-
-	public Long getAfterRuleId() {
-		return afterRuleId;
-	}
-
-	public void setAfterRuleId(Long afterRuleId) {
-		this.afterRuleId = afterRuleId;
-	}
-
 	public Long getDataSource() {
 		return dataSource;
 	}
@@ -140,12 +118,20 @@ public class JellyImportRule {
 		this.templateSource = templateSource;
 	}
 
-	public String getVerifyRuleId() {
+	public Long getVerifyRuleId() {
 		return verifyRuleId;
 	}
 
-	public void setVerifyRuleId(String verifyRuleId) {
+	public void setVerifyRuleId(Long verifyRuleId) {
 		this.verifyRuleId = verifyRuleId;
+	}
+
+	public Long getHandleRuleId() {
+		return handleRuleId;
+	}
+
+	public void setHandleRuleId(Long handleRuleId) {
+		this.handleRuleId = handleRuleId;
 	}
 
 	public Date getCreateTime() {

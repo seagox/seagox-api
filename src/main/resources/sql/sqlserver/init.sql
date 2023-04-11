@@ -8,9 +8,8 @@ CREATE TABLE dbo.jelly_import_rule  (
     code nvarchar(30) NOT NULL,
     name nvarchar(100) NOT NULL,
     data_source bigint NOT NULL,
-    before_rule_id bigint DEFAULT NULL,
-    after_rule_id bigint DEFAULT NULL,
     verify_rule_id bigint DEFAULT NULL,
+    handle_rule_id bigint DEFAULT NULL,
     template_source text,
     create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   	update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
@@ -53,25 +52,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'导入之前规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_import_rule',
-'COLUMN', N'before_rule_id'
-GO
-
-
-EXEC sp_addextendedproperty
-'MS_Description', N'导入之后 规则',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_import_rule',
-'COLUMN', N'after_rule_id'
-GO
-
-EXEC sp_addextendedproperty
 'MS_Description', N'验证规则',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_import_rule',
 'COLUMN', N'verify_rule_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'处理规则',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_import_rule',
+'COLUMN', N'handle_rule_id'
 GO
 
 EXEC sp_addextendedproperty

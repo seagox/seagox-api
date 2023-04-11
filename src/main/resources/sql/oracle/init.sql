@@ -4,9 +4,8 @@ CREATE TABLE jelly_import_rule  (
     code VARCHAR2(30) NOT NULL,
     name VARCHAR2(100) NOT NULL,
     data_source NUMBER(20) NOT NULL,
-    before_rule_id NUMBER(20) DEFAULT NULL,
-    after_rule_id NUMBER(20) DEFAULT NULL,
     verify_rule_id NUMBER(20) DEFAULT NULL,
+    handle_rule_id NUMBER(20) DEFAULT NULL,
     template_source clob,
     create_time date DEFAULT CURRENT_TIMESTAMP,
 	update_time date DEFAULT CURRENT_TIMESTAMP
@@ -19,9 +18,8 @@ COMMENT ON COLUMN jelly_import_rule.company_id IS '公司id';
 COMMENT ON COLUMN jelly_import_rule.code IS '编码';
 COMMENT ON COLUMN jelly_import_rule.name IS '名称';
 COMMENT ON COLUMN jelly_import_rule.data_source IS '数据源';
-COMMENT ON COLUMN jelly_import_rule.before_rule_id IS '导入之前规则';
-COMMENT ON COLUMN jelly_import_rule.after_rule_id IS '导入之后 规则';
 COMMENT ON COLUMN jelly_import_rule.verify_rule_id IS '验证规则';
+COMMENT ON COLUMN jelly_import_rule.handle_rule_id IS '处理规则';
 COMMENT ON COLUMN jelly_import_rule.template_source IS '模板源';
 COMMENT ON COLUMN jelly_import_rule.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_import_rule.update_time IS '更新时间';
