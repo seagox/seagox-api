@@ -773,7 +773,7 @@ public class ExcelUtils {
 			           	 					}
 			           	 				}
 			           	 				if (!isValid) {
-			           	 				failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "日期格式错误");
+			           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + "日期格式错误");
 			           	 				}
 		           	 				}
 		           	 				rowJson.put(fieldRule.getString("field"), timestamp);
@@ -801,7 +801,10 @@ public class ExcelUtils {
 		            	IGroovyImportVerifyRule verifyRule = GroovyFactory.getInstance().getIGroovyImportVerifyRuleFromCode(verifyScript);
 		            	VerifyHandlerResult verifyHandlerResult = verifyRule.verifyRule(rowJson);
                         if(!verifyHandlerResult.isSuccess()) {
-                        	failList.add("第" + (i + 1) + "行列错误：" + verifyHandlerResult.getMsg());
+                        	List<String> msgList = verifyHandlerResult.getMsg();
+                        	for (int k = 0; k <= sheet.getLastRowNum(); k++) {
+                        		failList.add("第" + (i + 1) + "行错误：" + msgList.get(k));
+                        	}
                         }
                     } catch (Exception e) {
 		                e.printStackTrace();

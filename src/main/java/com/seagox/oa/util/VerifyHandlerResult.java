@@ -1,5 +1,7 @@
 package com.seagox.oa.util;
 
+import java.util.List;
+
 public class VerifyHandlerResult {
 	
 	/**
@@ -9,7 +11,7 @@ public class VerifyHandlerResult {
     /**
      * 错误信息
      */
-    private String  msg;
+    private List<String>  msg;
 
     public VerifyHandlerResult() {
 
@@ -19,7 +21,7 @@ public class VerifyHandlerResult {
         this.success = success;
     }
 
-    public VerifyHandlerResult(boolean success, String msg) {
+    public VerifyHandlerResult(boolean success, List<String> msg) {
         this.success = success;
         this.msg = msg;
     }
@@ -32,11 +34,11 @@ public class VerifyHandlerResult {
 		this.success = success;
 	}
 
-	public String getMsg() {
+	public List<String> getMsg() {
 		return msg;
 	}
 
-	public void setMsg(String msg) {
+	public void setMsg(List<String> msg) {
 		this.msg = msg;
 	}
     
