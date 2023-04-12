@@ -641,12 +641,16 @@ public class ExcelUtils {
     public static ImportResult readCell(HttpServletRequest request, Sheet sheet, int startRow, JSONObject exportRule, String verifyScript) {
     	ImportResult importResult = new ImportResult();
         List<Map<String, Object>> result = new ArrayList<>();
-        List<String> failList = new ArrayList<>(); 
+        List<String> failList = new ArrayList<>();
+        short maxColIx = 0;
+        Row firstRow = sheet.getRow(0);
+        if(firstRow != null) {
+        	maxColIx = firstRow.getLastCellNum();
+        }
         for (int i = startRow - 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             if (row != null) {
                 JSONObject rowJson = new JSONObject();
-            	short maxColIx = row.getLastCellNum();
            	 	for(short colIx=0; colIx<maxColIx; colIx++) {
            	 		Cell cell = row.getCell(colIx);
            	 		String cellValue = getCellValue(cell);
