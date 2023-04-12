@@ -608,7 +608,7 @@ public class AuthService implements IAuthService {
 	}
 	
 	@Override
-	public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId) {
+	public ResultData importExcel(MultipartFile file, HttpServletRequest request) {
 		try {
 			JellyImportRule exportRule = importRuleMapper.selectById(request.getParameter("ruleId"));
 	        // 验证规则
@@ -645,9 +645,7 @@ public class AuthService implements IAuthService {
 	        }
 	        // 判断是否有错误
 	        if(importResult.isVerifyFail()) {
-	        	for (String errorMsg : importResult.getFailList()) {
-					return ResultData.warn(ResultCode.OTHER_ERROR, errorMsg);
-				}
+	        	return ResultData.warn(ResultCode.OTHER_ERROR, "导入验证不通过", importResult.getFailList());
 	        } else {
 	        	JellyBusinessTable businessTable = businessTableMapper.selectById(exportRule.getDataSource());
 	            // 处理导入数据
@@ -671,6 +669,5 @@ public class AuthService implements IAuthService {
 			e.printStackTrace();
 			return ResultData.error(ResultCode.INTERNAL_SERVER_ERROR);
 		}
-		return ResultData.success(null);
 	}
 }

@@ -62,6 +62,6 @@ public interface IAuthService {
 	/**
      * 导入
      */
-    public ResultData importExcel(MultipartFile file, HttpServletRequest request, String ruleId);
+    public ResultData importExcel(MultipartFile file, HttpServletRequest request);
 
 }

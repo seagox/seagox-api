@@ -190,7 +190,7 @@ public class UploadController {
      */
     @PostMapping("/import")
     public ResultData importExcel(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-    	return authService.importExcel(file, request, request.getParameter("ruleId"));
+    	return authService.importExcel(file, request);
     }
     
     /**

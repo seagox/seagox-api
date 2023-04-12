@@ -78,6 +78,13 @@ public class ResultData implements Serializable {
         result.setMessage(message);
         return result;
     }
+    
+    public static ResultData warn(ResultCode resultCode, String message, Object data) {
+        ResultData result = new ResultData(resultCode);
+        result.setMessage(message);
+        result.setData(data);
+        return result;
+    }
 
     public static ResultData error(ResultCode resultCode) {
         return new ResultData(resultCode);
