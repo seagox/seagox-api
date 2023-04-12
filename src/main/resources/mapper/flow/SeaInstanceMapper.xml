@@ -377,9 +377,6 @@
             <if test="_databaseId == 'mysql' and statusStr != null and statusStr != ''">
                 AND FIND_IN_SET(c.status, #{statusStr})
             </if>
-            <if test="_databaseId == 'oracle' and statusStr != null and statusStr != ''">
-                AND FIND_IN_SET(c.status, #{statusStr})
-            </if>
             <if test="_databaseId == 'postgresql' and statusStr != null and statusStr != ''">
                 AND cast(#{statusStr} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(c.status as VARCHAR),','))
             </if>
@@ -389,13 +386,13 @@
             <if test="_databaseId == 'dm' and statusStr != null and statusStr != ''">
                 AND position(c.status in #{statusStr})
             </if>
+            <if test="_databaseId == 'oracle' and statusStr != null and statusStr != ''">
+                AND FIND_IN_SET(c.status, #{statusStr})
+            </if>
             <if test="_databaseId == 'sqlserver' and statusStr != null and statusStr != ''">
                 AND position(c.status in #{statusStr})
             </if>
             <if test="_databaseId == 'mysql' and businessTypeStr != null and businessTypeStr != ''">
-                AND FIND_IN_SET(c.business_type, #{businessTypeStr})
-            </if>
-            <if test="_databaseId == 'oracle' and businessTypeStr != null and businessTypeStr != ''">
                 AND FIND_IN_SET(c.business_type, #{businessTypeStr})
             </if>
             <if test="_databaseId == 'postgresql' and businessTypeStr != null and businessTypeStr != ''">
@@ -406,6 +403,9 @@
             </if>
             <if test="_databaseId == 'dm' and businessTypeStr != null and businessTypeStr != ''">
                 AND position(c.business_type in #{businessTypeStr})
+            </if>
+            <if test="_databaseId == 'oracle' and businessTypeStr != null and businessTypeStr != ''">
+                AND FIND_IN_SET(c.business_type, #{businessTypeStr})
             </if>
             <if test="_databaseId == 'sqlserver' and businessTypeStr != null and businessTypeStr != ''">
                 AND position(c.business_type in #{businessTypeStr})

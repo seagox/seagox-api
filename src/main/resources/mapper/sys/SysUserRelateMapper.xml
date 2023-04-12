@@ -9,9 +9,6 @@
         	<if test="_databaseId == 'mysql'">
             	FIND_IN_SET(#{roleId}, role_ids)
             </if>
-            <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{roleId}, role_ids)
-            </if>
             <if test="_databaseId == 'postgresql'">
             	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
             </if>
@@ -20,6 +17,9 @@
             </if>
             <if test="_databaseId == 'dm'">
                 position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{roleId}, role_ids)
             </if>
             <if test="_databaseId == 'sqlserver'">
             	CHARINDEX(#{roleId}, role_ids) > 0
@@ -34,9 +34,6 @@
            <if test="_databaseId == 'mysql'">
             	FIND_IN_SET(#{roleId}, role_ids)
             </if>
-            <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{roleId}, role_ids)
-            </if>
             <if test="_databaseId == 'postgresql'">
             	cast(#{roleId} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(role_ids as VARCHAR),','))
             </if>
@@ -45,6 +42,9 @@
             </if>
             <if test="_databaseId == 'dm'">
                 position(#{roleId} in role_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{roleId}, role_ids)
             </if>
             <if test="_databaseId == 'sqlserver'">
                 CHARINDEX(#{roleId}, role_ids) > 0

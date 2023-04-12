@@ -127,9 +127,6 @@
             <if test="_databaseId == 'mysql'">
                 FIND_IN_SET(#{userId}, to_user_ids)
             </if>
-            <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{userId}, to_user_ids)
-            </if>
             <if test="_databaseId == 'postgresql'">
                 cast(#{userId} as VARCHAR) = ANY(STRING_TO_ARRAY(to_user_ids,','))
             </if>
@@ -138,6 +135,9 @@
             </if>
             <if test="_databaseId == 'dm'">
                 position(#{userId} in to_user_ids)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{userId}, to_user_ids)
             </if>
             <if test="_databaseId == 'sqlserver'">
                 CHARINDEX(#{userId}, to_user_ids) > 0
@@ -175,9 +175,6 @@
             <if test="_databaseId == 'mysql'">
                 FIND_IN_SET(#{id}, relation)
             </if>
-            <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{id}, relation)
-            </if>
             <if test="_databaseId == 'postgresql'">
                 cast(#{id} as VARCHAR) = ANY(STRING_TO_ARRAY(relation,','))
             </if>
@@ -186,6 +183,9 @@
             </if>
             <if test="_databaseId == 'dm'">
                 position(#{id} in relation)
+            </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{id}, relation)
             </if>
             <if test="_databaseId == 'sqlserver'">
                 CHARINDEX(#{id}, relation) > 0

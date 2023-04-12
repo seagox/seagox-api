@@ -45,9 +45,6 @@
 			<if test="_databaseId == 'mysql'">
             	ORDER BY FIND_IN_SET(id,#{ids})
             </if>
-            <if test="_databaseId == 'oracle'">
-                ORDER BY FIND_IN_SET(id,#{ids})
-            </if>
             <if test="_databaseId == 'postgresql'">
             	ORDER BY cast(#{ids} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(id as VARCHAR),','))
             </if>
@@ -56,6 +53,9 @@
             </if>
             <if test="_databaseId == 'dm'">
                 ORDER BY position(id in #{ids})
+            </if>
+            <if test="_databaseId == 'oracle'">
+                ORDER BY FIND_IN_SET(id,#{ids})
             </if>
             <if test="_databaseId == 'sqlserver'">
                 ORDER BY CHARINDEX(id, #{ids}) > 0
