@@ -38,6 +38,7 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.seagox.oa.exception.FormulaException;
 import com.seagox.oa.groovy.GroovyFactory;
 import com.seagox.oa.groovy.IGroovyImportVerifyRule;
 
@@ -606,12 +607,13 @@ public class ExcelUtils {
                 // 2007及2007以上
                 workbook = new XSSFWorkbook(is);
             } else {
-                throw new Exception("文件格式不对");
+                throw new FormulaException("文件格式不对");
             }
             importResult = readCell(workbook.getSheetAt(0), startRow, exportRule, verifyScript);
             workbook.close();
         } catch (Exception e) {
         	e.printStackTrace();
+        	throw new FormulaException(e.getMessage());
         } finally {
             try {
                 if (is != null) {
@@ -657,26 +659,26 @@ public class ExcelUtils {
 	           	 				JSONObject annotationJson = new JSONObject();
 	           	 				String[] annotationAry = annotation.substring(9, annotation.length()-1).split(",");
 	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+	           	 					annotationJson.put(annotationAry[k].split("=")[0].trim(), annotationAry[k].split("=")[1].trim());
 	           	 				}
 	           	 				if(StringUtils.isEmpty(cellValue)) {
-	           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+	           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 	           	 				}
 	           	 				rowJson.put(fieldRule.getString("field"), cellValue);
 	           	 			} else if (annotation.startsWith("@Length")) {
 		           	 			JSONObject annotationJson = new JSONObject();
 	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
 	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+	           	 					annotationJson.put(annotationAry[k].split("=")[0].trim(), annotationAry[k].split("=")[1].trim());
 	           	 				}
 		           	 			if(annotationJson.containsKey("min")) {
 		           	 				if(cellValue.length() <= annotationJson.getInteger("min")) {
-		           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+		           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 		           	 				}
 		           	 			}
 			           	 		if(annotationJson.containsKey("max")) {
 				           	 		if(cellValue.length() > annotationJson.getInteger("max")) {
-				           	 			failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+				           	 			failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 		           	 				}
 		           	 			}
 			           	 		rowJson.put(fieldRule.getString("field"), cellValue);
@@ -708,16 +710,16 @@ public class ExcelUtils {
 		           	 			JSONObject annotationJson = new JSONObject();
 	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
 	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+	           	 					annotationJson.put(annotationAry[k].split("=")[0].trim(), annotationAry[k].split("=")[1].trim());
 	           	 				}
 		           	 			if(annotationJson.containsKey("min")) {
 		           	 				if(Integer.valueOf(cellValue) <= annotationJson.getInteger("min")) {
-		           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+		           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 		           	 				}
 		           	 			}
 			           	 		if(annotationJson.containsKey("max")) {
 				           	 		if(Integer.valueOf(cellValue) > annotationJson.getInteger("max")) {
-				           	 			failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+				           	 			failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 		           	 				}
 		           	 			}
 			           	 		rowJson.put(fieldRule.getString("field"), cellValue);
@@ -725,11 +727,11 @@ public class ExcelUtils {
 		           	 			JSONObject annotationJson = new JSONObject();
 	           	 				String[] annotationAry = annotation.substring(8, annotation.length()-1).split(",");
 	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+	           	 					annotationJson.put(annotationAry[k].split("=")[0].trim(), annotationAry[k].split("=")[1].trim());
 	           	 				}
 	           	 				String regexp = annotationJson.getString("regexp");
 	           	 				if(!Pattern.matches(regexp, cellValue)) {
-	           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message"));
+	           	 					failList.add("第" + (i + 1) + "行" + letterList.get(colIx) +"列错误：" + annotationJson.getString("message").replace("\"", ""));
 	           	 				}
 	           	 				rowJson.put(fieldRule.getString("field"), cellValue);
 	           	 			} else if (annotation.startsWith("@Replace")) {
@@ -749,7 +751,7 @@ public class ExcelUtils {
 		           	 			JSONObject annotationJson = new JSONObject();
 	           	 				String[] annotationAry = annotation.substring(16, annotation.length()-1).split(",");
 	           	 				for(int k=0;k<annotationAry.length;k++) {
-	           	 					annotationJson.put(annotationAry[k].split("=")[0], annotationAry[k].split("=")[1]);
+	           	 					annotationJson.put(annotationAry[k].split("=")[0].trim(), annotationAry[k].split("=")[1].trim());
 	           	 				}
 		           	 			if(annotationJson.containsKey("pattern")) {
            	 						String patternStr = annotationJson.getString("pattern").substring(1, annotationJson.getString("pattern").length() - 1);
@@ -787,7 +789,7 @@ public class ExcelUtils {
 		           	 				rowJson.put(fieldRule.getString("field"), null);
 		           	 			}
 	           	 			} else {
-	           	 			failList.add("无效注解");
+	           	 				failList.add("无效注解");
 	           	 			}
 	           	 		}
            	 		} else {

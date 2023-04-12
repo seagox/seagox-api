@@ -19,10 +19,12 @@ public class GroovyImportHandle implements IGroovyImportHandle {
         String datasourceUrl = params.get("datasourceUrl").toString();
         String tableName = params.get("tableName").toString();
         
-        if (datasourceUrl.contains("oracle")) {
-            JdbcTemplateUtils.batchInsert(jdbcTemplate, tableName, result, "oracle");
-        } else {
-            JdbcTemplateUtils.batchInsert(jdbcTemplate, tableName, result);
+        if(result.size() != 0) {
+        	if (datasourceUrl.contains("oracle")) {
+                JdbcTemplateUtils.batchInsert(jdbcTemplate, tableName, result, "oracle");
+            } else {
+                JdbcTemplateUtils.batchInsert(jdbcTemplate, tableName, result);
+            }
         }
         
         return ResultData.success(null);
