@@ -103,7 +103,7 @@
             <if test="_databaseId == 'kingbase'">
                 code LIKE #{prefix} || '%'
             </if>
-            <if test="_databaseId == 'dm8'">
+            <if test="_databaseId == 'dm'">
                 code LIKE #{prefix} || '%'
             </if>
             <if test="_databaseId == 'oracle'">
@@ -128,7 +128,7 @@
             <if test="_databaseId == 'kingbase'">
                 code LIKE #{prefix} || '%'
             </if>
-            <if test="_databaseId == 'dm8'">
+            <if test="_databaseId == 'dm'">
                 code LIKE #{prefix} || '%'
             </if>
             <if test="_databaseId == 'oracle'">
