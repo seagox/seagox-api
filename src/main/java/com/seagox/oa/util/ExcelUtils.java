@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -593,7 +595,7 @@ public class ExcelUtils {
         return result;
     }
     
-    public static ImportResult readSheet(InputStream input, int startRow, JSONObject exportRule, String verifyScript) {
+    public static ImportResult readSheet(HttpServletRequest request, InputStream input, int startRow, JSONObject exportRule, String verifyScript) {
     	ImportResult importResult = new ImportResult();
         InputStream is = null;
         try {
@@ -609,7 +611,7 @@ public class ExcelUtils {
             } else {
                 throw new FormulaException("文件格式不对");
             }
-            importResult = readCell(workbook.getSheetAt(0), startRow, exportRule, verifyScript);
+            importResult = readCell(request, workbook.getSheetAt(0), startRow, exportRule, verifyScript);
             workbook.close();
         } catch (Exception e) {
         	e.printStackTrace();
@@ -636,7 +638,7 @@ public class ExcelUtils {
      * @return
      * @throws IOException
      */
-    public static ImportResult readCell(Sheet sheet, int startRow, JSONObject exportRule, String verifyScript) {
+    public static ImportResult readCell(HttpServletRequest request, Sheet sheet, int startRow, JSONObject exportRule, String verifyScript) {
     	ImportResult importResult = new ImportResult();
         List<Map<String, Object>> result = new ArrayList<>();
         List<String> failList = new ArrayList<>(); 
@@ -799,7 +801,7 @@ public class ExcelUtils {
            	 	if(!StringUtils.isEmpty(verifyScript)) {
 		            try {
 		            	IGroovyImportVerifyRule verifyRule = GroovyFactory.getInstance().getIGroovyImportVerifyRuleFromCode(verifyScript);
-		            	VerifyHandlerResult verifyHandlerResult = verifyRule.verifyRule(rowJson);
+		            	VerifyHandlerResult verifyHandlerResult = verifyRule.verifyRule(request, rowJson);
                         if(!verifyHandlerResult.isSuccess()) {
                         	List<String> msgList = verifyHandlerResult.getMsg();
                         	for (int k = 0; k <= sheet.getLastRowNum(); k++) {

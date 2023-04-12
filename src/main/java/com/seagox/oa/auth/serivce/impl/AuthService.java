@@ -639,9 +639,9 @@ public class AuthService implements IAuthService {
 	        ImportResult importResult = new ImportResult();
 	        if (exportRule.getVerifyRuleId() != null) {
 	        	JellyMetaFunction verifyRule = metaFunctionMapper.selectById(exportRule.getVerifyRuleId());
-	        	importResult = ExcelUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
+	        	importResult = ExcelUtils.readSheet(request, new ByteArrayInputStream(file.getBytes()), 2, rule, verifyRule.getScript());
 	        } else {
-	        	importResult = ExcelUtils.readSheet(new ByteArrayInputStream(file.getBytes()), 2, rule, null);
+	        	importResult = ExcelUtils.readSheet(request, new ByteArrayInputStream(file.getBytes()), 2, rule, null);
 	        }
 	        // 判断是否有错误
 	        if(importResult.isVerifyFail()) {
