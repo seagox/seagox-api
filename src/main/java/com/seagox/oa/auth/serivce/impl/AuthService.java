@@ -645,7 +645,7 @@ public class AuthService implements IAuthService {
 	        }
 	        // 判断是否有错误
 	        if(importResult.isVerifyFail()) {
-	        	return ResultData.warn(ResultCode.OTHER_ERROR, "导入验证不通过", importResult.getFailList());
+	        	return ResultData.warn(ResultCode.INVALID_ERROR, "导入验证不通过", importResult.getFailList());
 	        } else {
 	        	JellyBusinessTable businessTable = businessTableMapper.selectById(exportRule.getDataSource());
 	            // 处理导入数据

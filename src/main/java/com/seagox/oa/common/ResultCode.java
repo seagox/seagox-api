@@ -23,7 +23,8 @@ public enum ResultCode {
     INVALID_CODE(10008, "invalid code"),
     FLOW_MANUAL_SELECTION_ERROR(10009, "Flow ManualSelection Error"),
     SEAL_ERROR(10010, "Seal Error"),
-    CONFIRM(10011, "Confirm");
+    CONFIRM(10011, "Confirm"),
+    INVALID_ERROR(10012, "invalid error");
 
     private int code;
 
