@@ -43,7 +43,10 @@
 				#{id}
 			</foreach>
 			<if test="_databaseId == 'mysql'">
-            	ORDER BY find_in_set(id,#{ids})
+            	ORDER BY FIND_IN_SET(id,#{ids})
+            </if>
+            <if test="_databaseId == 'oracle'">
+                ORDER BY FIND_IN_SET(id,#{ids})
             </if>
             <if test="_databaseId == 'postgresql'">
             	ORDER BY cast(#{ids} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(id as VARCHAR),','))
@@ -54,8 +57,8 @@
             <if test="_databaseId == 'dm'">
                 ORDER BY position(id in #{ids})
             </if>
-            <if test="_databaseId == 'oracle'">
-                ORDER BY find_in_set(id,#{ids})
+            <if test="_databaseId == 'sqlserver'">
+                ORDER BY CHARINDEX(id, #{ids}) > 0
             </if>
         </where>
     </select>

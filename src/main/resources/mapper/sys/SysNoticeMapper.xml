@@ -53,6 +53,9 @@
         <if test="_databaseId == 'mysql'">
             DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') AS "createTime"
         </if>
+        <if test="_databaseId == 'oracle'">
+            to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') AS "createTime"
+        </if>
         <if test="_databaseId == 'postgresql'">
             to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
         </if>
@@ -61,6 +64,9 @@
         </if>
         <if test="_databaseId == 'dm'">
             to_char(a.create_time,'yyyy-MM-dd HH24:MI:ss') AS "createTime"
+        </if>
+        <if test="_databaseId == 'sqlserver'">
+            CONVERT(varchar, a.create_time, 120 ) AS "createTime"
         </if>
         FROM sys_notice a
         LEFT JOIN sys_account b ON b.id = a.user_id
@@ -78,6 +84,12 @@
             <if test="_databaseId == 'dm'">
                 and c.code LIKE #{prefix} || '%'
             </if>
+            <if test="_databaseId == 'oracle'">
+                and c.code LIKE '%' || #{prefix} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver'">
+                and c.code LIKE '%' + #{prefix} + '%'
+            </if>
             <if test="_databaseId == 'mysql' and title != null and title != ''">
                 and a.title LIKE CONCAT('%', #{title}, '%')
             </if>
@@ -89,6 +101,12 @@
             </if>
             <if test="_databaseId == 'dm' and title != null and title != ''">
                 and a.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'oracle' and title != null and title != ''">
+                and a.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="_databaseId == 'sqlserver' and title != null and title != ''">
+                and a.title LIKE '%' + #{title} + '%'
             </if>
             <if test="status != null">
                 AND a.status = #{status}
@@ -109,16 +127,16 @@
             <if test="_databaseId == 'mysql'">
                 FIND_IN_SET(#{userId}, to_user_ids)
             </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{userId}, to_user_ids)
+            </if>
             <if test="_databaseId == 'postgresql'">
-                #{userId} = ANY(STRING_TO_ARRAY(to_user_ids,','))
+                cast(#{userId} as VARCHAR) = ANY(STRING_TO_ARRAY(to_user_ids,','))
             </if>
             <if test="_databaseId == 'kingbase'">
-                #{userId} = ANY(STRING_TO_ARRAY(to_user_ids,','))
+                cast(#{userId} as VARCHAR) = ANY(STRING_TO_ARRAY(to_user_ids,','))
             </if>
             <if test="_databaseId == 'dm'">
-                position(#{userId} in to_user_ids)
-            </if>
-            <if test="_databaseId == 'oracle'">
                 position(#{userId} in to_user_ids)
             </if>
             <if test="_databaseId == 'sqlserver'">
@@ -157,16 +175,16 @@
             <if test="_databaseId == 'mysql'">
                 FIND_IN_SET(#{id}, relation)
             </if>
+            <if test="_databaseId == 'oracle'">
+                FIND_IN_SET(#{id}, relation)
+            </if>
             <if test="_databaseId == 'postgresql'">
-                #{id} = ANY(STRING_TO_ARRAY(relation,','))
+                cast(#{id} as VARCHAR) = ANY(STRING_TO_ARRAY(relation,','))
             </if>
             <if test="_databaseId == 'kingbase'">
-                #{id} = ANY(STRING_TO_ARRAY(relation,','))
+                cast(#{id} as VARCHAR) = ANY(STRING_TO_ARRAY(relation,','))
             </if>
             <if test="_databaseId == 'dm'">
-                position(#{id} in relation)
-            </if>
-            <if test="_databaseId == 'oracle'">
                 position(#{id} in relation)
             </if>
             <if test="_databaseId == 'sqlserver'">

@@ -75,10 +75,10 @@
     FIND_IN_SET(#{userId}, authority)
 </if>
 <if test="_databaseId == 'postgresql'">
-	#{userId} = ANY(STRING_TO_ARRAY(authority,','))
+	cast(#{userId} as VARCHAR) = ANY(STRING_TO_ARRAY(authority,','))
 </if>
 <if test="_databaseId == 'kingbase'">
-    #{userId} = ANY(STRING_TO_ARRAY(authority,','))
+    cast(#{userId} as VARCHAR) = ANY(STRING_TO_ARRAY(authority,','))
 </if>
 <if test="_databaseId == 'dm'">
     position(#{userId} in authority)

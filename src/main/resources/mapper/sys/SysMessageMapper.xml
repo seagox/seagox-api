@@ -46,6 +46,12 @@
 			<if test="_databaseId == 'dm'">
 				and c.code LIKE #{prefix} || '%'
 			</if>
+			<if test="_databaseId == 'oracle'">
+				and c.code LIKE '%' || #{prefix} || '%'
+			</if>
+			<if test="_databaseId == 'sqlserver'">
+				and c.code LIKE '%' + #{prefix} + '%'
+			</if>
 			<if test="_databaseId == 'mysql' and title != null and title != ''">
 				and a.title LIKE CONCAT('%', #{title}, '%')
 			</if>
@@ -57,6 +63,12 @@
 			</if>
 			<if test="_databaseId == 'dm' and title != null and title != ''">
 				and a.title LIKE '%' || #{title} || '%'
+			</if>
+			<if test="_databaseId == 'oracle' and title != null and title != ''">
+				and a.title LIKE '%' || #{title} || '%'
+			</if>
+			<if test="_databaseId == 'sqlserver' and title != null and title != ''">
+				and a.title LIKE '%' + #{title} + '%'
 			</if>
 			<if test="status != null">
 				and a.status = #{status}
