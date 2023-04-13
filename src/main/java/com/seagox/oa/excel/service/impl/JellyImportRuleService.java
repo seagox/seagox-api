@@ -1,5 +1,7 @@
 package com.seagox.oa.excel.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
@@ -8,12 +10,18 @@ import com.seagox.oa.excel.entity.JellyImportRuleDetail;
 import com.seagox.oa.excel.mapper.JellyImportRuleDetailMapper;
 import com.seagox.oa.excel.mapper.JellyImportRuleMapper;
 import com.seagox.oa.excel.service.IJellyImportRuleService;
+import com.seagox.oa.excel.entity.JellyBusinessField;
+import com.seagox.oa.util.ExcelUtils;
+import com.seagox.oa.excel.mapper.JellyBusinessFieldMapper;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -24,6 +32,9 @@ public class JellyImportRuleService implements IJellyImportRuleService {
 
     @Autowired
     private JellyImportRuleDetailMapper importRuleDetailMapper;
+    
+    @Autowired
+    private JellyBusinessFieldMapper businessFieldMapper;
 
     @Override
     public ResultData queryAll(Long companyId) {
@@ -32,7 +43,8 @@ public class JellyImportRuleService implements IJellyImportRuleService {
     	List<JellyImportRule> list = importRuleMapper.selectList(qw);
         return ResultData.success(list);
     }
-
+    
+    @Transactional
     @Override
     public ResultData insert(JellyImportRule importRule) {
         // 判断code是否重复
@@ -42,6 +54,41 @@ public class JellyImportRuleService implements IJellyImportRuleService {
             return ResultData.warn(ResultCode.OTHER_ERROR, "编码已存在！");
         }
         importRuleMapper.insert(importRule);
+        JSONArray as = JSONArray.parseArray(importRule.getTemplateSource());
+        String url = as.getJSONObject(0).getString("url");
+        InputStream inputStream = null;
+        try {
+			inputStream = new URL(url).openStream();
+			JSONObject result = ExcelUtils.readImportRuleSheet(inputStream);
+			LambdaQueryWrapper<JellyBusinessField> businessFieldQw = new LambdaQueryWrapper<>();
+			businessFieldQw.eq(JellyBusinessField::getBusinessTableId, importRule.getDataSource());
+			List<JellyBusinessField> businessFieldList = businessFieldMapper.selectList(businessFieldQw);
+			JSONObject fieldMap = new JSONObject();
+			for (int i=0;i<businessFieldList.size();i++) {
+				JellyBusinessField businessField = businessFieldList.get(i);
+				fieldMap.put(businessField.getRemark(), businessField.getId());
+			}
+			for (String str : result.keySet()) {
+				if(fieldMap.containsKey(str)) {
+					JellyImportRuleDetail importRuleDetail = new JellyImportRuleDetail();
+					importRuleDetail.setRuleId(importRule.getId());
+					importRuleDetail.setField(fieldMap.getLong(str));
+					importRuleDetail.setCol(result.getString(str));
+					importRuleDetail.setRule("[]");
+					importRuleDetailMapper.insert(importRuleDetail);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+		}
         return ResultData.success(importRule.getId());
     }
 

@@ -864,4 +864,50 @@ public class ExcelUtils {
 
 		return false;
 	}
+	
+	public static JSONObject readImportRuleSheet(InputStream input) {
+		JSONObject result = new JSONObject();
+        InputStream is = null;
+        try {
+            is = FileMagic.prepareToCheckMagic(input);
+            FileMagic fm = FileMagic.valueOf(is);
+            Workbook workbook = null;
+            if (fm.name().equals("OLE2")) {
+                // 2003
+                workbook = new HSSFWorkbook(is);
+            } else if (fm.name().equals("OOXML")) {
+                // 2007及2007以上
+                workbook = new XSSFWorkbook(is);
+            } else {
+                throw new FormulaException("文件格式不对");
+            }
+            Sheet sheet = workbook.getSheetAt(0);
+            short maxColIx = 0;
+            Row row = sheet.getRow(0);
+            if(row != null) {
+            	maxColIx = row.getLastCellNum();
+           	 	for(short colIx=0; colIx<maxColIx; colIx++) {
+           	 		Cell cell = row.getCell(colIx);
+           	 		String cellValue = getCellValue(cell);
+           	 		result.put(cellValue, letterList.get(colIx));
+           	 	}  
+            }
+            workbook.close();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	throw new FormulaException(e.getMessage());
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+                if (input != null) {
+                	input.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }
