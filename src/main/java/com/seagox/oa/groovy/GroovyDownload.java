@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class GroovyUpload implements IGroovyUpload {
+public class GroovyDownload implements IGroovyDownload {
 
     @Override
     public void download(HttpServletRequest request, HttpServletResponse response) {

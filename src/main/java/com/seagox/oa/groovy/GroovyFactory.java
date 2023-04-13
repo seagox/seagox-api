@@ -102,19 +102,19 @@ public class GroovyFactory {
 
 
     /**
-     * 根据脚本内容生成ICloud的实现
+     * 根据脚本内容生成IGroovyDownload的实现
      *
      * @param code
      * @return
      * @throws Exception
      */
-    public IGroovyUpload getIUploadFromCode(String code) throws Exception {
+    public IGroovyDownload getIDownloadFromCode(String code) throws Exception {
         Class<?> clazz = groovyClassLoader.parseClass(code);
         if (clazz != null) {
             Object instance = clazz.newInstance();
             if (instance != null) {
-                if (instance instanceof IGroovyUpload) {
-                    return (IGroovyUpload) instance;
+                if (instance instanceof IGroovyDownload) {
+                    return (IGroovyDownload) instance;
                 }
             }
         }

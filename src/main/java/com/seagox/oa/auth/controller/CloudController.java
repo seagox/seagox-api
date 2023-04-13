@@ -5,7 +5,7 @@ import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.service.IJellyMetaFunctionService;
 import com.seagox.oa.groovy.GroovyFactory;
 import com.seagox.oa.groovy.IGroovyCloud;
-import com.seagox.oa.groovy.IGroovyUpload;
+import com.seagox.oa.groovy.IGroovyDownload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -79,8 +79,8 @@ public class CloudController {
     public void download(@PathVariable String path, HttpServletRequest request, HttpServletResponse response) {
         try {
             String script = metaFunctionService.queryByPath(path);
-            IGroovyUpload groovyUpload = GroovyFactory.getInstance().getIUploadFromCode(script);
-            groovyUpload.download(request, response);
+            IGroovyDownload groovyDownload = GroovyFactory.getInstance().getIDownloadFromCode(script);
+            groovyDownload.download(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }

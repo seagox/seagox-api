@@ -24,7 +24,7 @@ public class JellyMetaFunction {
     private Long companyId;
     
     /**
-	 * 类型（1:元函数;2:规则引擎;3:导入验证规则;4:导入处理规则;5:定时任务;6:打印规则;）
+	 * 类型（1:元函数;2:规则引擎;3:导入验证规则;4:导入处理规则;5:定时任务;6:打印规则;7:下载规则;）
 	 */
 	private Integer type;
     

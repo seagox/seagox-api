@@ -1164,7 +1164,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'类型(1:元函数;2:规则引擎;3:导入验证规则;4:导入处理规则;5:定时任务;6:打印规则;)',
+'MS_Description', N'类型(1:元函数;2:规则引擎;3:导入验证规则;4:导入处理规则;5:定时任务;6:打印规则;7:下载规则;)',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_meta_function',
 'COLUMN', N'type'
