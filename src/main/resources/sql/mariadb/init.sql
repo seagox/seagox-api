@@ -163,7 +163,7 @@ CREATE TABLE `jelly_job`  (
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `cron` varchar(30) NOT NULL COMMENT '表达式',
-    `script` text NOT NULL COMMENT '规则',
+    `rule_id` bigint(20) NOT NULL COMMENT '规则',
     `status` int(4) DEFAULT 0 COMMENT '状态(0:未启动;1:已启动;)',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

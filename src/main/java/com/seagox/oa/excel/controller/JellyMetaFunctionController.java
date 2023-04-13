@@ -41,8 +41,8 @@ public class JellyMetaFunctionController {
      * @param companyId 公司id
      */
     @GetMapping("/queryByCompanyId")
-    public ResultData queryByCompanyId(Long companyId) {
-        return metaFunctionService.queryByCompanyId(companyId);
+    public ResultData queryByCompanyId(Long companyId, Integer type) {
+        return metaFunctionService.queryByCompanyId(companyId, type);
     }
 
     /**

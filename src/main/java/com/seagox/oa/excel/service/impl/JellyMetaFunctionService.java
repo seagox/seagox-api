@@ -38,9 +38,10 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
     }
     
     @Override
-    public ResultData queryByCompanyId(Long companyId) {
+    public ResultData queryByCompanyId(Long companyId, Integer type) {
         LambdaQueryWrapper<JellyMetaFunction> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(JellyMetaFunction::getCompanyId, companyId);
+        queryWrapper.eq(JellyMetaFunction::getCompanyId, companyId)
+        .eq(!StringUtils.isEmpty(type), JellyMetaFunction::getType, type);
         List<JellyMetaFunction> list = metaFunctionMapper.selectList(queryWrapper);
         return ResultData.success(list);
     }

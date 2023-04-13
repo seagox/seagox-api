@@ -1047,7 +1047,7 @@ CREATE TABLE dbo.jelly_job (
   company_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
   cron nvarchar(30)  NOT NULL,
-  script nvarchar(max)  NOT NULL,
+  rule_id bigint  NOT NULL,
   status int  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
@@ -1089,7 +1089,7 @@ EXEC sp_addextendedproperty
 'MS_Description', N'规则',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_job',
-'COLUMN', N'script'
+'COLUMN', N'rule_id'
 GO
 
 EXEC sp_addextendedproperty

@@ -24,7 +24,7 @@ public interface IJellyMetaFunctionService {
      *
      * @param companyId 公司id
      */
-    public ResultData queryByCompanyId(Long companyId);
+    public ResultData queryByCompanyId(Long companyId, Integer type);
     
     /**
      * 添加

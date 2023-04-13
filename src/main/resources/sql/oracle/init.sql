@@ -294,7 +294,7 @@ create table jelly_job (
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     cron VARCHAR2(30) NOT NULL,
-    script clob NOT NULL,
+    rule_id NUMBER(20) NOT NULL,
     status NUMBER(4) DEFAULT 0,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
@@ -306,7 +306,7 @@ COMMENT ON COLUMN jelly_job.id IS '主键';
 COMMENT ON COLUMN jelly_job.company_id IS '公司id';
 COMMENT ON COLUMN jelly_job.name IS '名称';
 COMMENT ON COLUMN jelly_job.cron IS '表达式';
-COMMENT ON COLUMN jelly_job.script IS '规则';
+COMMENT ON COLUMN jelly_job.rule_id IS '规则';
 COMMENT ON COLUMN jelly_job.status IS '状态(0:未启动;1:已启动;)';
 COMMENT ON COLUMN jelly_job.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_job.update_time IS '更新时间';

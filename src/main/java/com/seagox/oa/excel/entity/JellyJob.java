@@ -36,7 +36,7 @@ public class JellyJob {
     /**
      * 规则
      */
-    private String script;
+    private Long ruleId;
     
     /**
      * 状态(0:未启动;1:已启动;)
@@ -89,12 +89,12 @@ public class JellyJob {
 		this.cron = cron;
 	}
 
-	public String getScript() {
-		return script;
+	public Long getRuleId() {
+		return ruleId;
 	}
 
-	public void setScript(String script) {
-		this.script = script;
+	public void setRuleId(Long ruleId) {
+		this.ruleId = ruleId;
 	}
 
 	public Integer getStatus() {
