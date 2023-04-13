@@ -10,7 +10,7 @@ CREATE TABLE dbo.jelly_import_rule  (
     data_source bigint NOT NULL,
     verify_rule_id bigint DEFAULT NULL,
     handle_rule_id bigint DEFAULT NULL,
-    template_source text,
+    template_source nvarchar(max),
     create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   	update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -104,7 +104,7 @@ CREATE TABLE dbo.jelly_import_rule_detail  (
     rule_id bigint NOT NULL,
     field bigint NOT NULL,
     col nvarchar(30) NOT NULL,
-    rule text,
+    rule nvarchar(max),
     create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   	update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -173,12 +173,12 @@ CREATE TABLE dbo.jelly_report  (
     id bigint PRIMARY KEY IDENTITY(1,1),
 	company_id bigint NOT NULL,
     name nvarchar(100) NOT NULL,
-	icon nvarchar(30) NOT NULL,
+	icon nvarchar(max) NOT NULL,
 	color nvarchar(30) NOT NULL,
     data_source bigint NOT NULL,
-    template_source text NOT NULL,
-    search_json text DEFAULT NULL,
-	export_path text DEFAULT NULL,
+    template_source nvarchar(max) NOT NULL,
+    search_json nvarchar(max) DEFAULT NULL,
+	export_path nvarchar(max) DEFAULT NULL,
 	create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   	update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -747,7 +747,7 @@ CREATE TABLE dbo.jelly_form (
   company_id bigint  NOT NULL,
   design_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
-  icon nvarchar(30)  NOT NULL,
+  icon nvarchar(max)  NOT NULL,
   color nvarchar(30)  NOT NULL,
   flow_id bigint  NULL,
   data_source nvarchar(max)  NULL,
@@ -2574,7 +2574,7 @@ CREATE TABLE dbo.sys_menu (
   parent_id bigint  NULL,
   type int  NULL,
   name nvarchar(30)  NOT NULL,
-  icon nvarchar(30)  NOT NULL,
+  icon nvarchar(max)  NOT NULL,
   path nvarchar(50)  NULL,
   status int  NULL,
   sort int  NULL,
