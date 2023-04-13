@@ -31,11 +31,6 @@ public class JellyForm {
     private String name;
     
     /**
-     * 设计id
-     */
-    private Long designId;
-    
-    /**
      * 图标
      */
     private String icon;
@@ -65,6 +60,11 @@ public class JellyForm {
      * 搜索配置
      */
     private String searchJson;
+    
+    /**
+     * 设计界面
+     */
+    private String design;
 
     /**
      * 其他参数json
@@ -84,12 +84,6 @@ public class JellyForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-    
-    /**
-     * 表单设计
-     */
-    @TableField(exist = false)
-    private JellyFormDesign formDesign;
     
     /**
      * 打印json
@@ -131,14 +125,6 @@ public class JellyForm {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Long getDesignId() {
-		return designId;
-	}
-
-	public void setDesignId(Long designId) {
-		this.designId = designId;
 	}
 
 	public String getIcon() {
@@ -189,6 +175,14 @@ public class JellyForm {
 		this.searchJson = searchJson;
 	}
 
+	public String getDesign() {
+		return design;
+	}
+
+	public void setDesign(String design) {
+		this.design = design;
+	}
+
 	public String getOptions() {
 		return options;
 	}
@@ -211,14 +205,6 @@ public class JellyForm {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	public JellyFormDesign getFormDesign() {
-		return formDesign;
-	}
-
-	public void setFormDesign(JellyFormDesign formDesign) {
-		this.formDesign = formDesign;
 	}
 
 	public String getPrintJson() {

@@ -5,9 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.sys.entity.SysCompany;
 import com.seagox.oa.sys.entity.SysRole;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import com.seagox.oa.sys.mapper.RoleMapper;
 import com.seagox.oa.sys.mapper.UserRelateMapper;
 import com.seagox.oa.sys.service.IRoleService;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RoleService implements IRoleService {
@@ -26,15 +23,13 @@ public class RoleService implements IRoleService {
     @Autowired
     private UserRelateMapper userRelateMapper;
 
-    @Autowired
-    private CompanyMapper companyMapper;
-
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
-        List<Map<String, Object>> list = roleMapper.queryByCode(company.getCode().substring(0, 4));
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
+        LambdaQueryWrapper<SysRole> qw = new LambdaQueryWrapper<>();
+    	qw.eq(SysRole::getCompanyId, companyId);
+        List<SysRole> list = roleMapper.selectList(qw);
+        PageInfo<SysRole> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }
 
@@ -96,8 +91,9 @@ public class RoleService implements IRoleService {
      */
     @Override
     public ResultData queryAll(Long companyId) {
-        SysCompany company = companyMapper.selectById(companyId);
-        List<Map<String, Object>> list = roleMapper.queryByCode(company.getCode().substring(0, 4));
+    	LambdaQueryWrapper<SysRole> qw = new LambdaQueryWrapper<>();
+    	qw.eq(SysRole::getCompanyId, companyId);
+        List<SysRole> list = roleMapper.selectList(qw);
         return ResultData.success(list);
     }
 

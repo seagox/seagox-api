@@ -13,8 +13,6 @@ import com.seagox.oa.excel.mapper.JellyFormMapper;
 import com.seagox.oa.flow.entity.SeaDefinition;
 import com.seagox.oa.flow.mapper.SeaDefinitionMapper;
 import com.seagox.oa.flow.service.ISeaDefinitionService;
-import com.seagox.oa.sys.entity.SysCompany;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,25 +33,24 @@ public class SeaDefinitionService implements ISeaDefinitionService {
     private JellyBusinessFieldMapper businessFieldMapper;
 
     @Autowired
-    private CompanyMapper companyMapper;
-
-    @Autowired
     private JellyFormMapper formMapper;
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
-        List<Map<String, Object>> list = seaDefinitionMapper.queryByCode(company.getCode().substring(0, 4), name);
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
+        LambdaQueryWrapper<SeaDefinition> qw = new LambdaQueryWrapper<>();
+        qw.eq(SeaDefinition::getCompanyId, companyId)
+        .like(!StringUtils.isEmpty(name), SeaDefinition::getName, name);
+        List<SeaDefinition> list = seaDefinitionMapper.selectList(qw);
+        PageInfo<SeaDefinition> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }
 
     @Override
     public ResultData queryAll(Long companyId) {
-        LambdaQueryWrapper<SeaDefinition> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SeaDefinition::getCompanyId, companyId);
-        List<SeaDefinition> list = seaDefinitionMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<SeaDefinition> qw = new LambdaQueryWrapper<>();
+        qw.eq(SeaDefinition::getCompanyId, companyId);
+        List<SeaDefinition> list = seaDefinitionMapper.selectList(qw);
         return ResultData.success(list);
     }
 

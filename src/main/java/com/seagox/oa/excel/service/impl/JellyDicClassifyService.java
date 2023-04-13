@@ -8,13 +8,10 @@ import com.seagox.oa.excel.entity.JellyDicDetail;
 import com.seagox.oa.excel.mapper.JellyDicClassifyMapper;
 import com.seagox.oa.excel.mapper.JellyDicDetailMapper;
 import com.seagox.oa.excel.service.IJellyDicClassifyService;
-import com.seagox.oa.sys.entity.SysCompany;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class JellyDicClassifyService implements IJellyDicClassifyService {
@@ -25,13 +22,11 @@ public class JellyDicClassifyService implements IJellyDicClassifyService {
     @Autowired
     private JellyDicDetailMapper dicDetailMapper;
 
-    @Autowired
-    private CompanyMapper companyMapper;
-
     @Override
     public ResultData queryDisplay(Long companyId) {
-        SysCompany company = companyMapper.selectById(companyId);
-        List<Map<String, Object>> list = dicClassifyMapper.queryByCode(company.getCode().substring(0, 4));
+    	LambdaQueryWrapper<JellyDicClassify> qw = new LambdaQueryWrapper<>();
+    	qw.eq(JellyDicClassify::getCompanyId, companyId);
+        List<JellyDicClassify> list = dicClassifyMapper.selectList(qw);
         return ResultData.success(list);
     }
 

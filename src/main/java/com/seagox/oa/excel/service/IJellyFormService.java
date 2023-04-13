@@ -38,11 +38,6 @@ public interface IJellyFormService {
     public ResultData queryById(Long userId, Long id);
 
     /**
-     * 表单详情通过标识
-     */
-    public ResultData queryByMark(Long companyId, Long id, Long userId);
-
-    /**
      * 删除
      */
     public ResultData delete(Long id);

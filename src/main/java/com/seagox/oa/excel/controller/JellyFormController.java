@@ -86,14 +86,6 @@ public class JellyFormController {
     }
 
     /**
-     * 表单详情通过标识
-     */
-    @GetMapping("/queryByMark/{id}")
-    public ResultData queryByMark(@PathVariable Long id, Long companyId, Long userId) {
-        return formService.queryByMark(companyId, id, userId);
-    }
-
-    /**
      * 新增(自定义)
      */
     @PostMapping("/insertCustom")

@@ -745,7 +745,7 @@ DROP TABLE IF EXISTS dbo.jelly_form;
 CREATE TABLE dbo.jelly_form (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
-  design_id bigint  NOT NULL,
+  design nvarchar(max)  NOT NULL,
   name nvarchar(30)  NOT NULL,
   icon nvarchar(max)  NOT NULL,
   color nvarchar(30)  NOT NULL,
@@ -777,10 +777,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'设计id',
+'MS_Description', N'设计',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
-'COLUMN', N'design_id'
+'COLUMN', N'design'
 GO
 
 EXEC sp_addextendedproperty
@@ -862,98 +862,6 @@ GO
 
 -- ----------------------------
 -- Records of jelly_form
--- ----------------------------
-BEGIN TRANSACTION
-GO
-
-COMMIT
-GO
-
-
--- ----------------------------
--- Table structure for jelly_form_design
--- ----------------------------
-DROP TABLE IF EXISTS dbo.jelly_form_design;
-CREATE TABLE dbo.jelly_form_design (
-  id bigint PRIMARY KEY IDENTITY(1,1),
-  company_id bigint  NOT NULL,
-  type int  NOT NULL,
-  name nvarchar(30)  NOT NULL,
-  excel_json nvarchar(max)  NULL,
-  data_source nvarchar(255)  NOT NULL,
-  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
-  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
-)
-GO
-
-ALTER TABLE dbo.jelly_form_design SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'主键',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'公司id',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'company_id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'类型(1:简化版;2:高级版;)',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'type'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'名称',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'name'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'excel配置',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'excel_json'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'数据源配置',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'data_source'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'create_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'更新时间',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design',
-'COLUMN', N'update_time'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单设计',
-'SCHEMA', N'dbo',
-'TABLE', N'jelly_form_design'
-GO
-
-
--- ----------------------------
--- Records of jelly_form_design
 -- ----------------------------
 BEGIN TRANSACTION
 GO

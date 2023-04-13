@@ -46,29 +46,6 @@ COMMENT ON COLUMN jelly_import_rule_detail.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_import_rule_detail.update_time IS '更新时间';
 COMMENT ON TABLE jelly_import_rule_detail IS '导入规则明细';
 
-create table jelly_form_design (
-    id NUMBER(20) PRIMARY KEY NOT NULL,
-    company_id NUMBER(20) NOT NULL,
-    type NUMBER(4) NOT NULL,
-    name VARCHAR2(30) NOT NULL,
-    excel_json clob,
-    data_source VARCHAR2(255) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
-);
--- 创建序列
-create sequence jelly_form_design_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
-
-COMMENT ON COLUMN jelly_form_design.id IS '主键';
-COMMENT ON COLUMN jelly_form_design.company_id IS '公司id';
-COMMENT ON COLUMN jelly_form_design.type IS '类型(1:简化版;2:高级版;)';
-COMMENT ON COLUMN jelly_form_design.name IS '名称';
-COMMENT ON COLUMN jelly_form_design.excel_json IS 'excel配置';
-COMMENT ON COLUMN jelly_form_design.data_source IS '数据源配置';
-COMMENT ON COLUMN jelly_form_design.create_time IS '创建时间';
-COMMENT ON COLUMN jelly_form_design.update_time IS '更新时间';
-COMMENT ON TABLE jelly_form_design IS '表单设计';
-
 
 create table jelly_print (
     id NUMBER(20) PRIMARY KEY NOT NULL,
@@ -95,7 +72,7 @@ COMMENT ON TABLE jelly_print IS '打印模版';
 create table jelly_form (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
-    design_id NUMBER(20) NOT NULL,
+    design clob NOT NULL,
     name VARCHAR2(30) NOT NULL,
     icon clob NOT NULL,
 	color VARCHAR2(30) NOT NULL,
@@ -112,7 +89,7 @@ create sequence jelly_form_seq increment by 1 start with 1 nomaxvalue minvalue 1
 
 COMMENT ON COLUMN jelly_form.id IS '主键';
 COMMENT ON COLUMN jelly_form.company_id IS '公司id';
-COMMENT ON COLUMN jelly_form.design_id IS '设计id';
+COMMENT ON COLUMN jelly_form.design IS '设计';
 COMMENT ON COLUMN jelly_form.name IS '名称';
 COMMENT ON COLUMN jelly_form.icon IS '图标';
 COMMENT ON COLUMN jelly_form.color IS '颜色';

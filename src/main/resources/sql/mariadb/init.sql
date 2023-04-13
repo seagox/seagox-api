@@ -23,19 +23,6 @@ CREATE TABLE `jelly_import_rule_detail`  (
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入规则明细';
 
-DROP TABLE IF EXISTS `jelly_form_design`;
-CREATE TABLE `jelly_form_design`  (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `type` int(4) NOT NULL COMMENT '类型(1:简化版;2:高级版;)',
-    `name` varchar(30) NOT NULL COMMENT '名称',
-    `excel_json` text DEFAULT NULL COMMENT 'excel配置',
-    `data_source` varchar(255) NOT NULL COMMENT '数据源配置',
-    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '表单设计';
-
 DROP TABLE IF EXISTS `jelly_print`;
 CREATE TABLE `jelly_print`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -52,7 +39,7 @@ DROP TABLE IF EXISTS `jelly_form`;
 CREATE TABLE `jelly_form`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
-    `design_id` bigint(20) NOT NULL COMMENT '设计id',
+    `design` text NOT NULL COMMENT '设计',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `icon` text NOT NULL COMMENT '图标',
     `color` varchar(30) NOT NULL COMMENT '颜色',

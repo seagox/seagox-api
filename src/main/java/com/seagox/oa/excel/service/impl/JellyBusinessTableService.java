@@ -44,8 +44,9 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
 
     @Override
     public ResultData queryAll(Long companyId) {
-        SysCompany company = companyMapper.selectById(companyId);
-        List<Map<String, Object>> list = businessTableMapper.queryByCode(company.getCode().substring(0, 4));
+    	LambdaQueryWrapper<JellyBusinessTable> qw = new LambdaQueryWrapper<>();
+    	qw.eq(JellyBusinessTable::getCompanyId, companyId);
+        List<JellyBusinessTable> list = businessTableMapper.selectList(qw);
         return ResultData.success(list);
     }
 

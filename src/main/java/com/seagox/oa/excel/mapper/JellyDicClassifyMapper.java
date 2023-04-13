@@ -11,11 +11,6 @@ import java.util.Map;
  * 字典分类
  */
 public interface JellyDicClassifyMapper extends BaseMapper<JellyDicClassify> {
-
-    /**
-     * 查询列表
-     */
-    public List<Map<String, Object>> queryByCode(@Param("prefix") String prefix);
     
     /**
      * 查询列表通过名称

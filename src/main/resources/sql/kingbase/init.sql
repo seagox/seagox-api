@@ -43,27 +43,6 @@ COMMENT ON COLUMN "public"."jelly_import_rule_detail"."create_time" IS '创建�
 COMMENT ON COLUMN "public"."jelly_import_rule_detail"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_import_rule_detail" IS '导入规则明细';
 
-DROP TABLE IF EXISTS "public"."jelly_form_design";
-CREATE TABLE "public"."jelly_form_design" (
-	"id" BIGSERIAL PRIMARY KEY NOT NULL,
-	"company_id" BIGINT NOT NULL,
-	"type" INTEGER NOT NULL,
-	"name" VARCHAR(30) NOT NULL,
-	"excel_json" TEXT,
-	"data_source" VARCHAR(255) NOT NULL,
-	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "public"."jelly_form_design"."id" IS '主键';
-COMMENT ON COLUMN "public"."jelly_form_design"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_form_design"."type" IS '类型(1:简化版;2:高级版;)';
-COMMENT ON COLUMN "public"."jelly_form_design"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_form_design"."excel_json" IS 'excel配置';
-COMMENT ON COLUMN "public"."jelly_form_design"."data_source" IS '数据源配置';
-COMMENT ON COLUMN "public"."jelly_form_design"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."jelly_form_design"."update_time" IS '更新时间';
-COMMENT ON TABLE "public"."jelly_form_design" IS '表单设计';
-
 
 DROP TABLE IF EXISTS "public"."jelly_print";
 CREATE TABLE "public"."jelly_print" (
@@ -89,7 +68,7 @@ DROP TABLE IF EXISTS "public"."jelly_form";
 CREATE TABLE "public"."jelly_form" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
 	"company_id" BIGINT NOT NULL,
-	"design_id" BIGINT NOT NULL,
+	"design" TEXT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
 	"icon" TEXT NOT NULL,
 	"color" VARCHAR(30) NOT NULL,
@@ -103,7 +82,7 @@ CREATE TABLE "public"."jelly_form" (
 );
 COMMENT ON COLUMN "public"."jelly_form"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_form"."company_id" IS '公司id';
-COMMENT ON COLUMN "public"."jelly_form"."design_id" IS '设计id';
+COMMENT ON COLUMN "public"."jelly_form"."design" IS '设计';
 COMMENT ON COLUMN "public"."jelly_form"."name" IS '名称';
 COMMENT ON COLUMN "public"."jelly_form"."icon" IS '图标';
 COMMENT ON COLUMN "public"."jelly_form"."color" IS '颜色';

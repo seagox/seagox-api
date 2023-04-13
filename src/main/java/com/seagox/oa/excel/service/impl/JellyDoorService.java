@@ -11,9 +11,7 @@ import com.seagox.oa.excel.entity.JellyMetaPage;
 import com.seagox.oa.excel.mapper.JellyDoorMapper;
 import com.seagox.oa.excel.mapper.JellyMetaPageMapper;
 import com.seagox.oa.excel.service.IJellyDoorService;
-import com.seagox.oa.sys.entity.SysCompany;
 import com.seagox.oa.sys.entity.SysUserRelate;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import com.seagox.oa.sys.mapper.UserRelateMapper;
 import com.seagox.oa.util.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +33,6 @@ public class JellyDoorService implements IJellyDoorService {
     private JellyDoorMapper doorMapper;
 
     @Autowired
-    private CompanyMapper companyMapper;
-
-    @Autowired
     private UserRelateMapper userRelateMapper;
 
     @Value(value = "${spring.datasource.url}")
@@ -51,10 +46,11 @@ public class JellyDoorService implements IJellyDoorService {
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
-        List<Map<String, Object>> list = doorMapper.queryByCode(company.getCode().substring(0, 4));
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
+        LambdaQueryWrapper<JellyDoor> qw = new LambdaQueryWrapper<>();
+    	qw.eq(JellyDoor::getCompanyId, companyId);
+        List<JellyDoor> list = doorMapper.selectList(qw);
+        PageInfo<JellyDoor> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }
 

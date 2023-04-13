@@ -78,9 +78,6 @@ public class JellyFormService implements IJellyFormService {
     private SeaNodeMapper seaNodeMapper;
 
     @Autowired
-    private JellyFormDesignMapper formDesignMapper;
-
-    @Autowired
     private JellyMetaFunctionMapper metaFunctionMapper;
 
     @Autowired
@@ -194,23 +191,13 @@ public class JellyFormService implements IJellyFormService {
         return ResultData.success(form);
     }
 
-    @Override
-    public ResultData queryByMark(Long companyId, Long id, Long userId) {
-        JellyForm form = formMapper.selectById(id);
-        // 表单设计
-        JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
-        form.setFormDesign(formDesign);
-        return ResultData.success(form);
-    }
-
     @Transactional
     @Override
     public ResultData insertCustom(HttpServletRequest request) {
         Long formId = Long.valueOf(request.getParameter("$formId"));
         JellyForm form = formMapper.selectById(formId);
-        JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
         // 必填验证
-        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(formDesign.getDataSource().split(","));
+        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(form.getDataSource().split(","));
         // 过滤字段
         List<String> filterField = new ArrayList<>(Arrays.asList("company_id", "user_id", "is_submit"));
         for (int i = 0; i < requiredList.size(); i++) {
@@ -239,7 +226,7 @@ public class JellyFormService implements IJellyFormService {
 
         Map<String, Object> params = new HashMap<>();
         params.put("formId", formId);
-        params.put("dataSource", formDesign.getDataSource());
+        params.put("dataSource", form.getDataSource());
         String businessKey = insertLogic(request, params);
         SysAccount user = userMapper.selectById(request.getParameter("userId"));
         if (form.getFlowId() != null) {
@@ -431,9 +418,8 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData updateCustom(HttpServletRequest request) {
         JellyForm form = formMapper.selectById(request.getParameter("businessType"));
-        JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
         // 必填验证
-        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(formDesign.getDataSource().split(","));
+        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(form.getDataSource().split(","));
         // 过滤字段
         List<String> filterField = new ArrayList<>(Arrays.asList("company_id", "user_id", "is_submit"));
         for (int i = 0; i < requiredList.size(); i++) {
@@ -458,7 +444,7 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("dataSource", formDesign.getDataSource());
+        params.put("dataSource", form.getDataSource());
         updateLogic(request, params);
         if (form.getFlowId() != null) {
             LambdaQueryWrapper<SeaInstance> qw = new LambdaQueryWrapper<>();
@@ -808,13 +794,11 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryDetail(Long userId, Long formId, Long id) {
         JellyForm form = formMapper.selectById(formId);
-        JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
-        form.setFormDesign(formDesign);
         Map<String, Object> claims = new HashMap<String, Object>();
 
         Map<String, Object> tableMap = new HashMap<String, Object>();
         int isValid = 0;
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(formDesign.getDataSource().split(","));
+        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(form.getDataSource().split(","));
         for (int i = 0; i < dataSheetList.size(); i++) {
         	Map<String, Object> dataSheet = dataSheetList.get(i);
             if (StringUtils.isEmpty(dataSheet.get("targetTableId")) && StringUtils.isEmpty(dataSheet.get("relateTable"))
@@ -954,7 +938,6 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData deleteCustom(String businessType, String businessKey, HttpServletRequest request) {
         JellyForm form = formMapper.selectById(businessType);
-        JellyFormDesign formDesign = formDesignMapper.selectById(form.getDesignId());
         // 删除前规则
         JSONObject options = JSONObject.parseObject(form.getOptions());
         if (options != null && options.containsKey("deleteBeforeRule")) {
@@ -970,7 +953,7 @@ public class JellyFormService implements IJellyFormService {
             }
         }
 
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(formDesign.getDataSource().split(","));
+        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(form.getDataSource().split(","));
         Map<String, Object> map = new HashMap<>();
         for (int i = 0; i < dataSheetList.size(); i++) {
         	Map<String, Object> dataSheet = dataSheetList.get(i);

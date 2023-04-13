@@ -9,8 +9,6 @@ import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyGauge;
 import com.seagox.oa.excel.mapper.JellyGaugeMapper;
 import com.seagox.oa.excel.service.IJellyGaugeService;
-import com.seagox.oa.sys.entity.SysCompany;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import com.seagox.oa.util.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,15 +28,14 @@ public class JellyGaugeService implements IJellyGaugeService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private CompanyMapper companyMapper;
-
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
-        List<Map<String, Object>> list = gaugeMapper.queryByCode(company.getCode().substring(0, 4), name);
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
+        LambdaQueryWrapper<JellyGauge> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyGauge::getCompanyId, companyId)
+        .like(!StringUtils.isEmpty(name), JellyGauge::getName, name);
+        List<JellyGauge> list = gaugeMapper.selectList(qw);
+        PageInfo<JellyGauge> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }
 
@@ -103,9 +100,9 @@ public class JellyGaugeService implements IJellyGaugeService {
 
     @Override
     public ResultData queryByCompanyId(Long companyId) {
-        LambdaQueryWrapper<JellyGauge> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(JellyGauge::getCompanyId, companyId);
-        List<JellyGauge> list = gaugeMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<JellyGauge> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyGauge::getCompanyId, companyId);
+        List<JellyGauge> list = gaugeMapper.selectList(qw);
         return ResultData.success(list);
     }
 
