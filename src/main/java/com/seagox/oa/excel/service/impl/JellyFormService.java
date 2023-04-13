@@ -187,7 +187,6 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryById(Long userId, Long id) {
         JellyForm form = formMapper.selectById(id);
-        //form.setTableHeaderJson(JSON.toJSONString(tableColumnMapper.queryConfigByClassifyId(form.getTableHeader(), userId)));
         return ResultData.success(form);
     }
 
@@ -992,26 +991,10 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryBusinessField(Long formId) {
     	JellyForm form = formMapper.selectById(formId);
-        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
-        List<Map<String, Object>> businessFieldList = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < dataSheetList.size(); i++) {
-            List<Map<String, Object>> businessFieldItem = businessFieldMapper
-                    .queryByTableName(dataSheetList.getJSONObject(i).getString("tableName"), 1);
-            if (dataSheetList.getJSONObject(i).getIntValue("singleFlag") == 1) {
-                businessFieldList.addAll(businessFieldItem);
-            } else {
-                if (businessFieldItem.size() > 0) {
-                    List<Map<String, Object>> moreBusinessFieldList = new ArrayList<Map<String, Object>>();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", new Date().getTime());
-                    map.put("comment", businessFieldItem.get(0).get("tableComment"));
-                    map.put("children", businessFieldItem);
-                    moreBusinessFieldList.add(map);
-                    businessFieldList.addAll(moreBusinessFieldList);
-                }
-            }
-        }
-        return ResultData.success(businessFieldList);
+        LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(JellyBusinessField::getBusinessTableId, form.getTableId());
+        List<JellyBusinessField> list = businessFieldMapper.selectList(queryWrapper);
+        return ResultData.success(list);
     }
 
     @Override
