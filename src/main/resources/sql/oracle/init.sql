@@ -72,6 +72,7 @@ COMMENT ON TABLE jelly_print IS '打印模版';
 create table jelly_form (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
+    table_id NUMBER(20) NOT NULL,
     design clob NOT NULL,
     name VARCHAR2(30) NOT NULL,
     icon clob NOT NULL,
@@ -89,6 +90,7 @@ create sequence jelly_form_seq increment by 1 start with 1 nomaxvalue minvalue 1
 
 COMMENT ON COLUMN jelly_form.id IS '主键';
 COMMENT ON COLUMN jelly_form.company_id IS '公司id';
+COMMENT ON COLUMN jelly_form.table_id IS '目标表';
 COMMENT ON COLUMN jelly_form.design IS '设计';
 COMMENT ON COLUMN jelly_form.name IS '名称';
 COMMENT ON COLUMN jelly_form.icon IS '图标';

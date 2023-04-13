@@ -68,6 +68,7 @@ DROP TABLE IF EXISTS "jelly_form";
 CREATE TABLE "public"."jelly_form" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
 	"company_id" BIGINT NOT NULL,
+	"table_id" BIGINT NOT NULL,
 	"design" TEXT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
 	"icon" TEXT NOT NULL,
@@ -82,6 +83,7 @@ CREATE TABLE "public"."jelly_form" (
 );
 COMMENT ON COLUMN "jelly_form"."id" IS '主键';
 COMMENT ON COLUMN "jelly_form"."company_id" IS '公司id';
+COMMENT ON COLUMN "jelly_form"."table_id" IS '目标表';
 COMMENT ON COLUMN "jelly_form"."design" IS '设计';
 COMMENT ON COLUMN "jelly_form"."name" IS '名称';
 COMMENT ON COLUMN "jelly_form"."icon" IS '图标';

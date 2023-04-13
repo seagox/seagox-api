@@ -47,6 +47,11 @@ public class JellyForm {
     private Long flowId;
     
     /**
+     * 目标表
+     */
+    private Long tableId;
+    
+    /**
      * 表格表头
      */
     private String tableHeader;
@@ -125,6 +130,14 @@ public class JellyForm {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Long getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(Long tableId) {
+		this.tableId = tableId;
 	}
 
 	public String getIcon() {

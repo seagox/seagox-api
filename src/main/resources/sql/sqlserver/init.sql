@@ -745,6 +745,7 @@ DROP TABLE IF EXISTS dbo.jelly_form;
 CREATE TABLE dbo.jelly_form (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
+  table_id bigint  NOT NULL,
   design nvarchar(max)  NOT NULL,
   name nvarchar(30)  NOT NULL,
   icon nvarchar(max)  NOT NULL,
@@ -774,6 +775,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_form',
 'COLUMN', N'company_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'目标表',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_form',
+'COLUMN', N'table_id'
 GO
 
 EXEC sp_addextendedproperty

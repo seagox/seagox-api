@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS `jelly_form`;
 CREATE TABLE `jelly_form`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
+    `table_id` bigint(20) NOT NULL COMMENT '目标表',
     `design` text NOT NULL COMMENT '设计',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `icon` text NOT NULL COMMENT '图标',
