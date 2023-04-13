@@ -119,11 +119,6 @@ public interface IJellyFormService {
     public ResultData queryRegionsByCode(String codeStr);
 
     /**
-     * 获取业务应用数据
-     */
-    public ResultData queryOptions(String value, String source, String showField);
-
-    /**
      * 查询流程类型
      *
      * @param companyId 单位id

@@ -201,14 +201,6 @@ public class JellyFormController {
     }
 
     /**
-     * 获取业务应用数据
-     */
-    @PostMapping("/queryOptions")
-    public ResultData queryOptions(String value, String source, String showField) {
-        return formService.queryOptions(value, source, showField);
-    }
-
-    /**
      * 更新业务表文件数据
      */
     @PostMapping("/updateFileValue")

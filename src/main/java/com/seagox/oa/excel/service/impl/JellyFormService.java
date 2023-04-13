@@ -100,6 +100,9 @@ public class JellyFormService implements IJellyFormService {
 
     @Value(value = "${spring.datasource.url}")
     private String datasourceUrl;
+    
+    @Autowired
+    private JellyBusinessTableMapper businessTableMapper;
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name) {
@@ -1000,52 +1003,45 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData queryBill(Long id, String field, String prefix, String billDate, int digit) {
         JellyForm form = formMapper.selectById(id);
+        JellyBusinessTable businessTable = businessTableMapper.selectById(form.getTableId());
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT LEFT(");
+        sql.append(field);
+        sql.append(", ");
+        sql.append(billDate.equals("no") ? (prefix.length() + digit) : (prefix.length() + billDate.length() + digit));
+        sql.append(") FROM ");
+        sql.append(businessTable.getName());
+        sql.append(" WHERE ");
+        sql.append(field);
+        sql.append(" like ");
 
-        JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
-        for (int i = 0; i < dataSheetList.size(); i++) {
-            JSONObject dataSheet = dataSheetList.getJSONObject(i);
-            if (StringUtils.isEmpty(dataSheet.getString("relateField")) && StringUtils.isEmpty(dataSheet.getString("relateTable"))) {
-                StringBuffer sql = new StringBuffer();
-                sql.append("SELECT LEFT(");
-                sql.append(field);
-                sql.append(", ");
-                sql.append(billDate.equals("no") ? (prefix.length() + digit) : (prefix.length() + billDate.length() + digit));
-                sql.append(") FROM ");
-                sql.append(dataSheet.getString("tableName"));
-                sql.append(" WHERE ");
-                sql.append(field);
-                sql.append(" like ");
-
-                String str = prefix;
-                if (billDate.equals("no")) {
-                    sql.append("'" + str + "%'");
-                    sql.append(" AND LENGTH(" + field + ") = ");
-                    sql.append((prefix.length() + digit + 4));
-                    sql.append(" ORDER BY ");
-                    sql.append(field);
-                    sql.append(" DESC LIMIT 1");
-                } else {
-                    Date date = new Date();
-                    SimpleDateFormat sdf = new SimpleDateFormat(billDate);
-                    str = prefix + sdf.format(date);
-                    sql.append("'" + str + "%'");
-                    sql.append(" AND LENGTH(" + field + ") = ");
-                    sql.append((prefix.length() + billDate.length() + digit + 4));
-                    sql.append(" ORDER BY ");
-                    sql.append(field);
-                    sql.append(" DESC LIMIT 1");
-                }
-                String suffix = String.format("%04d", new Random().nextInt(9999));
-                try {
-                    String result = jdbcTemplate.queryForObject(sql.toString(), String.class);
-                    int max = Integer.valueOf(result.substring(str.length())) + 1;
-                    return ResultData.success(str + lpad(digit, max) + suffix);
-                } catch (Exception e) {
-                    return ResultData.success(str + lpad(digit, 1) + suffix);
-                }
-            }
+        String str = prefix;
+        if (billDate.equals("no")) {
+            sql.append("'" + str + "%'");
+            sql.append(" AND LENGTH(" + field + ") = ");
+            sql.append((prefix.length() + digit + 4));
+            sql.append(" ORDER BY ");
+            sql.append(field);
+            sql.append(" DESC LIMIT 1");
+        } else {
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat(billDate);
+            str = prefix + sdf.format(date);
+            sql.append("'" + str + "%'");
+            sql.append(" AND LENGTH(" + field + ") = ");
+            sql.append((prefix.length() + billDate.length() + digit + 4));
+            sql.append(" ORDER BY ");
+            sql.append(field);
+            sql.append(" DESC LIMIT 1");
         }
-        return ResultData.success(null);
+        String suffix = String.format("%04d", new Random().nextInt(9999));
+        try {
+            String result = jdbcTemplate.queryForObject(sql.toString(), String.class);
+            int max = Integer.valueOf(result.substring(str.length())) + 1;
+            return ResultData.success(str + lpad(digit, max) + suffix);
+        } catch (Exception e) {
+            return ResultData.success(str + lpad(digit, 1) + suffix);
+        }
     }
 
     /**
@@ -1081,7 +1077,6 @@ public class JellyFormService implements IJellyFormService {
         return ResultData.success(jdbcTemplate.queryForList(sql));
     }
 
-    @SuppressWarnings("unchecked")
 	@Override
     public void export(HttpServletRequest request, HttpServletResponse response) {
         JellyForm form = formMapper.selectById(request.getParameter("id"));
@@ -1277,20 +1272,6 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         return userList;
-    }
-
-    @Override
-    public ResultData queryOptions(String value, String source, String showField) {
-        JellyForm form = formMapper.selectById(source);
-        if (form != null) {
-        	JSONArray dataSheetList = null;//JSON.parseArray(form.getDataSheetTableJson());
-            if (dataSheetList.size() > 0) {
-            	JSONObject dataSheet = dataSheetList.getJSONObject(0);
-                String sql = "SELECT * FROM " + dataSheet.getString("tableName") + " WHERE FIND_IN_SET(id,'" + value + "')";
-                return ResultData.success(jdbcTemplate.queryForList(sql));
-            }
-        }
-        return ResultData.success(null);
     }
 
     @Override
