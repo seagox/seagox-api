@@ -28,6 +28,7 @@ import com.seagox.oa.sys.entity.SysMessage;
 import com.seagox.oa.sys.entity.SysUserRelate;
 import com.seagox.oa.sys.mapper.*;
 import com.seagox.oa.util.ExportUtils;
+import com.seagox.oa.util.JdbcTemplateUtils;
 import com.seagox.oa.util.TreeUtils;
 import com.seagox.oa.util.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,37 +200,22 @@ public class JellyFormService implements IJellyFormService {
         Long formId = Long.valueOf(request.getParameter("$formId"));
         JellyForm form = formMapper.selectById(formId);
         // 必填验证
-        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(form.getDataSource().split(","));
+        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(String.valueOf(form.getTableId()).split(","));
         // 过滤字段
         List<String> filterField = new ArrayList<>(Arrays.asList("company_id", "user_id", "is_submit"));
         for (int i = 0; i < requiredList.size(); i++) {
             Map<String, Object> item = requiredList.get(i);
             if (!filterField.contains(item.get("name").toString())
-                    && StringUtils.isEmpty(request.getParameter(item.get("tableName") + "." + item.get("name")))) {
-                return ResultData.warn(ResultCode.PARAMETER_ERROR, item.get("comment") + "不能为空");
-            }
-        }
-        // 新增前规则
-        JSONObject options = JSONObject.parseObject(form.getOptions());
-        if (options != null && options.containsKey("insertBeforeRule")) {
-        	JellyMetaFunction insertBeforeRule = metaFunctionMapper.selectById(options.getLong("insertBeforeRule"));
-            Map<String, Object> params = new HashMap<>();
-            params.put("temporaryStorage", request.getParameter("temporaryStorage"));
-            try {
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertBeforeRule.getScript());
-                groovyRule.execute(request, params);
-            } catch (ConfirmException e) {
-                throw new ConfirmException(e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
+                    && StringUtils.isEmpty(request.getParameter(item.get("name").toString()))) {
+                return ResultData.warn(ResultCode.PARAMETER_ERROR, item.get("remark") + "不能为空");
             }
         }
 
         Map<String, Object> params = new HashMap<>();
         params.put("formId", formId);
         params.put("dataSource", form.getDataSource());
-        String businessKey = insertLogic(request, params);
+        params.put("tableId", form.getTableId());
+        Long businessKey = insertLogic(request, params);
         SysAccount user = userMapper.selectById(request.getParameter("userId"));
         if (form.getFlowId() != null) {
             Map<String, Object> variables = new HashMap<>();
@@ -267,152 +253,35 @@ public class JellyFormService implements IJellyFormService {
             }
         }
 
-        // 新增后规则
-        if (options != null && options.containsKey("insertAfterRule")) {
-        	JellyMetaFunction insertAfterRule = metaFunctionMapper.selectById(options.getLong("insertAfterRule"));
-            try {
-            	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertAfterRule.getScript());
-                Map<String, Object> ruleParams = new HashMap<>();
-                ruleParams.put("username", user.getName());
-                ruleParams.put("formName", form.getName());
-                ruleParams.put("businessKey", businessKey);
-                params.put("temporaryStorage", request.getParameter("temporaryStorage"));
-                groovyRule.execute(request, ruleParams);
-            } catch (Exception e) {
-                e.printStackTrace();
-                // 手动回滚
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-            }
-        }
-
         return ResultData.success(null);
     }
 
-    public String insertLogic(HttpServletRequest request, Map<String, Object> params) {
-        String businessKey = "";
-        Map<String, String> map = new HashMap<String, String>();
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(params.get("dataSource").toString().split(","));
-        for (int i = 0; i < dataSheetList.size(); i++) {
-        	Map<String, Object> dataSheet = dataSheetList.get(i);
-            List<Map<String, Object>> businessFieldList = businessFieldMapper.queryByTableName(dataSheet.get("tableName").toString(), 0);
-            if (StringUtils.isEmpty(dataSheet.get("tartgetTableId"))) {
-                String fieldSql = "";
-                String valueSql = "";
-                List<String> valueArray = new ArrayList<>();
-                for (int j = 0; j < businessFieldList.size(); j++) {
-                    if (businessFieldList.get(j).get("name").equals("user_id")) {
-                        valueArray.add(request.getParameter("userId"));
-                        fieldSql = fieldSql + "user_id,";
-                        valueSql = valueSql + "?,";
-                    } else if (businessFieldList.get(j).get("name").equals("company_id")) {
-                        valueArray.add(request.getParameter("companyId"));
-                        fieldSql = fieldSql + "company_id,";
-                        valueSql = valueSql + "?,";
-                    } else if (businessFieldList.get(j).get("name").equals("is_submit")) {
-                        if (StringUtils.isEmpty(request.getParameter("temporaryStorage")) || "false".equals(request.getParameter("temporaryStorage"))) {
-                            valueArray.add("1");
-                        } else {
-                            valueArray.add("2");
-                        }
-                        fieldSql = fieldSql + "is_submit,";
-                        valueSql = valueSql + "?,";
-                    } else if (businessFieldList.get(j).get("name").equals(dataSheet.get("relateField"))) {
-                        valueArray.add(map.get(dataSheet.get("relateTable").toString()));
-                        fieldSql = fieldSql + dataSheet.get("relateField") + ",";
-                        valueSql = valueSql + "?,";
-                    } else {
-                        String value = request
-                                .getParameter(dataSheet.get("tableName") + "." + businessFieldList.get(j).get("name"));
-                        if (!StringUtils.isEmpty(value)) {
-                            valueArray.add(value);
-                            fieldSql = fieldSql + businessFieldList.get(j).get("name") + ",";
-                            if (datasourceUrl.contains("oracle")) {
-                                if ("date".equals(businessFieldList.get(j).get("type"))) {
-                                    valueSql = valueSql + "TO_DATE(?, 'yyyy-MM-dd'),";
-                                } else if ("timestamp".equals(businessFieldList.get(j).get("type"))) {
-                                    valueSql = valueSql + "TO_DATE(?, 'yyyy-MM-dd hh24:mi:ss'),";
-                                } else {
-                                    valueSql = valueSql + "?,";
-                                }
-                            } else {
-                                valueSql = valueSql + "?,";
-                            }
-                        }
-                    }
-                }
-                if (!StringUtils.isEmpty(fieldSql) && !StringUtils.isEmpty(valueSql)) {
-                    fieldSql = fieldSql.substring(0, fieldSql.length() - 1);
-                    valueSql = valueSql.substring(0, valueSql.length() - 1);
-
-                    String sql = "insert into " + dataSheet.get("tableName") + "(" + fieldSql + ") values(" + valueSql
-                            + ")";
-                    KeyHolder keyHolder = new GeneratedKeyHolder();
-                    jdbcTemplate.update(new PreparedStatementCreator() {
-                        @Override
-                        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                            for (int k = 0; k < valueArray.size(); k++) {
-                                ps.setString(k + 1, valueArray.get(k));
-                            }
-                            return ps;
-                        }
-                    }, keyHolder);
-
-                    map.put(dataSheet.get("tableName").toString(), String.valueOf(keyHolder.getKey()));
-
-                    if (StringUtils.isEmpty(dataSheet.get("relateField"))
-                            && StringUtils.isEmpty(dataSheet.get("relateTable"))) {
-                        businessKey = String.valueOf(keyHolder.getKey());
-                    }
-                }
+    public Long insertLogic(HttpServletRequest request, Map<String, Object> params) {
+        JellyBusinessTable businessTable = businessTableMapper.selectById(params.get("tableId").toString());
+        Map<String, Object> fieldParams = new HashMap<String, Object>();
+        LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyBusinessField::getBusinessTableId, businessTable.getId());
+        List<JellyBusinessField> businessFieldList = businessFieldMapper.selectList(qw);
+        for (int i = 0; i < businessFieldList.size(); i++) {
+        	JellyBusinessField businessField = businessFieldList.get(i);
+            if (businessField.getName().equals("user_id")) {
+                fieldParams.put("user_id", request.getParameter("userId"));
+            } else if (businessField.getName().equals("company_id")) {
+                fieldParams.put("company_id", request.getParameter("companyId"));
+            } else if (businessField.getName().equals("is_submit")) {
+                if (StringUtils.isEmpty(request.getParameter("temporaryStorage")) || "false".equals(request.getParameter("temporaryStorage"))) {
+                    fieldParams.put("is_submit", 1);
+                } else {
+                	fieldParams.put("is_submit", 2);
+                }  
             } else {
-                JSONArray jsonArray = JSON.parseArray(request.getParameter(dataSheet.get("tableName").toString()));
-                for (int k = 0; k < jsonArray.size(); k++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(k);
-                    String fieldSql = "";
-                    String valueSql = "";
-                    List<String> valueArray = new ArrayList<>();
-                    for (int j = 0; j < businessFieldList.size(); j++) {
-                        if (businessFieldList.get(j).get("name").equals(dataSheet.get("relateField"))) {
-                            valueArray.add(map.get(dataSheet.get("relateTable").toString()));
-                            fieldSql = fieldSql + dataSheet.get("relateField") + ",";
-                            valueSql = valueSql + "?,";
-                        } else {
-                            String value = jsonObject.getString(businessFieldList.get(j).get("name").toString());
-                            if (!StringUtils.isEmpty(value)) {
-                                valueArray.add(value);
-                                fieldSql = fieldSql + businessFieldList.get(j).get("name") + ",";
-                                valueSql = valueSql + "?,";
-                            }
-                        }
-
-                    }
-                    if (!StringUtils.isEmpty(fieldSql) && !StringUtils.isEmpty(valueSql)) {
-                        fieldSql = fieldSql.substring(0, fieldSql.length() - 1);
-                        valueSql = valueSql.substring(0, valueSql.length() - 1);
-
-                        String sql = "insert into " + dataSheet.get("tableName") + "(" + fieldSql + ") values(" + valueSql
-                                + ")";
-
-                        KeyHolder keyHolder = new GeneratedKeyHolder();
-                        jdbcTemplate.update(new PreparedStatementCreator() {
-                            @Override
-                            public PreparedStatement createPreparedStatement(Connection connection)
-                                    throws SQLException {
-                                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                                for (int k = 0; k < valueArray.size(); k++) {
-                                    ps.setString(k + 1, valueArray.get(k));
-                                }
-                                return ps;
-                            }
-                        }, keyHolder);
-
-                        map.put(dataSheet.get("tableName").toString(), String.valueOf(keyHolder.getKey()));
-                    }
+                String value = request.getParameter(businessField.getName());
+                if (!StringUtils.isEmpty(value)) {
+                	fieldParams.put(businessField.getName(), value);
                 }
             }
         }
+        Long businessKey = JdbcTemplateUtils.insert(jdbcTemplate, businessTable.getName(), fieldParams);
         return businessKey;
     }
 
@@ -797,63 +666,10 @@ public class JellyFormService implements IJellyFormService {
     public ResultData queryDetail(Long userId, Long formId, Long id) {
         JellyForm form = formMapper.selectById(formId);
         Map<String, Object> claims = new HashMap<String, Object>();
-
-        Map<String, Object> tableMap = new HashMap<String, Object>();
+        JellyBusinessTable businessTable = businessTableMapper.selectById(form.getTableId());
         int isValid = 0;
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(form.getDataSource().split(","));
-        for (int i = 0; i < dataSheetList.size(); i++) {
-        	Map<String, Object> dataSheet = dataSheetList.get(i);
-            if (StringUtils.isEmpty(dataSheet.get("targetTableId")) && StringUtils.isEmpty(dataSheet.get("relateTable"))
-                    && StringUtils.isEmpty(dataSheet.get("relateField"))) {
-                String sql = "";
-                if (i == 0) {
-                    sql = "select * from " + dataSheet.get("tableName") + " where id=" + id;
-                } else {
-                    sql = "select * from " + dataSheet.get("tableName") + " where id="
-                            + tableMap.get(dataSheet.get("tableName"));
-                }
-                try {
-                    Map<String, Object> map = jdbcTemplate.queryForMap(sql);
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        claims.put(dataSheet.get("tableName") + "." + entry.getKey(), entry.getValue());
-                    }
-                    tableMap.put(dataSheet.get("tableName").toString(), id);
-                    if (map.containsKey("user_id") && Long.valueOf(map.get("user_id").toString()).equals(userId)) {
-                        claims.put("temporaryStorage", true);
-                    }
-                } catch (Exception e) {
-
-                }
-            } else if (StringUtils.isEmpty(dataSheet.get("targetTableId")) && !StringUtils.isEmpty(dataSheet.get("relateTable"))
-                    && !StringUtils.isEmpty(dataSheet.get("relateField"))) {
-                String sql = "";
-                if (i == 0) {
-                    sql = "select * from " + dataSheet.get("tableName") + " where id=" + id;
-                } else {
-                    sql = "select * from " + dataSheet.get("tableName") + " where " + dataSheet.get("relateField") + "="
-                            + tableMap.get(dataSheet.get("relateTable"));
-                }
-                try {
-                    Map<String, Object> map = jdbcTemplate.queryForMap(sql);
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        claims.put(dataSheet.get("tableName") + "." + entry.getKey(), entry.getValue());
-                    }
-                    tableMap.put(dataSheet.get("tableName").toString(), map.get("id"));
-                    tableMap.put(dataSheet.get("relateTable").toString(), map.get(dataSheet.get("relateField")));
-                    if (map.containsKey("user_id") && Long.valueOf(map.get("user_id").toString()).equals(userId)) {
-                        claims.put("temporaryStorage", true);
-                    }
-                } catch (Exception e) {
-
-                }
-            } else if (!StringUtils.isEmpty(dataSheet.get("targetTableId")) && !StringUtils.isEmpty(dataSheet.get("relateTable"))
-                    && !StringUtils.isEmpty(dataSheet.get("relateField"))) {
-                String sql = "select * from " + dataSheet.get("tableName") + " where " + dataSheet.get("relateField") + "="
-                        + tableMap.get(dataSheet.get("relateTable"));
-                List<Map<String, Object>> map = jdbcTemplate.queryForList(sql);
-                claims.put(dataSheet.get("tableName").toString(), map);
-            }
-        }
+        String sql = "select * from " + businessTable.getName() + " where id=" + id;
+        claims = jdbcTemplate.queryForMap(sql);
         claims.put("isValid", isValid);
         // 有流程
         if (form.getFlowId() != null) {
@@ -862,7 +678,6 @@ public class JellyFormService implements IJellyFormService {
                     id);
             SeaInstance seaInstance = seaProcdefMapper.selectOne(qw);
             if (seaInstance != null) {
-                //form.setProcessJson(seaProcdef.getResource());
                 if (seaInstance.getStatus() == 0) {
                     // 待审
                     Map<String, Object> currentNode = seaNodeMapper.queryCurrentNodeDetail(
@@ -932,7 +747,7 @@ public class JellyFormService implements IJellyFormService {
                 }
             }
         }
-        claims.put("form", form);
+        claims.put("designJson", form.getDesign());
         return ResultData.success(claims);
     }
 
