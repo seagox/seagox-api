@@ -755,54 +755,9 @@ public class JellyFormService implements IJellyFormService {
     @Override
     public ResultData deleteCustom(String businessType, String businessKey, HttpServletRequest request) {
         JellyForm form = formMapper.selectById(businessType);
-        // 删除前规则
-        JSONObject options = JSONObject.parseObject(form.getOptions());
-        if (options != null && options.containsKey("deleteBeforeRule")) {
-        	JellyMetaFunction deleteBeforeRule = metaFunctionMapper.selectById(options.getLong("deleteBeforeRule"));
-            try {
-                Map<String, Object> params = new HashMap<>();
-                params.put("businessKey", businessKey);
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(deleteBeforeRule.getScript());
-                groovyRule.execute(request, params);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-            }
-        }
-
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(form.getDataSource().split(","));
-        Map<String, Object> map = new HashMap<>();
-        for (int i = 0; i < dataSheetList.size(); i++) {
-        	Map<String, Object> dataSheet = dataSheetList.get(i);
-            String sql = "";
-            if (StringUtils.isEmpty(dataSheet.get("relateTable")) && StringUtils.isEmpty(dataSheet.get("relateField"))) {
-                // 主表
-                sql = "DELETE FROM " + dataSheet.get("tableName") + " WHERE id = " + businessKey;
-                if (form.getFlowId() != null) {
-                    seaProcdefMapper.deleteProcess(businessType, businessKey);
-                    sysMessageMapper.deleteMessage(Long.valueOf(businessType), Long.valueOf(businessKey));
-                }
-            } else {
-                // 副表
-                sql = "DELETE FROM " + dataSheet.get("tableName") + " WHERE " + dataSheet.get("relateField") + " = "
-                        + map.get(dataSheet.get("relateTable"));
-            }
-            map.put(dataSheet.get("tableName").toString(), businessKey);
-            jdbcTemplate.update(sql);
-        }
-        // 删除后规则
-        if (options != null && options.containsKey("deleteAfterRule")) {
-        	JellyMetaFunction deleteAfterRule = metaFunctionMapper.selectById(options.getLong("deleteAfterRule"));
-            try {
-                Map<String, Object> params = new HashMap<>();
-                params.put("businessKey", businessKey);
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(deleteAfterRule.getScript());
-                groovyRule.execute(request, params);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResultData.warn(ResultCode.OTHER_ERROR, e.getMessage());
-            }
-        }
+        JellyBusinessTable businessTable = businessTableMapper.selectById(form.getTableId());
+        String sql = "DELETE FROM " + businessTable.getName() + " WHERE id = " + businessKey;
+        jdbcTemplate.update(sql);
         return ResultData.success(null);
     }
 
