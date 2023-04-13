@@ -282,7 +282,7 @@ public class JellyFormService implements IJellyFormService {
         if (options != null && options.containsKey("insertAfterRule")) {
         	JellyMetaFunction insertAfterRule = metaFunctionMapper.selectById(options.getLong("insertAfterRule"));
             try {
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertAfterRule.getScript());
+            	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(insertAfterRule.getScript());
                 Map<String, Object> ruleParams = new HashMap<>();
                 ruleParams.put("username", user.getName());
                 ruleParams.put("formName", form.getName());
@@ -448,7 +448,7 @@ public class JellyFormService implements IJellyFormService {
         if (options != null && options.containsKey("updateBeforeRule")) {
         	JellyMetaFunction updateBeforeRule = metaFunctionMapper.selectById(options.getLong("updateBeforeRule"));
             try {
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateBeforeRule.getScript());
+            	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateBeforeRule.getScript());
                 groovyRule.execute(request, null);
             } catch (ConfirmException e) {
                 throw new ConfirmException(e.getMessage());
@@ -526,7 +526,7 @@ public class JellyFormService implements IJellyFormService {
         if (options != null && options.containsKey("updateAfterRule")) {
         	JellyMetaFunction updateAfterRule = metaFunctionMapper.selectById(options.getLong("updateAfterRule"));
             try {
-                IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateAfterRule.getScript());
+            	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(updateAfterRule.getScript());
                 SysAccount user = userMapper.selectById(request.getParameter("userId"));
                 Map<String, Object> ruleParams = new HashMap<>();
                 ruleParams.put("username", user.getName());

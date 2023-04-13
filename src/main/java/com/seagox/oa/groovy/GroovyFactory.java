@@ -17,7 +17,28 @@ public class GroovyFactory {
     }
 
     /**
-     * 根据脚本内容生成IRule的实现
+     * 根据脚本内容生成IGroovyPrint的实现
+     *
+     * @param code
+     * @return
+     * @throws Exception
+     */
+    public IGroovyPrint getIPrintFromCode(String code) throws Exception {
+        Class<?> clazz = groovyClassLoader.parseClass(code);
+        if (clazz != null) {
+            Object instance = clazz.newInstance();
+            if (instance != null) {
+                if (instance instanceof IGroovyPrint) {
+                    return (IGroovyPrint) instance;
+                }
+            }
+        }
+        groovyClassLoader.clearCache();
+        throw new IllegalArgumentException("读取groovy脚本异常");
+    }
+    
+    /**
+     * 根据脚本内容生成IGroovyRule的实现
      *
      * @param code
      * @return

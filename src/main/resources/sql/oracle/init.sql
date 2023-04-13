@@ -397,7 +397,7 @@ create sequence jelly_meta_function_seq increment by 1 start with 1 nomaxvalue m
 
 COMMENT ON COLUMN jelly_meta_function.id IS '主键';
 COMMENT ON COLUMN jelly_meta_function.company_id IS '公司id';
-COMMENT ON COLUMN jelly_meta_function.type IS '类型(1:元函数;2:规则引擎)';
+COMMENT ON COLUMN jelly_meta_function.type IS '类型(1:元函数;2:规则引擎;3:导入验证规则;4:导入处理规则;5:定时任务;6:打印规则;)';
 COMMENT ON COLUMN jelly_meta_function.name IS '名称';
 COMMENT ON COLUMN jelly_meta_function.path IS '路径';
 COMMENT ON COLUMN jelly_meta_function.script IS '脚本';

@@ -54,9 +54,9 @@ logging:
 # 1:minio 2:aliyun 3:ecloud、aws s3
 oss:
   type: 1
-  endpoint: http://127.0.0.1:9000
-  access-key: minioadmin
-  secret-key: minioadmin
+  endpoint: http://192.168.0.188:9000
+  access-key: admin
+  secret-key: admin123456
 
 #Windows G:\\workingdir
 #Linux /opt/workingdir

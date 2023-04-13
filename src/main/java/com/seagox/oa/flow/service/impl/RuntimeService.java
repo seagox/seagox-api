@@ -9,8 +9,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.excel.entity.JellyMetaFunction;
-import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.exception.FlowException;
 import com.seagox.oa.exception.FlowManualSelectionException;
 import com.seagox.oa.exception.FlowOptionalException;
@@ -22,8 +20,6 @@ import com.seagox.oa.flow.mapper.SeaInstanceMapper;
 import com.seagox.oa.flow.mapper.SeaNodeDetailMapper;
 import com.seagox.oa.flow.mapper.SeaNodeMapper;
 import com.seagox.oa.flow.service.IRuntimeService;
-import com.seagox.oa.groovy.GroovyFactory;
-import com.seagox.oa.groovy.IGroovyRule;
 import com.seagox.oa.sys.entity.*;
 import com.seagox.oa.sys.mapper.*;
 import com.seagox.oa.util.FormulaUtils;
@@ -56,9 +52,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
 
     @Autowired
     private UserRelateMapper userRelateMapper;
-
-    @Autowired
-    private JellyMetaFunctionMapper metaFunctionMapper;
 
     @Autowired
     private CompanyMapper companyMapper;
@@ -676,22 +669,6 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
             JSONArray edges = resourceJson.getJSONArray("edges");
             JSONObject nodeNextMap = new JSONObject();
             JSONObject nodeLastMap = new JSONObject();
-
-            // 前置条件判断
-            JSONObject nodeCurMap = nodeMap.getJSONObject(currentNode.get("target").toString());
-            if (!StringUtils.isEmpty(nodeCurMap.getString("precondition"))) {
-            	JellyMetaFunction flowRule = metaFunctionMapper.selectById(nodeCurMap.getString("precondition"));
-                if (flowRule != null) {
-                    try {
-                    	Map<String, Object> params = new HashMap<String, Object>();
-                    	IGroovyRule groovyRule = GroovyFactory.getInstance().getIRuleFromCode(flowRule.getScript());
-                        groovyRule.execute(request, params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new FlowException("前置条件语法错误");
-                    }
-                }
-            }
 
             for (int i = 0; i < edges.size(); i++) {
                 JSONObject edge = edges.getJSONObject(i);

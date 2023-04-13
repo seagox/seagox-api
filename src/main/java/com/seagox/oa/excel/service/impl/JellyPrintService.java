@@ -12,7 +12,7 @@ import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
 import com.seagox.oa.excel.mapper.JellyPrintMapper;
 import com.seagox.oa.excel.service.IJellyPrintService;
 import com.seagox.oa.groovy.GroovyFactory;
-import com.seagox.oa.groovy.IGroovyRule;
+import com.seagox.oa.groovy.IGroovyPrint;
 import com.seagox.oa.util.ExportUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +106,6 @@ public class JellyPrintService implements IJellyPrintService {
         return ResultData.success(print);
     }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String preview(Long id, HttpServletRequest request) {
 		JellyPrint print = printMapper.selectById(id);
@@ -121,9 +120,9 @@ public class JellyPrintService implements IJellyPrintService {
 		}
 		if (!StringUtils.isEmpty(metaFunction.getScript())) {
 			try {
-				IGroovyRule groovyRule= GroovyFactory.getInstance().getIRuleFromCode(metaFunction.getScript());
+				IGroovyPrint groovyPrint= GroovyFactory.getInstance().getIPrintFromCode(metaFunction.getScript());
 	            Map<String, Object> params = new HashMap<String, Object>();
-	            Map<String, Object> result = (Map<String, Object>) groovyRule.execute(request, params);
+	            Map<String, Object> result = groovyPrint.execute(request, params);
 	            OutputStream out = new FileOutputStream(workingDir + "/" + fileName);
 	            if(url.contains(".docx")) {
 	            	ExportUtils.exportWord(url, result, out, null);
