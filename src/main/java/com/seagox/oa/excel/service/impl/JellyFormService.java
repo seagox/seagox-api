@@ -16,7 +16,6 @@ import com.seagox.oa.exception.FlowOptionalException;
 import com.seagox.oa.flow.entity.SeaInstance;
 import com.seagox.oa.flow.mapper.SeaDefinitionMapper;
 import com.seagox.oa.flow.mapper.SeaInstanceMapper;
-import com.seagox.oa.flow.mapper.SeaNodeDetailMapper;
 import com.seagox.oa.flow.mapper.SeaNodeMapper;
 import com.seagox.oa.flow.service.IRuntimeService;
 import com.seagox.oa.groovy.GroovyFactory;
@@ -33,7 +32,6 @@ import com.seagox.oa.util.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -42,9 +40,6 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -88,9 +83,6 @@ public class JellyFormService implements IJellyFormService {
     private JellyRegionsMapper regionsMapper;
 
     @Autowired
-    private SeaNodeDetailMapper seaNodeDetailMapper;
-
-    @Autowired
     private UserRelateMapper userRelateMapper;
 
     @Autowired
@@ -123,27 +115,6 @@ public class JellyFormService implements IJellyFormService {
     @Transactional
     @Override
     public ResultData insert(JellyForm form) {
-        String notAllowedKeyWords = "create |alter |drop |grant |deny |revoke |update |insert |delete ";
-        String keyStr[] = notAllowedKeyWords.split("\\|");
-        String dataSource = form.getDataSource().toLowerCase();
-        for (String str : keyStr) {
-            if (dataSource.contains(str)) {
-                return ResultData.warn(ResultCode.OTHER_ERROR, "sql包含关键字" + str);
-            }
-        }
-        Map<String, Object> params = new HashMap<String, Object>();
-        if (datasourceUrl.contains("mysql")) {
-            params.put("_databaseId", "mysql");
-        } else if (datasourceUrl.contains("postgresql")) {
-            params.put("_databaseId", "postgresql");
-        } else if (datasourceUrl.contains("kingbase")) {
-            params.put("_databaseId", "kingbase");
-        } else if (datasourceUrl.contains("oracle")) {
-            params.put("_databaseId", "oracle");
-        } else if (datasourceUrl.contains("dm")) {
-            params.put("_databaseId", "dm");
-        }
-        XmlUtils.sqlAnalysis(dataSource, params, null);
         formMapper.insert(form);
         return ResultData.success(null);
     }
@@ -151,29 +122,6 @@ public class JellyFormService implements IJellyFormService {
     @Transactional
     @Override
     public ResultData update(JellyForm form) {
-        if (!StringUtils.isEmpty(form.getDataSource())) {
-            String notAllowedKeyWords = "create |alter |drop |grant |deny |revoke |update |insert |delete ";
-            String keyStr[] = notAllowedKeyWords.split("\\|");
-            String dataSource = form.getDataSource().toLowerCase();
-            for (String str : keyStr) {
-                if (dataSource.contains(str)) {
-                    return ResultData.warn(ResultCode.OTHER_ERROR, "sql包含关键字" + str);
-                }
-            }
-            Map<String, Object> params = new HashMap<String, Object>();
-            if (datasourceUrl.contains("mysql")) {
-                params.put("_databaseId", "mysql");
-            } else if (datasourceUrl.contains("postgresql")) {
-                params.put("_databaseId", "postgresql");
-            } else if (datasourceUrl.contains("kingbase")) {
-                params.put("_databaseId", "kingbase");
-            } else if (datasourceUrl.contains("oracle")) {
-                params.put("_databaseId", "oracle");
-            } else if (datasourceUrl.contains("dm")) {
-                params.put("_databaseId", "dm");
-            }
-            XmlUtils.sqlAnalysis(dataSource, params, null);
-        }
         formMapper.updateById(form);
         return ResultData.success(null);
     }
@@ -299,6 +247,7 @@ public class JellyFormService implements IJellyFormService {
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("dataSource", form.getDataSource());
+        params.put("tableId", form.getTableId());
         updateLogic(request, params);
         if (form.getFlowId() != null) {
             LambdaQueryWrapper<SeaInstance> qw = new LambdaQueryWrapper<>();
@@ -366,55 +315,32 @@ public class JellyFormService implements IJellyFormService {
     }
 
     public void updateLogic(HttpServletRequest request, Map<String, Object> params) {;
-        Map<String, String> map = new HashMap<String, String>();
-        List<Map<String, Object>> dataSheetList = businessFieldMapper.queryRelateByTableIds(params.get("dataSource").toString().split(","));
-        for (int i = 0; i < dataSheetList.size(); i++) {
-        	Map<String, Object> dataSheet = dataSheetList.get(i);
-
-            List<Map<String, Object>> businessFieldList = businessFieldMapper.queryByTableName(dataSheet.get("tableName").toString(),0);
-            if (StringUtils.isEmpty(dataSheet.get("targetTableId")) && StringUtils.isEmpty(dataSheet.get("relateTable"))
-                    && StringUtils.isEmpty(dataSheet.get("relateField"))) {
-                StringBuffer sql = new StringBuffer();
-                String[] valueArray = new String[businessFieldList.size()];
-                for (int j = 0; j < businessFieldList.size(); j++) {
-                    if (businessFieldList.get(j).get("name").equals("is_submit")) {
-                        if (Boolean.valueOf(request.getParameter("temporaryStorage")) && !Boolean.valueOf(request.getParameter("existProdef"))) {
-                            valueArray[j] = "2";
-                        } else {
-                            valueArray[j] = "1";
-                        }
-                        sql.append("is_submit=?,");
-                    } else if (businessFieldList.get(j).get("name").equals(dataSheet.get("relateField"))) {
-                        valueArray[j] = map.get(dataSheet.get("relateTable"));
-                        sql.append(dataSheet.get("relateField") + "=?,");
-                    } else {
-                        String value = request
-                                .getParameter(dataSheet.get("tableName") + "." + businessFieldList.get(j).get("name"));
-                        if (StringUtils.isEmpty(value)) {
-                            valueArray[j] = null;
-                        } else {
-                            valueArray[j] = value;
-                        }
-                        sql.append(businessFieldList.get(j).get("name") + "=?,");
-                    }
-                }
-                String sourceSql = "UPDATE " + dataSheet.get("tableName") + " set "
-                        + sql.toString().substring(0, sql.length() - 1) + " WHERE id="
-                        + request.getParameter("businessKey");
-                jdbcTemplate.update(new PreparedStatementCreator() {
-                    @Override
-                    public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement ps = connection.prepareStatement(sourceSql);
-                        for (int k = 0; k < valueArray.length; k++) {
-                            ps.setString(k + 1, valueArray[k]);
-                        }
-                        return ps;
-                    }
-                });
-
-                map.put(dataSheet.get("tableName").toString(), request.getParameter("businessKey"));
-            }
-        }
+	    JellyBusinessTable businessTable = businessTableMapper.selectById(params.get("tableId").toString());
+	    Map<String, Object> fieldParams = new HashMap<String, Object>();
+	    LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+	    qw.eq(JellyBusinessField::getBusinessTableId, businessTable.getId());
+	    List<JellyBusinessField> businessFieldList = businessFieldMapper.selectList(qw);
+	    for (int i = 0; i < businessFieldList.size(); i++) {
+	    	JellyBusinessField businessField = businessFieldList.get(i);
+	        if (businessField.getName().equals("user_id")) {
+	            fieldParams.put("user_id", request.getParameter("userId"));
+	        } else if (businessField.getName().equals("company_id")) {
+	            fieldParams.put("company_id", request.getParameter("companyId"));
+	        } else if (businessField.getName().equals("is_submit")) {
+	            if (StringUtils.isEmpty(request.getParameter("temporaryStorage")) || "false".equals(request.getParameter("temporaryStorage"))) {
+	                fieldParams.put("is_submit", 1);
+	            } else {
+	            	fieldParams.put("is_submit", 2);
+	            }  
+	        } else {
+	            String value = request.getParameter(businessField.getName());
+	            if (!StringUtils.isEmpty(value)) {
+	            	fieldParams.put(businessField.getName(), value);
+	            }
+	        }
+	    }
+	    fieldParams.put("id", request.getParameter("businessKey"));
+	    JdbcTemplateUtils.updateById(jdbcTemplate, businessTable.getName(), fieldParams);
     }
 
     @Override
@@ -863,51 +789,6 @@ public class JellyFormService implements IJellyFormService {
             }
         }
         return ResultData.success(reuslt);
-    }
-
-    public JSONObject excute(JSONObject jsonObject, Map<String, Object> variables) {
-        if (jsonObject.getIntValue("type") == 1) {
-            List<Map<String, Object>> list = seaNodeDetailMapper.queryProcessDetailByNodeId(
-                    variables.get("flow.id").toString(), Integer.valueOf(variables.get("flow.version").toString()),
-                    jsonObject.getString("nodeId"));
-            if (list.size() == 0) {
-                list.add(new HashMap<>());
-            }
-            variables.put(jsonObject.getString("nodeId"), list);
-            // 审批
-            JSONObject childNode = jsonObject.getJSONObject("childNode");
-            if (childNode == null || childNode.isEmpty()) {
-                return jsonObject;
-            } else {
-                excute(childNode, variables);
-            }
-        } else if (jsonObject.getIntValue("type") == 2) {
-            // 抄送
-            JSONObject childNode = jsonObject.getJSONObject("childNode");
-            if (childNode == null || childNode.isEmpty()) {
-                return jsonObject;
-            } else {
-                excute(childNode, variables);
-            }
-        } else if (jsonObject.getIntValue("type") == 3) {
-            // 分支条件
-            JSONObject childNode = jsonObject.getJSONObject("childNode");
-            if (childNode == null || childNode.isEmpty()) {
-                return jsonObject;
-            } else {
-                excute(childNode, variables);
-            }
-
-            JSONArray conditionNodes = jsonObject.getJSONArray("conditionNodes");
-            for (int i = 0; i < conditionNodes.size(); i++) {
-                JSONObject conditionNode = conditionNodes.getJSONObject(i);
-                JSONObject conditionChildNode = conditionNode.getJSONObject("childNode");
-                if (conditionChildNode != null && !conditionChildNode.isEmpty()) {
-                    excute(conditionChildNode, variables);
-                }
-            }
-        }
-        return jsonObject;
     }
 
     public List<String> queryUserDataAuthority(Long companyId, Long userId, String authority) {
