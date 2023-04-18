@@ -55,7 +55,7 @@ public class UploadUtils {
             inputStream = file.getInputStream();
 
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
+            String fileName = DigestUtils.md5Hex(file.getInputStream()) + "." + suffix;
             Map<String, String> headers = new HashMap<>();
             headers.put("x-amz-acl", "public-read-write");
             minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(inputStream, inputStream.available(), -1).contentType(file.getContentType()).headers(headers).build());
@@ -95,7 +95,7 @@ public class UploadUtils {
             ObjectMetadata meta = new ObjectMetadata();
             // 设置上传的内容类型
             meta.setContentType(file.getContentType());
-            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
+            String fileName = DigestUtils.md5Hex(file.getInputStream()) + "." + suffix;
             // 上传文件流。
             ossClient.putObject(bucketName, fileName, inputStream, meta);
             if (endpoint.startsWith("https")) {
@@ -145,7 +145,7 @@ public class UploadUtils {
             meta.setContentType(file.getContentType());
             meta.setContentLength(file.getSize());
             meta.setHeader("x-amz-acl", com.amazonaws.services.s3.model.CannedAccessControlList.PublicReadWrite);
-            String fileName = DigestUtils.md5Hex(inputStream) + "." + suffix;
+            String fileName = DigestUtils.md5Hex(file.getInputStream()) + "." + suffix;
             s3.putObject(bucketName, fileName, inputStream, meta);
             return endpoint + "/" + bucketName + "/" + fileName;
         } catch (Exception e) {
