@@ -45,11 +45,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         if (request.getMethod().equals(RequestMethod.OPTIONS.name())) {
-        	response.setHeader("Access-Control-Allow-Origin","*");
-            response.setHeader("Access-Control-Allow-Headers","*");
-            response.setHeader("Access-Control-Allow-Methods","*");
-            response.setHeader("Access-Control-Allow-Credentials","true");
-            response.setHeader("Access-Control-Max-Age","3600");
             response.setStatus(HttpStatus.OK.value());
             return;
         }
