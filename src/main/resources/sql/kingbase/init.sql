@@ -297,18 +297,18 @@ CREATE TABLE "public"."jelly_door" (
 	"id" BIGSERIAL PRIMARY KEY NOT NULL,
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
-	"config" TEXT,
+	"type" INTEGER DEFAULT 1,
 	"authority" TEXT,
-	"path" BIGINT,
+	"view_id" BIGINT NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON COLUMN "public"."jelly_door"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_door"."company_id" IS '公司id';
 COMMENT ON COLUMN "public"."jelly_door"."name" IS '名称';
-COMMENT ON COLUMN "public"."jelly_door"."config" IS '配置';
+COMMENT ON COLUMN "public"."jelly_door"."type" IS '类型(1:仪表盘;2:云页面;)';
 COMMENT ON COLUMN "public"."jelly_door"."authority" IS '权限';
-COMMENT ON COLUMN "public"."jelly_door"."path" IS '路径';
+COMMENT ON COLUMN "public"."jelly_door"."view_id" IS '页面id';
 COMMENT ON COLUMN "public"."jelly_door"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."jelly_door"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."jelly_door" IS '门户管理';

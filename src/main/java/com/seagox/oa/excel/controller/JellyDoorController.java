@@ -76,8 +76,8 @@ public class JellyDoorController {
      * 执行sql
      */
     @PostMapping("/execute")
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name) {
-        return doorService.execute(request, userId, id, name);
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
+        return doorService.execute(request, userId, id, key);
     }
 
 }

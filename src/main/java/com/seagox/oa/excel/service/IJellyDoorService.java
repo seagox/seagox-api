@@ -41,6 +41,6 @@ public interface IJellyDoorService {
     /**
      * 执行sql
      */
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name);
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key);
 
 }

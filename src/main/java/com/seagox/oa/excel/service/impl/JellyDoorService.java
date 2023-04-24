@@ -1,14 +1,15 @@
 package com.seagox.oa.excel.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.entity.JellyDoor;
+import com.seagox.oa.excel.entity.JellyGauge;
 import com.seagox.oa.excel.entity.JellyMetaPage;
 import com.seagox.oa.excel.mapper.JellyDoorMapper;
+import com.seagox.oa.excel.mapper.JellyGaugeMapper;
 import com.seagox.oa.excel.mapper.JellyMetaPageMapper;
 import com.seagox.oa.excel.service.IJellyDoorService;
 import com.seagox.oa.sys.entity.SysUserRelate;
@@ -43,6 +44,9 @@ public class JellyDoorService implements IJellyDoorService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private JellyGaugeMapper gaugeMapper;
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId) {
@@ -108,16 +112,14 @@ public class JellyDoorService implements IJellyDoorService {
                 List<String> authorityList = Arrays.asList(door.getAuthority().split(","));
                 for (String role : roleList) {
                     if (authorityList.contains(role)) {
-                        if (!StringUtils.isEmpty(door.getPath())) {
-                            JellyMetaPage metaPage = metaPageMapper.selectById(door.getPath());
-                            result.put("type", "meta");
-                            result.put("data", metaPage);
+                    	result.put("id", door.getId());
+                    	result.put("type", door.getType());
+                        if (door.getType() == 1) {
+                        	JellyGauge gauge = gaugeMapper.selectById(door.getViewId());
+                            result.put("data", gauge);
                         } else {
-                            if (!StringUtils.isEmpty(door.getConfig())) {
-                                result.put("id", door.getId());
-                                result.put("type", "panel");
-                                result.put("data", JSONObject.parseObject(door.getConfig()));
-                            }
+                        	JellyMetaPage metaPage = metaPageMapper.selectById(door.getViewId());
+                            result.put("data", metaPage);
                         }
                     }
                 }
@@ -127,32 +129,23 @@ public class JellyDoorService implements IJellyDoorService {
     }
 
     @Override
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name) {
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyDoor door = doorMapper.selectById(id);
-        if (door != null) {
-            JSONObject config = JSONObject.parseObject(door.getConfig());
-            JSONArray queries = config.getJSONArray("queries");
-            for (int i = 0; i < queries.size(); i++) {
-                JSONObject query = queries.getJSONObject(i);
-                if (query.getString("name").equals(name)) {
-                    String resultType = XmlUtils.sqlResultType(query.getString("script"));
-                    String script = XmlUtils.sqlAnalysis(query.getString("script"), XmlUtils.requestToMap(request), null);
-                    if (resultType.equals("list")) {
-                        return ResultData.success(jdbcTemplate.queryForList(script));
-                    } else if (resultType.equals("map")) {
-                        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(script);
-                        if (mapList.size() > 0) {
-                            return ResultData.success(mapList.get(0));
-                        } else {
-                            return ResultData.success(mapList);
-                        }
-                    } else {
-                        return ResultData.success(jdbcTemplate.queryForObject(script, String.class));
-                    }
-                }
+        JellyGauge gauge = gaugeMapper.selectById(door.getViewId());
+        String resultType = XmlUtils.sqlResultType(gauge.getTemplateEngine());
+        String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
+        if (resultType.equals("list")) {
+            return ResultData.success(jdbcTemplate.queryForList(script));
+        } else if (resultType.equals("map")) {
+            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(script);
+            if (mapList.size() > 0) {
+                return ResultData.success(mapList.get(0));
+            } else {
+                return ResultData.success(mapList);
             }
+        } else {
+            return ResultData.success(jdbcTemplate.queryForObject(script, String.class));
         }
-        return ResultData.success(null);
     }
 
 }

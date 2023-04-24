@@ -320,9 +320,9 @@ create table jelly_door (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
-    config clob,
+    type NUMBER(4) DEFAULT 1,
 	authority clob,
-	path NUMBER(20),
+	view_id NUMBER(20) NOT NULL,
     create_time date DEFAULT CURRENT_TIMESTAMP,
     update_time date DEFAULT CURRENT_TIMESTAMP
 );
@@ -332,9 +332,9 @@ create sequence jelly_door_seq increment by 1 start with 1 nomaxvalue minvalue 1
 COMMENT ON COLUMN jelly_door.id IS '主键';
 COMMENT ON COLUMN jelly_door.company_id IS '公司id';
 COMMENT ON COLUMN jelly_door.name IS '名称';
-COMMENT ON COLUMN jelly_door.config IS '配置';
+COMMENT ON COLUMN jelly_door.type IS '类型(1:仪表盘;2:云页面;)';
 COMMENT ON COLUMN jelly_door.authority IS '权限';
-COMMENT ON COLUMN jelly_door.path IS '路径';
+COMMENT ON COLUMN jelly_door.view_id IS '页面id';
 COMMENT ON COLUMN jelly_door.create_time IS '创建时间';
 COMMENT ON COLUMN jelly_door.update_time IS '更新时间';
 COMMENT ON TABLE jelly_door IS '门户管理';

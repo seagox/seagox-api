@@ -4,9 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -31,9 +29,9 @@ public class JellyDoor {
     private String name;
     
     /**
-     * 配置
+     * 类型(1:仪表盘;2:云页面;)
      */
-    private String config;
+    private Integer type;
     
     /**
      * 权限
@@ -41,10 +39,9 @@ public class JellyDoor {
     private String authority;
     
     /**
-     * 路径
+     * 页面id
      */
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private Long path;
+    private Long viewId;
     
     /**
      * 创建时间
@@ -84,12 +81,12 @@ public class JellyDoor {
 		this.name = name;
 	}
 
-	public String getConfig() {
-		return config;
+	public Integer getType() {
+		return type;
 	}
 
-	public void setConfig(String config) {
-		this.config = config;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String getAuthority() {
@@ -100,12 +97,12 @@ public class JellyDoor {
 		this.authority = authority;
 	}
 
-	public Long getPath() {
-		return path;
+	public Long getViewId() {
+		return viewId;
 	}
 
-	public void setPath(Long path) {
-		this.path = path;
+	public void setViewId(Long viewId) {
+		this.viewId = viewId;
 	}
 
 	public Date getCreateTime() {

@@ -654,9 +654,9 @@ CREATE TABLE dbo.jelly_door (
   id bigint PRIMARY KEY IDENTITY(1,1),
   company_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
-  config nvarchar(max)  NULL,
+  type int  NULL,
   authority nvarchar(max)  NULL,
-  path bigint,
+  view_id bigint NOT NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -687,10 +687,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'配置',
+'MS_Description', N'类型(1:仪表盘;2:云页面;)',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_door',
-'COLUMN', N'config'
+'COLUMN', N'type'
 GO
 
 EXEC sp_addextendedproperty
@@ -701,10 +701,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'路径',
+'MS_Description', N'页面id',
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_door',
-'COLUMN', N'path'
+'COLUMN', N'view_id'
 GO
 
 EXEC sp_addextendedproperty

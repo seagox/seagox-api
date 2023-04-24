@@ -177,9 +177,9 @@ CREATE TABLE `jelly_door` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(30) NOT NULL COMMENT '名称',
-    `config` text DEFAULT NULL COMMENT '配置',
+    `type` int(4) DEFAULT 1 COMMENT '类型(1:仪表盘;2:云页面;)',
 	`authority` text DEFAULT NULL COMMENT '权限',
-	`path` bigint(20) DEFAULT NULL COMMENT '路径',
+	`view_id` bigint(20) NOT NULL COMMENT '页面id',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
