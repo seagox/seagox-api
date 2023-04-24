@@ -34,6 +34,16 @@ public class JellyGauge {
     private String config;
     
     /**
+     * 脚本
+     */
+    private String script;
+    
+    /**
+     * 模板引擎
+     */
+    private String templateEngine;
+    
+    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -77,6 +87,22 @@ public class JellyGauge {
 
 	public void setConfig(String config) {
 		this.config = config;
+	}
+
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
+	public String getTemplateEngine() {
+		return templateEngine;
+	}
+
+	public void setTemplateEngine(String templateEngine) {
+		this.templateEngine = templateEngine;
 	}
 
 	public Date getCreateTime() {

@@ -887,6 +887,8 @@ CREATE TABLE dbo.jelly_gauge (
   company_id bigint  NOT NULL,
   name nvarchar(30)  NOT NULL,
   config nvarchar(max)  NULL,
+  script nvarchar(max)  NULL,
+  template_engine nvarchar(max)  NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -921,6 +923,20 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'jelly_gauge',
 'COLUMN', N'config'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'脚本',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_gauge',
+'COLUMN', N'script'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'模板引擎',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_gauge',
+'COLUMN', N'template_engine'
 GO
 
 EXEC sp_addextendedproperty

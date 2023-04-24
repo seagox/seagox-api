@@ -1,7 +1,5 @@
 package com.seagox.oa.excel.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -41,6 +39,14 @@ public class JellyGaugeService implements IJellyGaugeService {
 
     @Override
     public ResultData insert(JellyGauge gauge) {
+    	String script = "export function mounted() {\r\n" + 
+    			"  console.log(`mounted`)\r\n" + 
+    			"}";
+    	gauge.setScript(script);
+    	String templateEngine = "<mapper>\r\n" + 
+    			"    \r\n" + 
+    			"</mapper>";
+    	gauge.setTemplateEngine(templateEngine);
         gaugeMapper.insert(gauge);
         return ResultData.success(null);
     }
@@ -60,42 +66,26 @@ public class JellyGaugeService implements IJellyGaugeService {
     @Override
     public ResultData queryById(Long id, Long userId) {
         JellyGauge gauge = gaugeMapper.selectById(id);
-        if (gauge != null) {
-            if (!StringUtils.isEmpty(gauge.getConfig())) {
-                JSONObject result = JSONObject.parseObject(gauge.getConfig());
-                return ResultData.success(result);
-            }
-        }
-        return ResultData.success(null);
+        return ResultData.success(gauge);
     }
 
     @Override
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name) {
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyGauge gauge = gaugeMapper.selectById(id);
-        if (gauge != null) {
-            JSONObject config = JSONObject.parseObject(gauge.getConfig());
-            JSONArray queries = config.getJSONArray("queries");
-            for (int i = 0; i < queries.size(); i++) {
-                JSONObject query = queries.getJSONObject(i);
-                if (query.getString("name").equals(name)) {
-                    String resultType = XmlUtils.sqlResultType(query.getString("script"));
-                    String script = XmlUtils.sqlAnalysis(query.getString("script"), XmlUtils.requestToMap(request), null);
-                    if (resultType.equals("list")) {
-                        return ResultData.success(jdbcTemplate.queryForList(script));
-                    } else if (resultType.equals("map")) {
-                        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(script);
-                        if (mapList.size() > 0) {
-                            return ResultData.success(mapList.get(0));
-                        } else {
-                            return ResultData.success(mapList);
-                        }
-                    } else {
-                        return ResultData.success(jdbcTemplate.queryForObject(script, String.class));
-                    }
-                }
+        String resultType = XmlUtils.sqlResultType(gauge.getTemplateEngine());
+        String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
+        if (resultType.equals("list")) {
+            return ResultData.success(jdbcTemplate.queryForList(script));
+        } else if (resultType.equals("map")) {
+            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(script);
+            if (mapList.size() > 0) {
+                return ResultData.success(mapList.get(0));
+            } else {
+                return ResultData.success(mapList);
             }
+        } else {
+            return ResultData.success(jdbcTemplate.queryForObject(script, String.class));
         }
-        return ResultData.success(null);
     }
 
     @Override

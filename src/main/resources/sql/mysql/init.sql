@@ -164,6 +164,8 @@ CREATE TABLE `jelly_gauge` (
     `company_id` bigint(20) NOT NULL COMMENT '公司id',
     `name` varchar(30) NOT NULL COMMENT '名称',
     `config` text DEFAULT NULL COMMENT '配置',
+    `script` text DEFAULT NULL COMMENT '脚本',
+    `template_engine` text DEFAULT NULL COMMENT '模板引擎',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)

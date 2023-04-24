@@ -275,6 +275,8 @@ CREATE TABLE "jelly_gauge" (
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
 	"config" TEXT,
+	"script" TEXT,
+	"template_engine" TEXT,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -282,6 +284,8 @@ COMMENT ON COLUMN "jelly_gauge"."id" IS '主键';
 COMMENT ON COLUMN "jelly_gauge"."company_id" IS '公司id';
 COMMENT ON COLUMN "jelly_gauge"."name" IS '名称';
 COMMENT ON COLUMN "jelly_gauge"."config" IS '配置';
+COMMENT ON COLUMN "jelly_gauge"."script" IS '脚本';
+COMMENT ON COLUMN "jelly_gauge"."template_engine" IS '模板引擎';
 COMMENT ON COLUMN "jelly_gauge"."create_time" IS '创建时间';
 COMMENT ON COLUMN "jelly_gauge"."update_time" IS '更新时间';
 COMMENT ON TABLE "jelly_gauge" IS '仪表板';
