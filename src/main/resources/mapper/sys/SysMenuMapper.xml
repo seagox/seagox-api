@@ -4,7 +4,7 @@
 
     <!--查询全部通过公司id-->
 	<select id="queryByCode" resultType="camelKeyMap">
-        SELECT a.id, a.name, a.parent_id as "parentId", a.icon, a.path, a.type, a.status, a.sort, a.quick_name as "quickName"
+        SELECT a.id, a.name, a.parent_id as "parentId", a.icon, a.path, a.type, a.status, a.sort
         FROM sys_menu a
         LEFT JOIN sys_company b ON b.id = a.company_id
         <where>

@@ -69,8 +69,8 @@ public class JellyGaugeController {
      * 执行sql
      */
     @PostMapping("/execute")
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name) {
-        return gaugeService.execute(request, userId, id, name);
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
+        return gaugeService.execute(request, userId, id, key);
     }
 
     /**

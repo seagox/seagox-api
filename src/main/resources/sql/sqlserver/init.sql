@@ -2510,7 +2510,6 @@ CREATE TABLE dbo.sys_menu (
   path nvarchar(50)  NULL,
   status int  NULL,
   sort int  NULL,
-  quick_name nvarchar(30)  NOT NULL,
   create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -2580,13 +2579,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'sys_menu',
 'COLUMN', N'sort'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'简称',
-'SCHEMA', N'dbo',
-'TABLE', N'sys_menu',
-'COLUMN', N'quick_name'
 GO
 
 EXEC sp_addextendedproperty

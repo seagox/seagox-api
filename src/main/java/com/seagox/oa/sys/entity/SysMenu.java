@@ -61,11 +61,6 @@ public class SysMenu {
     private Integer sort;
 
     /**
-     * 简称
-     */
-    private String quickName;
-
-    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -149,14 +144,6 @@ public class SysMenu {
 
     public void setSort(Integer sort) {
         this.sort = sort;
-    }
-
-    public String getQuickName() {
-        return quickName;
-    }
-
-    public void setQuickName(String quickName) {
-        this.quickName = quickName;
     }
 
     public Date getCreateTime() {

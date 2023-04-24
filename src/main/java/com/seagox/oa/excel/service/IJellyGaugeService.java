@@ -35,7 +35,7 @@ public interface IJellyGaugeService {
     /**
      * 执行sql
      */
-    public ResultData execute(HttpServletRequest request, Long userId, Long id, String name);
+    public ResultData execute(HttpServletRequest request, Long userId, Long id, String key);
 
     /**
      * 查询全部通过公司id
