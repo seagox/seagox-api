@@ -3072,7 +3072,7 @@ GO
 INSERT INTO dbo.sys_account (avatar, account, email, phone, name, sex, password, position, status, type, openid, sort, create_time, update_time) VALUES (NULL, N'superAdmin', NULL, NULL, N'超级管理员', N'1', N'e10adc3949ba59abbe56e057f20f883e', NULL, N'1', N'3', NULL, N'0', N'2021-07-01 11:51:02.0000000', N'2021-07-01 11:51:02.0000000')
 GO
 
-INSERT INTO dbo.sys_account (avatar, account, email, phone, name, sex, password, position, status, type, openid, sort, create_time, update_time) VALUES (NULL, N'sysAdmin', NULL, NULL, N'管理员', N'1', N'e10adc3949ba59abbe56e057f20f883e', NULL, N'1', N'2', NULL, N'0', N'2021-07-01 11:51:02.0000000', N'2021-07-01 11:51:02.0000000')
+INSERT INTO dbo.sys_account (avatar, account, email, phone, name, sex, password, position, status, type, openid, sort, create_time, update_time) VALUES (NULL, N'sysAdmin', NULL, NULL, N'系统管理员', N'1', N'e10adc3949ba59abbe56e057f20f883e', NULL, N'1', N'2', NULL, N'0', N'2021-07-01 11:51:02.0000000', N'2021-07-01 11:51:02.0000000')
 GO
 
 -- ----------------------------
