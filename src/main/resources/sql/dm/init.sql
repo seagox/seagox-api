@@ -763,7 +763,7 @@ INSERT INTO "public"."sys_company" VALUES (NULL, 'seagox', '1001', '水母', '�
 INSERT INTO "public"."sys_department" VALUES (1, NULL, '1001', '默认部门', NULL, NULL, '2021-07-01 11:30:43', '2021-07-01 11:30:43');
 INSERT INTO "public"."sys_account" VALUES (NULL, 'superAdmin', NULL, NULL, '超级管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 3, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO "public"."sys_user_relate" VALUES (1, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
-INSERT INTO "public"."sys_account" VALUES (NULL, 'admin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
+INSERT INTO "public"."sys_account" VALUES (NULL, 'sysAdmin', NULL, NULL, '管理员', 1, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 2, NULL, 0, '2021-07-01 11:51:02', '2021-07-01 11:51:02');
 INSERT INTO "public"."sys_user_relate" VALUES (2, 1, 1, 1, '2021-06-29 09:23:33', '2021-06-29 09:23:33');
 
 SET IDENTITY_INSERT "public"."sys_role" ON;
