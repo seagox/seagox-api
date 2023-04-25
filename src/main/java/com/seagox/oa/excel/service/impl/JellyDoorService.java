@@ -52,7 +52,8 @@ public class JellyDoorService implements IJellyDoorService {
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId) {
         PageHelper.startPage(pageNo, pageSize);
         LambdaQueryWrapper<JellyDoor> qw = new LambdaQueryWrapper<>();
-    	qw.eq(JellyDoor::getCompanyId, companyId);
+    	qw.eq(JellyDoor::getCompanyId, companyId)
+    	.orderByDesc(JellyDoor::getCreateTime);
         List<JellyDoor> list = doorMapper.selectList(qw);
         PageInfo<JellyDoor> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
@@ -132,7 +133,7 @@ public class JellyDoorService implements IJellyDoorService {
     public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyDoor door = doorMapper.selectById(id);
         JellyGauge gauge = gaugeMapper.selectById(door.getViewId());
-        String resultType = XmlUtils.sqlResultType(gauge.getTemplateEngine());
+        String resultType = XmlUtils.sqlResultType(key, gauge.getTemplateEngine());
         String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
         if (resultType.equals("list")) {
             return ResultData.success(jdbcTemplate.queryForList(script));

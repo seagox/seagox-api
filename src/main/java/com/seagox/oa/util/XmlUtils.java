@@ -301,14 +301,19 @@ public class XmlUtils {
         return sb.toString();
     }
 
-    public static String sqlResultType(String text) {
+    public static String sqlResultType(String id, String text) {
         String resultType = "";
         try {
             text = text.replaceAll("<!--.*?-->", "");
             text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + text;
             Document document = DocumentHelper.parseText(text);
             Element rootElement = document.getRootElement();
-            resultType = rootElement.attribute("resultType").getValue();
+            List<Element> contentList = rootElement.elements();
+            for (Element element : contentList) {
+            	if(element.attribute("id").getValue().equals(id)) {
+            		return resultType = element.attribute("resultType").getValue();
+            	}
+            }
         } catch (DocumentException e) {
             throw new GrammarException("xml语法错误");
         }

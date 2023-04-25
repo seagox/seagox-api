@@ -31,7 +31,8 @@ public class JellyGaugeService implements IJellyGaugeService {
         PageHelper.startPage(pageNo, pageSize);
         LambdaQueryWrapper<JellyGauge> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyGauge::getCompanyId, companyId)
-        .like(!StringUtils.isEmpty(name), JellyGauge::getName, name);
+        .like(!StringUtils.isEmpty(name), JellyGauge::getName, name)
+        .orderByDesc(JellyGauge::getCreateTime);
         List<JellyGauge> list = gaugeMapper.selectList(qw);
         PageInfo<JellyGauge> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
@@ -72,7 +73,7 @@ public class JellyGaugeService implements IJellyGaugeService {
     @Override
     public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyGauge gauge = gaugeMapper.selectById(id);
-        String resultType = XmlUtils.sqlResultType(gauge.getTemplateEngine());
+        String resultType = XmlUtils.sqlResultType(key, gauge.getTemplateEngine());
         String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
         if (resultType.equals("list")) {
             return ResultData.success(jdbcTemplate.queryForList(script));
