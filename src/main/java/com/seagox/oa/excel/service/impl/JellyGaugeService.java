@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +76,7 @@ public class JellyGaugeService implements IJellyGaugeService {
     @Override
     public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyGauge gauge = gaugeMapper.selectById(id);
-        String resultType = XmlUtils.sqlResultType(key, gauge.getTemplateEngine());
+        String resultType = XmlUtils.sqlResultTypeById(key, gauge.getTemplateEngine());
         String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
         if (resultType.equals("list")) {
             return ResultData.success(jdbcTemplate.queryForList(script));
@@ -96,5 +99,42 @@ public class JellyGaugeService implements IJellyGaugeService {
         List<JellyGauge> list = gaugeMapper.selectList(qw);
         return ResultData.success(list);
     }
+
+	@Override
+	public ResultData chartSql(String tableName, String dimension, String metrics, String filterData) {
+		List<Map<String,Object>> result = new ArrayList<>();
+		String sumSql = "";
+		if(StringUtils.isEmpty(dimension)) {
+			String[] metricsArray = metrics.split(",");
+			Map<String, Object> metricsMap = new HashMap<String, Object>();
+			for(int i=0;i<metricsArray.length;i++) {
+				String metric = metricsArray[i];
+				String name = metric.split("\\|")[0];
+				String filed = metric.split("\\|")[1];
+				sumSql = sumSql + "sum(" + filed + ") as " + "\"" + filed + "\"" + ",";
+				metricsMap.put(filed, name);
+			}
+			sumSql = sumSql.substring(0, sumSql.length()-1);
+			String whereSql = "";
+			if(!StringUtils.isEmpty(filterData)) {
+				whereSql = whereSql + " where " + filterData;
+			}
+			String sql =  "select " + sumSql + " from " + tableName + whereSql;
+			System.out.println(sql);
+			List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+			if (mapList.size() > 0) {
+				Map<String, Object> data = mapList.get(0);
+				data.forEach((key,value)-> {
+					Map<String, Object> item = new HashMap<String, Object>();
+		            item.put("name", metricsMap.get(key));
+					item.put("value", value);
+					result.add(item);
+		        });
+            }
+		} else {
+			
+		}
+		return ResultData.success(result);
+	}
 
 }

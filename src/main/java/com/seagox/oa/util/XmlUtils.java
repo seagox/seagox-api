@@ -300,8 +300,8 @@ public class XmlUtils {
         }
         return sb.toString();
     }
-
-    public static String sqlResultType(String id, String text) {
+    
+    public static String sqlResultTypeById(String id, String text) {
         String resultType = "";
         try {
             text = text.replaceAll("<!--.*?-->", "");

@@ -4,7 +4,9 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -41,6 +43,7 @@ public class JellyGauge {
     /**
      * 模板引擎
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String templateEngine;
     
     /**

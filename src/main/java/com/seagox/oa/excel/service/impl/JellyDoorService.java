@@ -133,7 +133,7 @@ public class JellyDoorService implements IJellyDoorService {
     public ResultData execute(HttpServletRequest request, Long userId, Long id, String key) {
         JellyDoor door = doorMapper.selectById(id);
         JellyGauge gauge = gaugeMapper.selectById(door.getViewId());
-        String resultType = XmlUtils.sqlResultType(key, gauge.getTemplateEngine());
+        String resultType = XmlUtils.sqlResultTypeById(key, gauge.getTemplateEngine());
         String script = XmlUtils.sqlAnalysis(gauge.getTemplateEngine(), XmlUtils.requestToMap(request), key);
         if (resultType.equals("list")) {
             return ResultData.success(jdbcTemplate.queryForList(script));

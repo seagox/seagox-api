@@ -41,5 +41,10 @@ public interface IJellyGaugeService {
      * 查询全部通过公司id
      */
     public ResultData queryByCompanyId(Long companyId);
+    
+    /**
+     * 图标sql
+     */
+    public ResultData chartSql(String tableName, String dimension, String metrics, String filterData);
 
 }
