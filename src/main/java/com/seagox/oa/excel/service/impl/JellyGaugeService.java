@@ -132,7 +132,21 @@ public class JellyGaugeService implements IJellyGaugeService {
 		        });
             }
 		} else {
-			
+			String[] dimensionArray = dimension.split(",");
+			String[] metricsArray = metrics.split(",");
+			if(dimensionArray.length == 1 && metricsArray.length == 1) {
+				String name = dimensionArray[0].split("\\|")[1];
+				String value = metricsArray[0].split("\\|")[1];
+				sumSql = sumSql + name + " AS \"name\"," + "sum(" + value + ") AS " + "\"value\"";
+				String whereSql = "";
+				if(!StringUtils.isEmpty(filterData)) {
+					whereSql = whereSql + " where " + filterData;
+				}
+				String groupSql = " GROUP BY " + name;
+				String sql = "select " + sumSql + " from " + tableName + whereSql + groupSql;
+				System.out.println(sql);
+				return ResultData.success(jdbcTemplate.queryForList(sql));
+			}
 		}
 		return ResultData.success(result);
 	}
