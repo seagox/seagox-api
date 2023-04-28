@@ -43,11 +43,12 @@ public class JellyBusinessTableService implements IJellyBusinessTableService {
     private String datasourceUrl;
 
     @Override
-    public ResultData queryAll(Long companyId) {
+    public ResultData queryAll(Long companyId, String name) {
     	LambdaQueryWrapper<JellyBusinessTable> qw = new LambdaQueryWrapper<>();
-    	qw.eq(JellyBusinessTable::getCompanyId, companyId);
+    	qw.eq(JellyBusinessTable::getCompanyId, companyId)
+    	.eq(!StringUtils.isEmpty(name), JellyBusinessTable::getName, name);
         List<JellyBusinessTable> list = businessTableMapper.selectList(qw);
-        return ResultData.success(list);
+		return ResultData.success(list);
     }
 
     @Transactional

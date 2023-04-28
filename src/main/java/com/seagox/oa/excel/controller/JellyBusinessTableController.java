@@ -23,8 +23,8 @@ public class JellyBusinessTableController {
      * 查询全部
      */
     @GetMapping("/queryAll")
-    public ResultData queryAll(Long companyId) {
-        return businessTableService.queryAll(companyId);
+    public ResultData queryAll(Long companyId, String name) {
+        return businessTableService.queryAll(companyId, name);
     }
 
     /**

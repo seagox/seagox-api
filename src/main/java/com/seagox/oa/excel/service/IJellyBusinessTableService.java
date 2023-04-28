@@ -9,7 +9,7 @@ public interface IJellyBusinessTableService {
     /**
      * 查询全部
      */
-    public ResultData queryAll(Long companyId);
+    public ResultData queryAll(Long companyId, String name);
 
     /**
      * 添加
