@@ -228,5 +228,37 @@ public class UploadController {
             }
         }
 	}
+	
+	/**
+	 * 打印下载
+	 */
+	@GetMapping("/printDownload/{id}")
+	public void printDownload(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		OutputStream outputStream = null;
+        InputStream inputStream = null;
+        try {
+        	//使用response,将pdf文件以流的方式发送的前端浏览器上
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String((request.getParameter("filename")).getBytes("GBK"), "ISO-8859-1"));
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            printService.download(id, request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+	}
 
 }

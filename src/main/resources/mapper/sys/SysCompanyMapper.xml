@@ -55,7 +55,7 @@
                 ORDER BY position(id in #{ids})
             </if>
             <if test="_databaseId == 'oracle'">
-                ORDER BY FIND_IN_SET(id,#{ids})
+                ORDER BY FIND_IN_SET(id,#{ids}) > 0
             </if>
             <if test="_databaseId == 'sqlserver'">
                 ORDER BY CHARINDEX(id, #{ids}) > 0

@@ -135,5 +135,34 @@ public class JellyPrintService implements IJellyPrintService {
         }
 		return workingDir + "/" + fileName;
 	}
+	
+	@Override
+	public void download(Long id, HttpServletRequest request) {
+		JellyPrint print = printMapper.selectById(id);
+		JSONArray templateSource = JSONArray.parseArray(print.getTemplateSource());
+		String url = templateSource.getJSONObject(0).getString("url");
+		JellyMetaFunction metaFunction = metaFunctionMapper.selectById(print.getDataSource());
+		String fileName;
+		if(url.contains(".docx")) {
+			fileName = System.currentTimeMillis() + ".docx";
+		} else {
+			fileName = System.currentTimeMillis() + ".xlsx";
+		}
+		if (!StringUtils.isEmpty(metaFunction.getScript())) {
+			try {
+				IGroovyPrint groovyPrint = GroovyFactory.getInstance().getIPrintFromCode(metaFunction.getScript());
+	            Map<String, Object> params = new HashMap<String, Object>();
+	            Map<String, Object> result = groovyPrint.execute(request, params);
+	            OutputStream out = new FileOutputStream(workingDir + "/" + fileName);
+	            if(url.contains(".docx")) {
+	            	ExportUtils.exportWord(url, result, out, null);
+	    		} else {
+	    			ExportUtils.exportExcel(url, result, out);
+	    		}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+	}
 
 }

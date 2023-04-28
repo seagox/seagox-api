@@ -48,5 +48,10 @@ public interface IJellyPrintService {
      * 预览
      */
     public String preview(Long id, HttpServletRequest request);
+    
+    /**
+     * 下载
+     */
+    public void download(Long id, HttpServletRequest request);
 
 }

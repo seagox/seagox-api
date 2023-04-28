@@ -387,7 +387,7 @@
                 AND position(c.status in #{statusStr})
             </if>
             <if test="_databaseId == 'oracle' and statusStr != null and statusStr != ''">
-                AND FIND_IN_SET(c.status, #{statusStr})
+                AND FIND_IN_SET(c.status, #{statusStr}) > 0
             </if>
             <if test="_databaseId == 'sqlserver' and statusStr != null and statusStr != ''">
                 AND position(c.status in #{statusStr})
@@ -405,13 +405,13 @@
                 AND position(c.business_type in #{businessTypeStr})
             </if>
             <if test="_databaseId == 'oracle' and businessTypeStr != null and businessTypeStr != ''">
-                AND FIND_IN_SET(c.business_type, #{businessTypeStr})
+                AND FIND_IN_SET(c.business_type, #{businessTypeStr}) > 0
             </if>
             <if test="_databaseId == 'sqlserver' and businessTypeStr != null and businessTypeStr != ''">
                 AND position(c.business_type in #{businessTypeStr})
             </if>
             <if test="_databaseId == 'mysql' and departmentIds != null and departmentIds != ''">
-                AND find_in_set(f.department_id, #{departmentIds})
+                AND FIND_IN_SET(f.department_id, #{departmentIds})
             </if>
             <if test="_databaseId == 'postgresql' and departmentIds != null and departmentIds != ''">
                 AND cast(#{departmentIds} as VARCHAR) = ANY (STRING_TO_ARRAY(cast(f.department_id as VARCHAR),','))
@@ -423,7 +423,7 @@
                 AND position(f.department_id in #{departmentIds})
             </if>
             <if test="_databaseId == 'oracle' and departmentIds != null and departmentIds != ''">
-                AND position(f.department_id in #{departmentIds})
+                AND FIND_IN_SET(f.department_id, #{departmentIds}) > 0
             </if>
             <if test="_databaseId == 'sqlserver' and departmentIds != null and departmentIds != ''">
                 AND position(f.department_id in #{departmentIds})

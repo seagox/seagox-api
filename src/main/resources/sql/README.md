@@ -84,7 +84,7 @@
     position(#{userId} in authority)
 </if>
 <if test="_databaseId == 'oracle'">
-    FIND_IN_SET(#{userId}, authority)
+    FIND_IN_SET(#{userId}, authority) > 0
 </if>
 <if test="_databaseId == 'sqlserver'">
 	CHARINDEX(#{userId}, authority) > 0

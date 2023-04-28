@@ -19,7 +19,7 @@
                 position(#{roleId} in role_ids)
             </if>
             <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{roleId}, role_ids)
+                FIND_IN_SET(#{roleId}, role_ids) > 0
             </if>
             <if test="_databaseId == 'sqlserver'">
             	CHARINDEX(#{roleId}, role_ids) > 0
@@ -44,7 +44,7 @@
                 position(#{roleId} in role_ids)
             </if>
             <if test="_databaseId == 'oracle'">
-                FIND_IN_SET(#{roleId}, role_ids)
+                FIND_IN_SET(#{roleId}, role_ids) > 0
             </if>
             <if test="_databaseId == 'sqlserver'">
                 CHARINDEX(#{roleId}, role_ids) > 0
