@@ -145,7 +145,7 @@ public class JellyFormService implements IJellyFormService {
         Long formId = Long.valueOf(request.getParameter("$formId"));
         JellyForm form = formMapper.selectById(formId);
         // 必填验证
-        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(String.valueOf(form.getTableId()).split(","));
+        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(form.getTableId());
         // 过滤字段
         List<String> filterField = new ArrayList<>(Arrays.asList("company_id", "user_id", "is_submit"));
         for (int i = 0; i < requiredList.size(); i++) {
@@ -235,7 +235,7 @@ public class JellyFormService implements IJellyFormService {
     public ResultData updateCustom(HttpServletRequest request) {
         JellyForm form = formMapper.selectById(request.getParameter("businessType"));
         // 必填验证
-        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(String.valueOf(form.getTableId()).split(","));
+        List<Map<String, Object>> requiredList = businessFieldMapper.queryRequiredByFormId(form.getTableId());
         // 过滤字段
         List<String> filterField = new ArrayList<>(Arrays.asList("company_id", "user_id", "is_submit"));
         for (int i = 0; i < requiredList.size(); i++) {
