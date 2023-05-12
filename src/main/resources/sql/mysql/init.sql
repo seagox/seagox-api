@@ -1,3 +1,39 @@
+DROP TABLE IF EXISTS `jelly_view`;
+CREATE TABLE `jelly_view`  (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `company_id` bigint(20) NOT NULL COMMENT '公司id',
+    `name` varchar(64) NOT NULL COMMENT '名称',
+    `remark` varchar(64) NOT NULL COMMENT '注释',
+    `script` text NOT NULL COMMENT '脚本',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '视图表';
+
+
+DROP TABLE IF EXISTS `jelly_view_field`;
+CREATE TABLE `jelly_view_field`  (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `view_id` bigint(20) NOT NULL COMMENT '视图id',
+    `name` varchar(64) NOT NULL COMMENT '名称',
+    `remark` varchar(64) NOT NULL COMMENT '注释',
+    `type` varchar(20) NOT NULL COMMENT '类型',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '视图字段';
+
+DROP TABLE IF EXISTS `jelly_procedure`;
+CREATE TABLE `jelly_procedure`  (
+    `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `company_id` bigint(20) NOT NULL COMMENT '公司id',
+    `name` varchar(30) NOT NULL COMMENT '名称',
+    `remark` varchar(200) NOT NULL COMMENT '备注',
+    `config` text COMMENT '配置',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '存储过程';
+
 DROP TABLE IF EXISTS `jelly_import_rule`;
 CREATE TABLE `jelly_import_rule`  (
     `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT '主键',

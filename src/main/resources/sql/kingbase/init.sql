@@ -1,3 +1,61 @@
+DROP TABLE IF EXISTS "public"."jelly_view";
+CREATE TABLE "public"."jelly_view" (
+	"id" BIGSERIAL PRIMARY KEY NOT NULL,
+	"company_id" BIGINT NOT NULL,
+	"name" VARCHAR(64) NOT NULL,
+	"remark" VARCHAR(64) NOT NULL,
+	"script" TEXT NOT NULL,
+	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+COMMENT ON COLUMN "public"."jelly_view"."id" IS '主键';
+COMMENT ON COLUMN "public"."jelly_view"."company_id" IS '公司id';
+COMMENT ON COLUMN "public"."jelly_view"."name" IS '名称';
+COMMENT ON COLUMN "public"."jelly_view"."remark" IS '注释';
+COMMENT ON COLUMN "public"."jelly_view"."script" IS '脚本';
+COMMENT ON COLUMN "public"."jelly_view"."create_time" IS '创建时间';
+COMMENT ON COLUMN "public"."jelly_view"."update_time" IS '更新时间';
+COMMENT ON TABLE "public"."jelly_view" IS '业务表';
+
+
+DROP TABLE IF EXISTS "public"."jelly_view_field";
+CREATE TABLE "public"."jelly_view_field" (
+	"id" BIGSERIAL PRIMARY KEY NOT NULL,
+	"view_id" BIGINT NOT NULL,
+	"name" VARCHAR(64) NOT NULL,
+	"remark" VARCHAR(64) NOT NULL,
+	"type" VARCHAR(20) NOT NULL,
+	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+COMMENT ON COLUMN "public"."jelly_view_field"."id" IS '主键';
+COMMENT ON COLUMN "public"."jelly_view_field"."view_id" IS '视图id';
+COMMENT ON COLUMN "public"."jelly_view_field"."name" IS '名称';
+COMMENT ON COLUMN "public"."jelly_view_field"."remark" IS '注释';
+COMMENT ON COLUMN "public"."jelly_view_field"."type" IS '类型';
+COMMENT ON COLUMN "public"."jelly_view_field"."create_time" IS '创建时间';
+COMMENT ON COLUMN "public"."jelly_view_field"."update_time" IS '更新时间';
+COMMENT ON TABLE "public"."jelly_view_field" IS '视图字段';
+
+DROP TABLE IF EXISTS "public"."jelly_procedure";
+CREATE TABLE "public"."jelly_procedure"  (
+	"id" BIGSERIAL PRIMARY KEY NOT NULL,
+	"company_id" BIGINT NOT NULL,
+  	"name" VARCHAR(100) NOT NULL,
+  	"remark" VARCHAR(200) NOT NULL,
+  	"config" text,
+  	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+COMMENT ON COLUMN "public"."jelly_procedure"."id" IS '主键';
+COMMENT ON COLUMN "public"."jelly_procedure"."company_id" IS '公司id';
+COMMENT ON COLUMN "public"."jelly_procedure"."name" IS '名称';
+COMMENT ON COLUMN "public"."jelly_procedure"."remark" IS '备注';
+COMMENT ON COLUMN "public"."jelly_procedure"."config" IS '配置';
+COMMENT ON COLUMN "public"."jelly_procedure"."create_time" IS '创建时间';
+COMMENT ON COLUMN "public"."jelly_procedure"."update_time" IS '更新时间';
+COMMENT ON TABLE "public"."jelly_procedure" IS '存储过程';
+
 DROP TABLE IF EXISTS "public"."jelly_import_rule";
 CREATE TABLE "public"."jelly_import_rule"  (
     "id" BIGSERIAL PRIMARY KEY NOT NULL,

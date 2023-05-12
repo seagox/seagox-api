@@ -1,4 +1,243 @@
 -- ----------------------------
+-- Table structure for jelly_view_field
+-- ----------------------------
+DROP TABLE IF EXISTS dbo.jelly_view_field;
+CREATE TABLE dbo.jelly_view_field (
+  id bigint PRIMARY KEY IDENTITY(1,1),
+  view_id bigint  NOT NULL,
+  name nvarchar(64)  NOT NULL,
+  remark nvarchar(64)  NOT NULL,
+  type nvarchar(20)  NOT NULL,
+  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
+  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
+)
+GO
+
+ALTER TABLE dbo.jelly_view_field SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'主键',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'视图id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'view_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'名称',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'注释',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'remark'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'类型',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'type'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'create_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'更新时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field',
+'COLUMN', N'update_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'视图字段',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view_field'
+GO
+
+
+-- ----------------------------
+-- Records of jelly_view_field
+-- ----------------------------
+BEGIN TRANSACTION
+GO
+
+COMMIT
+GO
+
+
+-- ----------------------------
+-- Table structure for jelly_view
+-- ----------------------------
+DROP TABLE IF EXISTS dbo.jelly_view;
+CREATE TABLE dbo.jelly_view (
+  id bigint PRIMARY KEY IDENTITY(1,1),
+  company_id bigint  NOT NULL,
+  name nvarchar(64)  NOT NULL,
+  remark nvarchar(64)  NOT NULL,
+  script text NOT NULL,
+  create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
+  update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
+)
+GO
+
+ALTER TABLE dbo.jelly_view SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'主键',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'公司id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'company_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'名称',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'注释',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'remark'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'脚本',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'script'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'create_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'更新时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view',
+'COLUMN', N'update_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'视图表',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_view'
+GO
+
+
+-- ----------------------------
+-- Records of jelly_view
+-- ----------------------------
+BEGIN TRANSACTION
+GO
+
+COMMIT
+GO
+
+
+-- ----------------------------
+-- Table structure for jelly_procedure
+-- ----------------------------
+DROP TABLE IF EXISTS dbo.jelly_procedure;
+CREATE TABLE dbo.jelly_procedure  (
+	id bigint PRIMARY KEY IDENTITY(1,1),
+	company_id bigint NOT NULL,
+  	name nvarchar(100) NOT NULL,
+  	remark nvarchar(200) NOT NULL,
+  	config text,
+  	create_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP,
+  	update_time datetime2(7)  DEFAULT CURRENT_TIMESTAMP
+)
+GO
+
+
+EXEC sp_addextendedproperty
+'MS_Description', N'主键',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'公司id',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'company_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'名称',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'备注',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'remark'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'配置',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'config'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'create_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'更新时间',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure',
+'COLUMN', N'update_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'存储过程',
+'SCHEMA', N'dbo',
+'TABLE', N'jelly_procedure'
+GO
+
+-- ----------------------------
 -- Table structure for jelly_import_rule
 -- ----------------------------
 DROP TABLE IF EXISTS dbo.jelly_import_rule;
