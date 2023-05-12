@@ -34,7 +34,7 @@ public class StartupRunner implements CommandLineRunner {
         for (int i = 0; i < jobList.size(); i++) {
             JellyJob job = jobList.get(i);
             JellyMetaFunction metaFunction = metaFunctionMapper.selectById(job.getRuleId());
-            schedulerUtils.start(String.valueOf(job.getId()), "seagull", job.getCron(), metaFunction.getScript());
+            schedulerUtils.start(String.valueOf(job.getId()), "seagox", job.getCron(), metaFunction.getScript());
         }
     }
 }
