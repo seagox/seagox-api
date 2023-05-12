@@ -23,8 +23,8 @@ public class JellyBusinessTableController {
      * 查询全部
      */
     @GetMapping("/queryAll")
-    public ResultData queryAll(Long companyId, String name) {
-        return businessTableService.queryAll(companyId, name);
+    public ResultData queryAll(Long companyId, String name, String remark) {
+        return businessTableService.queryAll(companyId, name, remark);
     }
 
     /**
@@ -92,6 +92,14 @@ public class JellyBusinessTableController {
     @GetMapping("/queryCascader/{id}")
     public ResultData queryCascader(@PathVariable("id") Long id, String rule) {
         return businessTableService.queryCascader(id, rule);
+    }
+    
+    /**
+	 * 数据模型接口
+	 */
+    @GetMapping("/queryModel")
+    public ResultData queryModel(Long companyId) {
+        return businessTableService.queryModel(companyId);
     }
 
 }
