@@ -33,11 +33,6 @@ public interface JellyBusinessFieldMapper extends BaseMapper<JellyBusinessField>
     /**
      * 查询必填字段全部表单id
      */
-    public List<Map<String, Object>> queryRequiredByFormId(String[] tableIds);
-    
-    /**
-     * 获取数据表关联关系通过表ids
-     */
-    public List<Map<String, Object>> queryRelateByTableIds(String[] tableIds);
+    public List<Map<String, Object>> queryRequiredByFormId(@Param("formId") Long formId);
 
 }

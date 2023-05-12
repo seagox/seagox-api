@@ -38,13 +38,13 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
 
     @Override
     public ResultData queryAll(String tableName) {
-        LambdaQueryWrapper<JellyBusinessTable> businessTableQueryWrapper = new LambdaQueryWrapper<JellyBusinessTable>();
-        businessTableQueryWrapper.eq(JellyBusinessTable::getName, tableName);
-        JellyBusinessTable businessTable = businessTableMapper.selectOne(businessTableQueryWrapper);
+        LambdaQueryWrapper<JellyBusinessTable> tableQw = new LambdaQueryWrapper<>();
+        tableQw.eq(JellyBusinessTable::getName, tableName);
+        JellyBusinessTable businessTable = businessTableMapper.selectOne(tableQw);
         if (businessTable != null) {
-            LambdaQueryWrapper<JellyBusinessField> businessFieldQueryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
-            businessFieldQueryWrapper.eq(JellyBusinessField::getBusinessTableId, businessTable.getId());
-            List<JellyBusinessField> list = businessFieldMapper.selectList(businessFieldQueryWrapper);
+            LambdaQueryWrapper<JellyBusinessField> fieldQw = new LambdaQueryWrapper<>();
+            fieldQw.eq(JellyBusinessField::getBusinessTableId, businessTable.getId());
+            List<JellyBusinessField> list = businessFieldMapper.selectList(fieldQw);
             return ResultData.success(list);
         } else {
             return ResultData.success(null);
@@ -57,24 +57,24 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long businessTableId, String name, String remark) {
         PageHelper.startPage(pageNo, pageSize);
-        LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
-        queryWrapper.eq(JellyBusinessField::getBusinessTableId, businessTableId)
+        LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyBusinessField::getBusinessTableId, businessTableId)
                 .like(!StringUtils.isEmpty(name), JellyBusinessField::getName, name)
                 .like(!StringUtils.isEmpty(remark), JellyBusinessField::getRemark, remark)
                 .orderByDesc(JellyBusinessField::getCreateTime);
-        List<JellyBusinessField> list = businessFieldMapper.selectList(queryWrapper);
-        PageInfo<JellyBusinessField> pageInfo = new PageInfo<JellyBusinessField>(list);
+        List<JellyBusinessField> list = businessFieldMapper.selectList(qw);
+        PageInfo<JellyBusinessField> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }
 
     @Transactional
     @Override
     public ResultData insert(JellyBusinessField businessField) {
-        LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
-        queryWrapper.eq(JellyBusinessField::getBusinessTableId, businessField.getBusinessTableId())
+        LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyBusinessField::getBusinessTableId, businessField.getBusinessTableId())
                 .eq(JellyBusinessField::getName, businessField.getName());
 
-        int count = businessFieldMapper.selectCount(queryWrapper);
+        Long count = businessFieldMapper.selectCount(qw);
         if (count > 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "字段已经存在");
         }
@@ -161,11 +161,11 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
                 }
             }
         } else {
-            LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
-            queryWrapper.eq(JellyBusinessField::getBusinessTableId, businessField.getBusinessTableId())
+            LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+            qw.eq(JellyBusinessField::getBusinessTableId, businessField.getBusinessTableId())
                     .eq(JellyBusinessField::getName, businessField.getName());
 
-            int count = businessFieldMapper.selectCount(queryWrapper);
+            Long count = businessFieldMapper.selectCount(qw);
             if (count > 0) {
                 return ResultData.warn(ResultCode.OTHER_ERROR, "字段已经存在");
             } else {
@@ -248,9 +248,9 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
 
     @Override
     public ResultData queryByTableId(Long tableId) {
-        LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(JellyBusinessField::getBusinessTableId, tableId);
-        List<JellyBusinessField> list = businessFieldMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+        qw.eq(JellyBusinessField::getBusinessTableId, tableId);
+        List<JellyBusinessField> list = businessFieldMapper.selectList(qw);
         return ResultData.success(list);
     }
 
@@ -258,10 +258,10 @@ public class JellyBusinessFieldService implements IJellyBusinessFieldService {
 	public ResultData importHandle(Long tableId, List<FieldModel> resultList) {
         for(int i=0;i<resultList.size();i++) {
         	FieldModel fieldModel = resultList.get(i);
-        	LambdaQueryWrapper<JellyBusinessField> queryWrapper = new LambdaQueryWrapper<JellyBusinessField>();
-            queryWrapper.eq(JellyBusinessField::getBusinessTableId, tableId)
+        	LambdaQueryWrapper<JellyBusinessField> qw = new LambdaQueryWrapper<>();
+        	qw.eq(JellyBusinessField::getBusinessTableId, tableId)
                     .eq(JellyBusinessField::getName, fieldModel.getName());
-            int count = businessFieldMapper.selectCount(queryWrapper);
+            Long count = businessFieldMapper.selectCount(qw);
             if (count > 0) {
                 return ResultData.warn(ResultCode.OTHER_ERROR, "第" + (i+2) + "行的错误是：" + "字段名" + fieldModel.getName() +"已经存在");
             }
