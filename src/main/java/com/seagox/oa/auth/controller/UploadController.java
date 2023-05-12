@@ -1,5 +1,6 @@
 package com.seagox.oa.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.seagox.oa.annotation.SysLogPoint;
 import com.seagox.oa.auth.serivce.IAuthService;
 import com.seagox.oa.common.ResultCode;
@@ -7,6 +8,15 @@ import com.seagox.oa.common.ResultData;
 import com.seagox.oa.excel.service.IJellyPrintService;
 import com.seagox.oa.util.DocumentConverterUtils;
 import com.seagox.oa.util.UploadUtils;
+import com.seagox.oa.excel.mapper.JellyMetaFunctionMapper;
+import com.seagox.oa.excel.mapper.JellyMetaPageMapper;
+import com.seagox.oa.excel.mapper.JellyTemplateEngineMapper;
+import com.seagox.oa.excel.entity.JellyMetaFunction;
+import com.seagox.oa.excel.entity.JellyMetaPage;
+import com.seagox.oa.excel.entity.JellyTemplateEngine;
+import com.seagox.oa.util.CompressUtils;
+import com.seagox.oa.util.FileUtils;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * 文件上传下载
@@ -43,6 +55,9 @@ public class UploadController {
 
     @Value("${oss.secret-key}")
     private String ossSecretKey;
+    
+    @Value("${jodconverter.working-dir}")
+    private String uploadPath;
 
     @Autowired
     private DocumentConverterUtils documentConverterUtils;
@@ -52,6 +67,15 @@ public class UploadController {
     
     @Autowired
     private IJellyPrintService printService;
+    
+    @Autowired
+    private JellyMetaFunctionMapper metaFunctionMapper;
+
+    @Autowired
+    private JellyMetaPageMapper metaPageMapper;
+
+    @Autowired
+    private JellyTemplateEngineMapper templateEngineMapper;
 
     /**
      * 文件上传
@@ -260,5 +284,62 @@ public class UploadController {
             }
         }
 	}
+	
+	/**
+     * 元函数,元页面,模板引擎导出
+     */
+    @PostMapping("/exportScript")
+    public void exportScript(HttpServletRequest request, HttpServletResponse response) {
+        String exportPath = uploadPath + "\\" + "exportFile\\";
+        File zipFile = null;
+        String filePath = null;
+        if ("元函数".equals(request.getParameter("type"))) {
+            LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
+            qw.eq(JellyMetaFunction::getCompanyId, request.getParameter("companyId"));
+            List<JellyMetaFunction> listMx = metaFunctionMapper.selectList(qw);
+            for (JellyMetaFunction mx : listMx) {
+                filePath = exportPath + mx.getPath() + ".java";
+                FileUtils.fileLinesWrite(filePath, mx.getScript(), false);
+            }
+            FileUtils.mkDir(uploadPath);
+            // 指定打包到哪个zip（绝对路径）
+            zipFile = new File(uploadPath + "\\" + "元函数.zip");
+        } else if ("元页面".equals(request.getParameter("type"))) {
+            LambdaQueryWrapper<JellyMetaPage> qw = new LambdaQueryWrapper<>();
+            qw.eq(JellyMetaPage::getCompanyId, request.getParameter("companyId"));
+            List<JellyMetaPage> listMx = metaPageMapper.selectList(qw);
+            for (JellyMetaPage mx : listMx) {
+                filePath = exportPath + mx.getPath() + ".vue";
+                StringBuffer stringBuffer = new StringBuffer();
+                stringBuffer.append(mx.getHtml());
+                stringBuffer.append(mx.getJs());
+                stringBuffer.append(mx.getCss());
+                FileUtils.fileLinesWrite(filePath, stringBuffer.toString(), false);
+            }
+            FileUtils.mkDir(uploadPath);
+            // 指定打包到哪个zip（绝对路径）
+            zipFile = new File(uploadPath + "\\" + "元页面.zip");
+        } else if ("模板引擎".equals(request.getParameter("type"))) {
+            LambdaQueryWrapper<JellyTemplateEngine> qw = new LambdaQueryWrapper<>();
+            qw.eq(JellyTemplateEngine::getCompanyId, request.getParameter("companyId")).orderByAsc(JellyTemplateEngine::getPath);
+            List<JellyTemplateEngine> listMx = templateEngineMapper.selectList(qw);
+            for (JellyTemplateEngine mx : listMx) {
+                filePath = exportPath + mx.getPath() + ".xml";
+                FileUtils.fileLinesWrite(filePath, mx.getScript(), false);
+            }
+            FileUtils.mkDir(uploadPath);
+            // 指定打包到哪个zip（绝对路径）
+            zipFile = new File(uploadPath + "\\" + "模板引擎.zip");
+        }
+        CompressUtils.compressFilesToZip(exportPath, zipFile);
+        String path = uploadPath + "\\" + request.getParameter("type") + ".zip";
+        // path是指欲下载的文件的路径。
+        File file = new File(path);
+        // 取得文件名。
+        String filename = file.getName();
+        FileUtils.downloadFile(request, response, filename, path);
+        FileUtils.deleteEveryThing(exportPath);
+        FileUtils.deleteEveryThing(path);
+    }
 
 }
