@@ -50,7 +50,7 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
     public ResultData insert(JellyMetaFunction metaFunction) {
         LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyMetaFunction::getPath, metaFunction.getPath());
-        int count = metaFunctionMapper.selectCount(qw);
+        Long count = metaFunctionMapper.selectCount(qw);
         if (count == 0) {
             metaFunctionMapper.insert(metaFunction);
             return ResultData.success(null);
@@ -69,7 +69,7 @@ public class JellyMetaFunctionService implements IJellyMetaFunctionService {
         } else {
             LambdaQueryWrapper<JellyMetaFunction> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyMetaFunction::getPath, metaFunction.getPath());
-            int count = metaFunctionMapper.selectCount(qw);
+            Long count = metaFunctionMapper.selectCount(qw);
             if (count == 0) {
                 metaFunctionMapper.updateById(metaFunction);
                 return ResultData.success(null);

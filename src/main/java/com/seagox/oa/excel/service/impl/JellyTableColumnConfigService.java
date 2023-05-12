@@ -20,7 +20,7 @@ public class JellyTableColumnConfigService implements IJellyTableColumnConfigSer
         LambdaQueryWrapper<JellyTableColumnConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(JellyTableColumnConfig::getUserId, tableColumnConfig.getUserId())
                 .eq(JellyTableColumnConfig::getTableColumnId, tableColumnConfig.getTableColumnId());
-        int count = tableColumnConfigMapper.selectCount(queryWrapper);
+        Long count = tableColumnConfigMapper.selectCount(queryWrapper);
         if (count == 0) {
             tableColumnConfigMapper.insert(tableColumnConfig);
         } else {

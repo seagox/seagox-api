@@ -65,7 +65,7 @@ public class JellyPrintService implements IJellyPrintService {
     public ResultData insert(JellyPrint print) {
         LambdaQueryWrapper<JellyPrint> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyPrint::getCompanyId, print.getCompanyId()).eq(JellyPrint::getName, print.getName());
-        int count = printMapper.selectCount(qw);
+        Long count = printMapper.selectCount(qw);
         if (count == 0) {
             printMapper.insert(print);
             return ResultData.success(null);
@@ -84,7 +84,7 @@ public class JellyPrintService implements IJellyPrintService {
         } else {
             LambdaQueryWrapper<JellyPrint> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyPrint::getCompanyId, print.getCompanyId()).eq(JellyPrint::getName, print.getName());
-            int count = printMapper.selectCount(qw);
+            Long count = printMapper.selectCount(qw);
             if (count == 0) {
                 printMapper.updateById(print);
                 return ResultData.success(null);

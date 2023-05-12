@@ -41,7 +41,7 @@ public class RoleService implements IRoleService {
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysRole::getName, role.getName())
                 .eq(SysRole::getCompanyId, role.getCompanyId());
-        int count = roleMapper.selectCount(queryWrapper);
+        Long count = roleMapper.selectCount(queryWrapper);
         if (count == 0) {
             roleMapper.insert(role);
             return ResultData.success(null);
@@ -63,7 +63,7 @@ public class RoleService implements IRoleService {
             LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SysRole::getName, role.getName())
                     .eq(SysRole::getCompanyId, role.getCompanyId());
-            int count = roleMapper.selectCount(queryWrapper);
+            Long count = roleMapper.selectCount(queryWrapper);
             if (count == 0) {
                 roleMapper.updateById(role);
                 return ResultData.success(null);

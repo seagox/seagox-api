@@ -32,7 +32,7 @@ public class JellyTemplateEngineService implements IJellyTemplateEngineService {
     public ResultData insert(JellyTemplateEngine templateEngine) {
         LambdaQueryWrapper<JellyTemplateEngine> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyTemplateEngine::getPath, templateEngine.getPath());
-        int count = templateEngineMapper.selectCount(qw);
+        Long count = templateEngineMapper.selectCount(qw);
         if (count == 0) {
             templateEngineMapper.insert(templateEngine);
             return ResultData.success(null);
@@ -51,7 +51,7 @@ public class JellyTemplateEngineService implements IJellyTemplateEngineService {
         } else {
             LambdaQueryWrapper<JellyTemplateEngine> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyTemplateEngine::getPath, templateEngine.getPath());
-            int count = templateEngineMapper.selectCount(qw);
+            Long count = templateEngineMapper.selectCount(qw);
             if (count == 0) {
                 templateEngineMapper.updateById(templateEngine);
                 return ResultData.success(null);

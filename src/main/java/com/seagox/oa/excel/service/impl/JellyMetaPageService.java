@@ -49,7 +49,7 @@ public class JellyMetaPageService implements IJellyMetaPageService {
     public ResultData insert(JellyMetaPage metaPage) {
         LambdaQueryWrapper<JellyMetaPage> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyMetaPage::getPath, metaPage.getPath());
-        int count = metaPageMapper.selectCount(qw);
+        Long count = metaPageMapper.selectCount(qw);
         if (count == 0) {
             metaPageMapper.insert(metaPage);
             return ResultData.success(null);
@@ -68,7 +68,7 @@ public class JellyMetaPageService implements IJellyMetaPageService {
         } else {
             LambdaQueryWrapper<JellyMetaPage> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyMetaPage::getPath, metaPage.getPath());
-            int count = metaPageMapper.selectCount(qw);
+            Long count = metaPageMapper.selectCount(qw);
             if (count == 0) {
                 metaPageMapper.updateById(metaPage);
                 return ResultData.success(null);

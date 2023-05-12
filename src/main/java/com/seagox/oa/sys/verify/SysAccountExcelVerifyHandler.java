@@ -44,7 +44,7 @@ public class SysAccountExcelVerifyHandler implements IExcelVerifyHandler<SysAcco
 
         LambdaQueryWrapper<SysAccount> qwAccount = new LambdaQueryWrapper<>();
         qwAccount.eq(SysAccount::getAccount, obj.getAccount());
-        int accountCount = sysAccountMapper.selectCount(qwAccount);
+        Long accountCount = sysAccountMapper.selectCount(qwAccount);
         if (accountCount != 0) {
             result.setSuccess(false);
             result.setMsg("账号已存在");
@@ -59,7 +59,7 @@ public class SysAccountExcelVerifyHandler implements IExcelVerifyHandler<SysAcco
             LambdaQueryWrapper<SysDepartment> qwDept = new LambdaQueryWrapper<>();
             qwDept.eq(SysDepartment::getCompanyId, company.getId())
                     .eq(SysDepartment::getCode, obj.getDeptCode());
-            int deptCount = departmentMapper.selectCount(qwDept);
+            Long deptCount = departmentMapper.selectCount(qwDept);
             if (deptCount == 0) {
                 result.setSuccess(false);
                 result.setMsg("部门编码不存在");
@@ -67,7 +67,7 @@ public class SysAccountExcelVerifyHandler implements IExcelVerifyHandler<SysAcco
             LambdaQueryWrapper<SysRole> qwRole = new LambdaQueryWrapper<>();
             qwRole.eq(SysRole::getCompanyId, company.getId())
                     .eq(SysRole::getName, obj.getRoleName());
-            int roleCount = roleMapper.selectCount(qwRole);
+            Long roleCount = roleMapper.selectCount(qwRole);
             if (roleCount == 0) {
                 result.setSuccess(false);
                 result.setMsg("所属角色不存在");

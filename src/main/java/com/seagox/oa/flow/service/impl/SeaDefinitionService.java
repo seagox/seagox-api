@@ -71,7 +71,7 @@ public class SeaDefinitionService implements ISeaDefinitionService {
     public ResultData delete(Long id) {
         LambdaQueryWrapper<JellyForm> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyForm::getFlowId, id);
-        int count = formMapper.selectCount(qw);
+        Long count = formMapper.selectCount(qw);
         if (count == 0) {
             seaDefinitionMapper.deleteById(id);
             return ResultData.success(null);

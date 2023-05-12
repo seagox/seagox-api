@@ -58,7 +58,7 @@ public class UserService implements IUserService {
     public ResultData insert(SysAccount user) {
         LambdaQueryWrapper<SysAccount> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysAccount::getAccount, user.getAccount());
-        int count = userMapper.selectCount(queryWrapper);
+        Long count = userMapper.selectCount(queryWrapper);
         if (count != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "账号已存在");
         }
@@ -95,7 +95,7 @@ public class UserService implements IUserService {
         } else {
             LambdaQueryWrapper<SysAccount> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SysAccount::getAccount, user.getAccount());
-            int count = userMapper.selectCount(queryWrapper);
+            Long count = userMapper.selectCount(queryWrapper);
             if (count == 0) {
                 userMapper.updateById(user);
 

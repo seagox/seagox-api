@@ -748,7 +748,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                     //查询当前节点待审批数
                     LambdaQueryWrapper<SeaNodeDetail> qw = new LambdaQueryWrapper<>();
                     qw.eq(SeaNodeDetail::getNodeId, currentNode.get("id")).eq(SeaNodeDetail::getStatus, 0);
-                    int count = seaNodeDetailMapper.selectCount(qw);
+                    Long count = seaNodeDetailMapper.selectCount(qw);
                     //当前节点是会签,且节点存在待审批则不必执行流程
                     if (!(way == 2 && count != 0)) {
                         //更新当前节点状态
@@ -778,7 +778,7 @@ public class RuntimeService extends ServiceImpl<SeaNodeDetailMapper, SeaNodeDeta
                             LambdaQueryWrapper<SeaNode> concurrentQw = new LambdaQueryWrapper<>();
                             concurrentQw.eq(SeaNode::getDefId, seaInstance.getId())
                                     .eq(SeaNode::getStatus, 0);
-                            int concurrentCount = seaNodeMapper.selectCount(concurrentQw);
+                            Long concurrentCount = seaNodeMapper.selectCount(concurrentQw);
                             if (concurrentCount == 0) {
                                 variables.put("currentNodeId", currentNode.get("target"));
                                 variables.put("source", currentNode.get("target"));

@@ -48,7 +48,7 @@ public class JellyDicClassifyService implements IJellyDicClassifyService {
     public ResultData delete(Long id) {
         LambdaQueryWrapper<JellyDicDetail> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyDicDetail::getClassifyId, id);
-        int count = dicDetailMapper.selectCount(qw);
+        Long count = dicDetailMapper.selectCount(qw);
         if (count > 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "字典分类下有数据，不可删除");
         } else {

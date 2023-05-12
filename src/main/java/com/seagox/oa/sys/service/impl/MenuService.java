@@ -64,7 +64,7 @@ public class MenuService implements IMenuService {
     public ResultData delete(Long id) {
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
         qw.eq(SysMenu::getParentId, id);
-        int count = menuMapper.selectCount(qw);
+        Long count = menuMapper.selectCount(qw);
         if (count != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "存在子菜单，不可删除");
         }

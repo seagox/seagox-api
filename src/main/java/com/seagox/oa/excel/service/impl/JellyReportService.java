@@ -59,7 +59,7 @@ public class JellyReportService implements IJellyReportService {
     public ResultData insert(JellyReport report) {
         LambdaQueryWrapper<JellyReport> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyReport::getCompanyId, report.getCompanyId()).eq(JellyReport::getName, report.getName());
-        int count = reportMapper.selectCount(qw);
+        Long count = reportMapper.selectCount(qw);
         if (count == 0) {
             reportMapper.insert(report);
             return ResultData.success(null);
@@ -78,7 +78,7 @@ public class JellyReportService implements IJellyReportService {
         } else {
             LambdaQueryWrapper<JellyReport> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyReport::getCompanyId, report.getCompanyId()).eq(JellyReport::getName, report.getName());
-            int count = reportMapper.selectCount(qw);
+            Long count = reportMapper.selectCount(qw);
             if (count == 0) {
                 reportMapper.updateById(report);
                 return ResultData.success(null);

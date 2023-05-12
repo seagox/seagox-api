@@ -47,7 +47,7 @@ public class CompanyService implements ICompanyService {
     public ResultData insert(Long userId, SysCompany company) {
         LambdaQueryWrapper<SysCompany> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysCompany::getName, company.getName());
-        int count = companyMapper.selectCount(queryWrapper);
+        Long count = companyMapper.selectCount(queryWrapper);
         if (count == 0) {
             SysCompany parentCompany = companyMapper.selectById(company.getParentId());
             String maxCode = "";
@@ -64,7 +64,7 @@ public class CompanyService implements ICompanyService {
                 }
                 LambdaQueryWrapper<SysCompany> markQw = new LambdaQueryWrapper<>();
                 markQw.eq(SysCompany::getMark, company.getMark());
-                int markCount = companyMapper.selectCount(markQw);
+                Long markCount = companyMapper.selectCount(markQw);
                 if (markCount > 0) {
                     return ResultData.warn(ResultCode.OTHER_ERROR, "标识已经存在");
                 }
@@ -150,7 +150,7 @@ public class CompanyService implements ICompanyService {
         } else {
             LambdaQueryWrapper<SysCompany> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SysCompany::getName, company.getName());
-            int count = companyMapper.selectCount(queryWrapper);
+            Long count = companyMapper.selectCount(queryWrapper);
             if (count == 0) {
                 if ((originalCompany.getParentId() == null && company.getParentId() != null)
                         || (company.getParentId() == null && originalCompany.getParentId() != null)
@@ -183,7 +183,7 @@ public class CompanyService implements ICompanyService {
     public ResultData delete(Long id) {
         LambdaQueryWrapper<SysDepartment> departmentQueryWrapper = new LambdaQueryWrapper<>();
         departmentQueryWrapper.eq(SysDepartment::getCompanyId, id);
-        int departmentCount = departmentMapper.selectCount(departmentQueryWrapper);
+        Long departmentCount = departmentMapper.selectCount(departmentQueryWrapper);
         if (departmentCount != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "存在部门，不可删除");
         }

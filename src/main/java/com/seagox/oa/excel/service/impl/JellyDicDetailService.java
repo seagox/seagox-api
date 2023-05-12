@@ -48,7 +48,7 @@ public class JellyDicDetailService implements IJellyDicDetailService {
         LambdaQueryWrapper<JellyDicDetail> qw = new LambdaQueryWrapper<>();
         qw.eq(JellyDicDetail::getClassifyId, dicDetail.getClassifyId())
                 .eq(JellyDicDetail::getCode, dicDetail.getCode());
-        int count = dicDetailMapper.selectCount(qw);
+        Long count = dicDetailMapper.selectCount(qw);
         if (count > 0) {
             return ResultData.warn(ResultCode.PARAMETER_ERROR, "字典值已经存在");
         }
@@ -75,7 +75,7 @@ public class JellyDicDetailService implements IJellyDicDetailService {
             LambdaQueryWrapper<JellyDicDetail> qw = new LambdaQueryWrapper<>();
             qw.eq(JellyDicDetail::getClassifyId, dicDetail.getClassifyId())
                     .eq(JellyDicDetail::getCode, dicDetail.getCode());
-            int count = dicDetailMapper.selectCount(qw);
+            Long count = dicDetailMapper.selectCount(qw);
             if (count == 0) {
                 dicDetailMapper.updateById(dicDetail);
 

@@ -52,7 +52,7 @@ public class DepartmentService implements IDepartmentService {
         queryWrapper.eq(SysDepartment::getCompanyId, department.getCompanyId())
                 .eq(!StringUtils.isEmpty(department.getParentId()), SysDepartment::getParentId, department.getParentId())
                 .eq(SysDepartment::getName, department.getName());
-        int count = departmentMapper.selectCount(queryWrapper);
+        Long count = departmentMapper.selectCount(queryWrapper);
         if (count != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "部门已经存在");
         }
@@ -104,7 +104,7 @@ public class DepartmentService implements IDepartmentService {
             queryWrapper.eq(SysDepartment::getCompanyId, department.getCompanyId())
                     .eq(!StringUtils.isEmpty(department.getParentId()), SysDepartment::getParentId, department.getParentId())
                     .eq(SysDepartment::getName, department.getName());
-            int count = departmentMapper.selectCount(queryWrapper);
+            Long count = departmentMapper.selectCount(queryWrapper);
             if (count == 0) {
                 if ((originalDepartment.getParentId() == null && department.getParentId() != null)
                         || (department.getParentId() == null && originalDepartment.getParentId() != null)
@@ -137,14 +137,14 @@ public class DepartmentService implements IDepartmentService {
     public ResultData delete(Long id) {
         LambdaQueryWrapper<SysDepartment> departmentQueryWrapper = new LambdaQueryWrapper<>();
         departmentQueryWrapper.eq(SysDepartment::getParentId, id);
-        int departmentCount = departmentMapper.selectCount(departmentQueryWrapper);
+        Long departmentCount = departmentMapper.selectCount(departmentQueryWrapper);
         if (departmentCount != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "存在子部门，不可删除");
         }
 
         LambdaQueryWrapper<SysUserRelate> userRelateQueryWrapper = new LambdaQueryWrapper<>();
         userRelateQueryWrapper.eq(SysUserRelate::getDepartmentId, id);
-        int userRelateCount = userRelateMapper.selectCount(userRelateQueryWrapper);
+        Long userRelateCount = userRelateMapper.selectCount(userRelateQueryWrapper);
         if (userRelateCount != 0) {
             return ResultData.warn(ResultCode.OTHER_ERROR, "部门存在人员，不可删除");
         }
