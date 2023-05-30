@@ -4,7 +4,7 @@ CREATE TABLE "public"."jelly_view_table" (
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(200) NOT NULL,
 	"remark" VARCHAR(200) NOT NULL,
-	"script" text NOT NULL,
+	"script" TEXT NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -43,7 +43,7 @@ CREATE TABLE "public"."jelly_procedure"  (
 	"company_id" BIGINT NOT NULL,
   	"name" VARCHAR(100) NOT NULL,
   	"remark" VARCHAR(200) NOT NULL,
-  	"config" text,
+  	"config" TEXT,
   	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -60,12 +60,13 @@ DROP TABLE IF EXISTS "public"."jelly_import_rule";
 CREATE TABLE "public"."jelly_import_rule"  (
     "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     "company_id" BIGINT NOT NULL,
-    "code" varchar(30) NOT NULL,
-    "name" varchar(100) NOT NULL,
-    "data_source" bigint NOT NULL,
-    "verify_rule_id" bigint DEFAULT NULL,
-    "handle_rule_id" bigint DEFAULT NULL,
-    "template_source" text,
+    "code" VARCHAR(30) NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "start_line" INTEGER DEFAULT 2,
+    "data_source" BIGINT NOT NULL,
+    "verify_rule_id" BIGINT DEFAULT NULL,
+    "handle_rule_id" BIGINT DEFAULT NULL,
+    "template_source" TEXT,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -73,6 +74,7 @@ COMMENT ON COLUMN "public"."jelly_import_rule"."id" IS '主键';
 COMMENT ON COLUMN "public"."jelly_import_rule"."company_id" IS '公司id';
 COMMENT ON COLUMN "public"."jelly_import_rule"."code" IS '编码';
 COMMENT ON COLUMN "public"."jelly_import_rule"."name" IS '名称';
+COMMENT ON COLUMN "public"."jelly_import_rule"."start_line" IS '开始行';
 COMMENT ON COLUMN "public"."jelly_import_rule"."data_source" IS '数据源';
 COMMENT ON COLUMN "public"."jelly_import_rule"."verify_rule_id" IS '验证规则';
 COMMENT ON COLUMN "public"."jelly_import_rule"."handle_rule_id" IS '处理规则';
@@ -86,8 +88,8 @@ CREATE TABLE "public"."jelly_import_rule_detail"  (
     "id" BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     "rule_id" BIGINT NOT NULL,
     "field" BIGINT NOT NULL,
-    "col" varchar(30) NOT NULL,
-    "rule" text,
+    "col" VARCHAR(30) NOT NULL,
+    "rule" TEXT,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -108,7 +110,7 @@ CREATE TABLE "public"."jelly_print" (
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(100) NOT NULL,
 	"data_source" BIGINT NOT NULL,
-  	"template_source" text NOT NULL,
+  	"template_source" TEXT NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

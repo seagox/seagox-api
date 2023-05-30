@@ -43,7 +43,7 @@ CREATE TABLE "jelly_procedure"  (
 	"company_id" BIGINT NOT NULL,
   	"name" VARCHAR(100) NOT NULL,
   	"remark" VARCHAR(200) NOT NULL,
-  	"config" text,
+  	"config" TEXT,
   	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -62,10 +62,11 @@ CREATE TABLE "jelly_import_rule"  (
     "company_id" BIGINT NOT NULL,
     "code" varchar(30) NOT NULL,
     "name" varchar(100) NOT NULL,
+    "start_line" INTEGER DEFAULT 2,
     "data_source" BIGINT NOT NULL,
     "verify_rule_id" BIGINT DEFAULT NULL,
     "handle_rule_id" BIGINT DEFAULT NULL,
-    "template_source" text,
+    "template_source" TEXT,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -73,6 +74,7 @@ COMMENT ON COLUMN "jelly_import_rule"."id" IS '主键';
 COMMENT ON COLUMN "jelly_import_rule"."company_id" IS '公司id';
 COMMENT ON COLUMN "jelly_import_rule"."code" IS '编码';
 COMMENT ON COLUMN "jelly_import_rule"."name" IS '名称';
+COMMENT ON COLUMN "jelly_import_rule"."start_line" IS '开始行';
 COMMENT ON COLUMN "jelly_import_rule"."data_source" IS '数据源';
 COMMENT ON COLUMN "jelly_import_rule"."verify_rule_id" IS '验证规则';
 COMMENT ON COLUMN "jelly_import_rule"."handle_rule_id" IS '处理规则';
@@ -86,8 +88,8 @@ CREATE TABLE "jelly_import_rule_detail"  (
     "id" BIGSERIAL PRIMARY KEY NOT NULL,
     "rule_id" BIGINT NOT NULL,
     "field" BIGINT NOT NULL,
-    "col" varchar(30) NOT NULL,
-    "rule" text,
+    "col" VARCHAR(30) NOT NULL,
+    "rule" TEXT,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -108,7 +110,7 @@ CREATE TABLE "jelly_print" (
 	"company_id" BIGINT NOT NULL,
 	"name" VARCHAR(30) NOT NULL,
 	"data_source" BIGINT NOT NULL,
-  	"template_source" text NOT NULL,
+  	"template_source" TEXT NOT NULL,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -163,9 +165,9 @@ CREATE TABLE "jelly_report"  (
 	"icon" TEXT NOT NULL,
 	"color" VARCHAR(30) NOT NULL,
     "data_source" BIGINT NOT NULL,
-    "template_source" text NOT NULL,
-    "search_json" text DEFAULT NULL,
-	"export_path" text DEFAULT NULL,
+    "template_source" TEXT NOT NULL,
+    "search_json" TEXT DEFAULT NULL,
+	"export_path" TEXT DEFAULT NULL,
     "create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -16,7 +16,7 @@ public interface IJellyBusinessFieldService {
     /**
      * 分页查询
      */
-    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long businessTableId, String name, String comment);
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long businessTableId, String name, String remark);
 
     /**
      * 添加

@@ -43,6 +43,11 @@ public class JellyImportRule {
      * 模板源
      */
     private String templateSource;
+    
+    /**
+     * 开始行
+     */
+    private Integer startLine;
 
     /**
      * 校验规则
@@ -132,6 +137,14 @@ public class JellyImportRule {
 
 	public void setHandleRuleId(Long handleRuleId) {
 		this.handleRuleId = handleRuleId;
+	}
+
+	public Integer getStartLine() {
+		return startLine;
+	}
+
+	public void setStartLine(Integer startLine) {
+		this.startLine = startLine;
 	}
 
 	public Date getCreateTime() {

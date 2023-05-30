@@ -1,14 +1,14 @@
-create table jelly_view (
+CREATE TABLE jelly_view (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(64) NOT NULL,
     remark VARCHAR2(64) NOT NULL,
     script CLOB NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_view_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_view_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_view.id IS '主键';
 COMMENT ON COLUMN jelly_view.company_id IS '公司id';
@@ -20,17 +20,17 @@ COMMENT ON COLUMN jelly_view.update_time IS '更新时间';
 COMMENT ON TABLE jelly_view IS '视图表';
 
 
-create table jelly_view_field (
+CREATE TABLE jelly_view_field (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     view_id NUMBER(20) NOT NULL,
     name VARCHAR2(64) NOT NULL,
     remark VARCHAR2(64) NOT NULL,
     type VARCHAR2(20) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_view_field_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_view_field_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_view_field.id IS '主键';
 COMMENT ON COLUMN jelly_view_field.view_id IS '视图id';
@@ -46,12 +46,12 @@ CREATE TABLE jelly_procedure  (
 	company_id NUMBER(20) NOT NULL,
   	name VARCHAR2(100) NOT NULL,
   	remark VARCHAR2(200) NOT NULL,
-  	config clob,
-  	create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+  	config CLOB,
+  	create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_procedure_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_procedure_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_procedure.id IS '主键';
 COMMENT ON COLUMN jelly_procedure.company_id IS '公司id';
@@ -67,20 +67,22 @@ CREATE TABLE jelly_import_rule  (
     company_id NUMBER(20) NOT NULL,
     code VARCHAR2(30) NOT NULL,
     name VARCHAR2(100) NOT NULL,
+    start_line NUMBER(4) DEFAULT 2,
     data_source NUMBER(20) NOT NULL,
     verify_rule_id NUMBER(20) DEFAULT NULL,
     handle_rule_id NUMBER(20) DEFAULT NULL,
-    template_source clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+    template_source CLOB,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_import_rule_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_import_rule_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_import_rule.id IS '主键';
 COMMENT ON COLUMN jelly_import_rule.company_id IS '公司id';
 COMMENT ON COLUMN jelly_import_rule.code IS '编码';
 COMMENT ON COLUMN jelly_import_rule.name IS '名称';
+COMMENT ON COLUMN jelly_import_rule.start_line IS '开始行'
 COMMENT ON COLUMN jelly_import_rule.data_source IS '数据源';
 COMMENT ON COLUMN jelly_import_rule.verify_rule_id IS '验证规则';
 COMMENT ON COLUMN jelly_import_rule.handle_rule_id IS '处理规则';
@@ -94,12 +96,12 @@ CREATE TABLE jelly_import_rule_detail  (
     rule_id NUMBER(20) NOT NULL,
     field NUMBER(20) NOT NULL,
     col VARCHAR2(30) NOT NULL,
-    rule clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+    rule CLOB,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_import_rule_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_import_rule_detail_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_import_rule_detail.id IS '主键';
 COMMENT ON COLUMN jelly_import_rule_detail.rule_id IS '导入规则id';
@@ -111,17 +113,17 @@ COMMENT ON COLUMN jelly_import_rule_detail.update_time IS '更新时间';
 COMMENT ON TABLE jelly_import_rule_detail IS '导入规则明细';
 
 
-create table jelly_print (
+CREATE TABLE jelly_print (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     data_source NUMBER(20) NOT NULL,
-    template_source clob NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    template_source CLOB NOT NULL,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_print_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_print_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_print.id IS '主键';
 COMMENT ON COLUMN jelly_print.company_id IS '公司id';
@@ -133,24 +135,24 @@ COMMENT ON COLUMN jelly_print.update_time IS '更新时间';
 COMMENT ON TABLE jelly_print IS '打印模版';
 
 
-create table jelly_form (
+CREATE TABLE jelly_form (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     table_id NUMBER(20) NOT NULL,
-    design clob NOT NULL,
+    design CLOB NOT NULL,
     name VARCHAR2(30) NOT NULL,
-    icon clob NOT NULL,
+    icon CLOB NOT NULL,
 	color VARCHAR2(30) NOT NULL,
 	flow_id NUMBER(20) DEFAULT NULL,
-	data_source clob,
-	search_json clob,
-    table_header clob,
-    options clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+	data_source CLOB,
+	search_json CLOB,
+    table_header CLOB,
+    options CLOB,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_form_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_form_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_form.id IS '主键';
 COMMENT ON COLUMN jelly_form.company_id IS '公司id';
@@ -172,17 +174,17 @@ CREATE TABLE jelly_report  (
     id NUMBER(20) PRIMARY KEY NOT NULL,
 	company_id NUMBER(20) NOT NULL,
     name VARCHAR2(100) NOT NULL,
-	icon clob NOT NULL,
+	icon CLOB NOT NULL,
 	color VARCHAR2(30) NOT NULL,
     data_source NUMBER(20) NOT NULL,
-    template_source clob NOT NULL,
-    search_json clob DEFAULT NULL,
-	export_path clob DEFAULT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+    template_source CLOB NOT NULL,
+    search_json CLOB DEFAULT NULL,
+	export_path CLOB DEFAULT NULL,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_report_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_report_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_report.id IS '主键';
 COMMENT ON COLUMN jelly_report.company_id IS '公司id';
@@ -196,17 +198,17 @@ COMMENT ON COLUMN jelly_report.export_path IS '导出路径';
 COMMENT ON TABLE jelly_report IS '报表管理';
 
 
-create table jelly_table_column_config (
+CREATE TABLE jelly_table_column_config (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     user_id NUMBER(20) NOT NULL,
     form_id NUMBER(20) NOT NULL,
-    config clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    config CLOB,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_table_column_config_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_table_column_config_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_table_column_config.id IS '主键';
 COMMENT ON COLUMN jelly_table_column_config.company_id IS '公司id';
@@ -218,16 +220,16 @@ COMMENT ON COLUMN jelly_table_column_config.update_time IS '更新时间';
 COMMENT ON TABLE jelly_table_column_config IS '表头配置';
 
 
-create table jelly_business_table (
+CREATE TABLE jelly_business_table (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(64) NOT NULL,
     remark VARCHAR2(64) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_business_table_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_business_table_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_business_table.id IS '主键';
 COMMENT ON COLUMN jelly_business_table.company_id IS '公司id';
@@ -238,7 +240,7 @@ COMMENT ON COLUMN jelly_business_table.update_time IS '更新时间';
 COMMENT ON TABLE jelly_business_table IS '业务表';
 
 
-create table jelly_business_field (
+CREATE TABLE jelly_business_field (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     business_table_id NUMBER(20) NOT NULL,
     name VARCHAR2(64) NOT NULL,
@@ -250,11 +252,11 @@ create table jelly_business_field (
     not_null NUMBER(4) DEFAULT 0,
     default_value VARCHAR2(200),
     target_table_id NUMBER(20) DEFAULT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_business_field_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_business_field_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_business_field.id IS '主键';
 COMMENT ON COLUMN jelly_business_field.business_table_id IS '业务表id';
@@ -272,16 +274,16 @@ COMMENT ON COLUMN jelly_business_field.update_time IS '更新时间';
 COMMENT ON TABLE jelly_business_field IS '业务字段';
 
 
-create table jelly_dic_classify (
+CREATE TABLE jelly_dic_classify (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     sort NUMBER(4) DEFAULT 1,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_dic_classify_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_dic_classify_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_dic_classify.id IS '主键';
 COMMENT ON COLUMN jelly_dic_classify.company_id IS '公司id';
@@ -292,18 +294,18 @@ COMMENT ON COLUMN jelly_dic_classify.update_time IS '更新时间';
 COMMENT ON TABLE jelly_dic_classify IS '字典分类';
 
 
-create table jelly_dic_detail (
+CREATE TABLE jelly_dic_detail (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     classify_id NUMBER(20) NOT NULL,
     code VARCHAR2(30) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     sort NUMBER(4) DEFAULT 1,
     status NUMBER(4) DEFAULT 1,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_dic_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_dic_detail_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_dic_detail.id IS '主键';
 COMMENT ON COLUMN jelly_dic_detail.classify_id IS '字典分类id';
@@ -316,14 +318,14 @@ COMMENT ON COLUMN jelly_dic_detail.update_time IS '更新时间';
 COMMENT ON TABLE jelly_dic_detail IS '字典详情';
 
 
-create table jelly_regions (
+CREATE TABLE jelly_regions (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     code VARCHAR2(30) NOT NULL,
     grade NUMBER(4) NOT NULL,
     name VARCHAR2(100) NOT NULL
 );
 -- 创建序列
-create sequence jelly_regions_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_regions_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_regions.id IS '主键';
 COMMENT ON COLUMN jelly_regions.code IS '编码';
@@ -332,18 +334,18 @@ COMMENT ON COLUMN jelly_regions.name IS '名称';
 COMMENT ON TABLE jelly_regions IS '区域数据';
 
 
-create table jelly_job (
+CREATE TABLE jelly_job (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     cron VARCHAR2(30) NOT NULL,
     rule_id NUMBER(20) NOT NULL,
     status NUMBER(4) DEFAULT 0,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_job_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_job_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_job.id IS '主键';
 COMMENT ON COLUMN jelly_job.company_id IS '公司id';
@@ -356,18 +358,18 @@ COMMENT ON COLUMN jelly_job.update_time IS '更新时间';
 COMMENT ON TABLE jelly_job IS '任务调度';
 
 
-create table jelly_gauge (
+CREATE TABLE jelly_gauge (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
-    config clob,
-    script clob,
-    template_engine clob,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    config CLOB,
+    script CLOB,
+    template_engine CLOB,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_gauge_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_gauge_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_gauge.id IS '主键';
 COMMENT ON COLUMN jelly_gauge.company_id IS '公司id';
@@ -380,18 +382,18 @@ COMMENT ON COLUMN jelly_gauge.update_time IS '更新时间';
 COMMENT ON TABLE jelly_gauge IS '仪表板';
 
 
-create table jelly_door (
+CREATE TABLE jelly_door (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     type NUMBER(4) DEFAULT 1,
-	authority clob,
+	authority CLOB,
 	view_id NUMBER(20) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_door_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_door_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_door.id IS '主键';
 COMMENT ON COLUMN jelly_door.company_id IS '公司id';
@@ -409,14 +411,14 @@ CREATE TABLE jelly_meta_page  (
     company_id NUMBER(20) NOT NULL,
 	name VARCHAR2(30) NOT NULL,
 	path VARCHAR2(30) NOT NULL,
-	html clob DEFAULT NULL,
-	js clob DEFAULT NULL,
-	css clob DEFAULT NULL,
-	create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+	html CLOB DEFAULT NULL,
+	js CLOB DEFAULT NULL,
+	css CLOB DEFAULT NULL,
+	create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_meta_page_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_meta_page_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_meta_page.id IS '主键';
 COMMENT ON COLUMN jelly_meta_page.company_id IS '公司id';
@@ -435,12 +437,12 @@ CREATE TABLE jelly_meta_function  (
     type NUMBER(4) DEFAULT 1,
 	name VARCHAR2(30) NOT NULL,
 	path VARCHAR2(30) NOT NULL,
-	script clob DEFAULT NULL,
-	create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+	script CLOB DEFAULT NULL,
+	create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_meta_function_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_meta_function_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_meta_function.id IS '主键';
 COMMENT ON COLUMN jelly_meta_function.company_id IS '公司id';
@@ -457,12 +459,12 @@ CREATE TABLE jelly_template_engine  (
     company_id NUMBER(20) NOT NULL,
 	name VARCHAR2(30) NOT NULL,
 	path VARCHAR2(30) NOT NULL,
-	script clob DEFAULT NULL,
-	create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+	script CLOB DEFAULT NULL,
+	create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence jelly_template_engine_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence jelly_template_engine_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN jelly_template_engine.id IS '主键';
 COMMENT ON COLUMN jelly_template_engine.company_id IS '公司id';
@@ -477,13 +479,13 @@ CREATE TABLE sea_definition  (
     id NUMBER(20) PRIMARY KEY NOT NULL,
 	company_id NUMBER(20) NOT NULL,
 	name VARCHAR2(30) NOT NULL,
-    resources clob DEFAULT NULL,
+    resources CLOB DEFAULT NULL,
     data_source VARCHAR2(255) DEFAULT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-	update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+	update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sea_definition_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sea_definition_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sea_definition.id IS '主键';
 COMMENT ON COLUMN sea_definition.company_id IS '公司id';
@@ -494,7 +496,7 @@ COMMENT ON COLUMN sea_definition.create_time IS '创建时间';
 COMMENT ON COLUMN sea_definition.update_time IS '更新时间';
 COMMENT ON TABLE sea_definition IS '流程定义';
 
-create table sea_instance (
+CREATE TABLE sea_instance (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     user_id NUMBER(20) NOT NULL,
@@ -502,19 +504,19 @@ create table sea_instance (
     name VARCHAR2(50) NOT NULL,
     business_type VARCHAR2(50) NOT NULL,
     business_key VARCHAR2(50) NOT NULL,
-    resources clob NOT NULL,
+    resources CLOB NOT NULL,
     status NUMBER(4) DEFAULT 0,
-    start_time date DEFAULT CURRENT_TIMESTAMP,
-    end_time date,
-    current_agent clob,
+    start_time DATE DEFAULT CURRENT_TIMESTAMP,
+    end_time DATE,
+    current_agent CLOB,
     close_status NUMBER(4) DEFAULT NULL,
-    other_json clob DEFAULT NULL,
+    other_json CLOB DEFAULT NULL,
     return_number NUMBER(4) DEFAULT 0,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sea_instance_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sea_instance_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sea_instance.id IS '主键';
 COMMENT ON COLUMN sea_instance.company_id IS '公司id';
@@ -536,7 +538,7 @@ COMMENT ON COLUMN sea_instance.return_number IS '退回次数';
 COMMENT ON TABLE sea_instance IS '流程实例';
 
 
-create table sea_node (
+CREATE TABLE sea_node (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     def_id NUMBER(20) NOT NULL,
     version NUMBER(4) DEFAULT 1,
@@ -545,14 +547,14 @@ create table sea_node (
     name VARCHAR2(50) NOT NULL,
     type NUMBER(4) DEFAULT 1,
     status NUMBER(4) DEFAULT 0,
-    start_time date DEFAULT CURRENT_TIMESTAMP,
-    end_time date,
+    start_time DATE DEFAULT CURRENT_TIMESTAMP,
+    end_time DATE,
     is_concurrent NUMBER(4) DEFAULT 0,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sea_node_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sea_node_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sea_node.id IS '主键';
 COMMENT ON COLUMN sea_node.def_id IS '流程实例id';
@@ -570,20 +572,20 @@ COMMENT ON COLUMN sea_node.update_time IS '更新时间';
 COMMENT ON TABLE sea_node IS '流程节点';
 
 
-create table sea_node_detail (
+CREATE TABLE sea_node_detail (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     node_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     assignee VARCHAR2(30) NOT NULL,
     status NUMBER(4) DEFAULT 0,
     remark VARCHAR2(255),
-    start_time date DEFAULT CURRENT_TIMESTAMP,
-    end_time date,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    start_time DATE DEFAULT CURRENT_TIMESTAMP,
+    end_time DATE,
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sea_node_detail_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sea_node_detail_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sea_node_detail.id IS '主键';
 COMMENT ON COLUMN sea_node_detail.node_id IS '流程节点id';
@@ -597,7 +599,7 @@ COMMENT ON COLUMN sea_node_detail.create_time IS '创建时间';
 COMMENT ON COLUMN sea_node_detail.update_time IS '更新时间';
 COMMENT ON TABLE sea_node_detail IS '流程节点详情';
 
-create table sys_company (
+CREATE TABLE sys_company (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     parent_id NUMBER(20),
     mark VARCHAR2(30) NOT NULL,
@@ -605,11 +607,11 @@ create table sys_company (
     name VARCHAR2(30) NOT NULL,
     alias VARCHAR2(30) NOT NULL,
     logo VARCHAR2(100) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_company_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_company_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_company.id IS '主键';
 COMMENT ON COLUMN sys_company.parent_id IS '上级id';
@@ -623,7 +625,7 @@ COMMENT ON COLUMN sys_company.update_time IS '更新时间';
 COMMENT ON TABLE sys_company IS '公司';
 
 
-create table sys_department (
+CREATE TABLE sys_department (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     parent_id NUMBER(20),
@@ -631,11 +633,11 @@ create table sys_department (
     name VARCHAR2(30) NOT NULL,
     director VARCHAR2(500),
     charge_leader VARCHAR2(500),
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_department_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_department_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_department.id IS '主键';
 COMMENT ON COLUMN sys_department.company_id IS '公司id';
@@ -649,17 +651,17 @@ COMMENT ON COLUMN sys_department.update_time IS '更新时间';
 COMMENT ON TABLE sys_department IS '部门';
 
 
-create table sys_user_relate (
+CREATE TABLE sys_user_relate (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     user_id NUMBER(20) NOT NULL,
     company_id NUMBER(20) NOT NULL,
     department_id NUMBER(20),
     role_ids VARCHAR2(50),
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_user_relate_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_user_relate_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_user_relate.id IS '主键';
 COMMENT ON COLUMN sys_user_relate.user_id IS '用户id';
@@ -671,7 +673,7 @@ COMMENT ON COLUMN sys_user_relate.update_time IS '更新时间';
 COMMENT ON TABLE sys_user_relate IS '用户关联';
 
 
-create table sys_account (
+CREATE TABLE sys_account (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     avatar VARCHAR2(255) DEFAULT NULL,
     account VARCHAR2(50) NOT NULL,
@@ -685,11 +687,11 @@ create table sys_account (
     type NUMBER(4) DEFAULT 1,
     openid VARCHAR2(100),
 	sort NUMBER(4) DEFAULT 0,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_account_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_account_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_account.id IS '主键';
 COMMENT ON COLUMN sys_account.avatar IS '头像';
@@ -709,16 +711,16 @@ COMMENT ON COLUMN sys_account.sort IS '排序';
 COMMENT ON TABLE sys_account IS '用户';
 
 
-create table sys_role (
+CREATE TABLE sys_role (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     name VARCHAR2(30) NOT NULL,
     path VARCHAR2(4000) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_role_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_role_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_role.id IS '主键';
 COMMENT ON COLUMN sys_role.company_id IS '公司id';
@@ -729,21 +731,21 @@ COMMENT ON COLUMN sys_role.update_time IS '更新时间';
 COMMENT ON TABLE sys_role IS '系统角色';
 
 
-create table sys_menu (
+CREATE TABLE sys_menu (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     parent_id NUMBER(20),
     type NUMBER(4) DEFAULT 1,
     name VARCHAR2(30) NOT NULL,
-    icon clob NOT NULL,
+    icon CLOB NOT NULL,
     path VARCHAR2(50),
     status NUMBER(4) DEFAULT 1,
     sort NUMBER(4) DEFAULT 1,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_menu_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_menu_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_menu.id IS '主键';
 COMMENT ON COLUMN sys_menu.company_id IS '公司id';
@@ -759,22 +761,22 @@ COMMENT ON COLUMN sys_menu.update_time IS '更新时间';
 COMMENT ON TABLE sys_menu IS '菜单';
 
 
-create table sys_notice (
+CREATE TABLE sys_notice (
     id NUMBER(20) PRIMARY KEY NOT NULL,
 	company_id NUMBER(20) NOT NULL,
     title VARCHAR2(50) NOT NULL,
-    content clob,
-    resources clob,
+    content CLOB,
+    resources CLOB,
     user_id NUMBER(20) NOT NULL,
     to_user_ids VARCHAR2(500) NOT NULL,
     status NUMBER(4) DEFAULT 1,
     classify VARCHAR2(30) DEFAULT '1',
     relation VARCHAR2(500),
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_notice_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_notice_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_notice.id IS '主键';
 COMMENT ON COLUMN sys_notice.company_id IS '公司id';
@@ -791,7 +793,7 @@ COMMENT ON COLUMN sys_notice.update_time IS '更新时间';
 COMMENT ON TABLE sys_notice IS '公告';
 
 
-create table sys_message (
+CREATE TABLE sys_message (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     type NUMBER(4) DEFAULT 1,
@@ -801,11 +803,11 @@ create table sys_message (
     business_type NUMBER(20) NOT NULL,
     business_key NUMBER(20) NOT NULL,
     status NUMBER(4) DEFAULT 0,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_message_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_message_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_message.id IS '主键';
 COMMENT ON COLUMN sys_message.company_id IS '公司id';
@@ -821,7 +823,7 @@ COMMENT ON COLUMN sys_message.update_time IS '更新时间';
 COMMENT ON TABLE sys_message IS '消息表';
 
 
-create table sys_log (
+CREATE TABLE sys_log (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     company_id NUMBER(20) NOT NULL,
     user_id NUMBER(20) NOT NULL,
@@ -829,15 +831,15 @@ create table sys_log (
     ip VARCHAR2(100) NOT NULL,
     uri VARCHAR2(100) NOT NULL,
     method VARCHAR2(500) NOT NULL,
-    params clob,
+    params CLOB,
     status NUMBER(4) DEFAULT 1,
     cost_time NUMBER(4) NOT NULL,
-    result clob,
+    result CLOB,
     ua VARCHAR2(1000),
-    create_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_log_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_log_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_log.id IS '主键';
 COMMENT ON COLUMN sys_log.company_id IS '公司id';
@@ -854,15 +856,15 @@ COMMENT ON COLUMN sys_log.ua IS '浏览器信息';
 COMMENT ON COLUMN sys_log.create_time IS '创建时间';
 COMMENT ON TABLE sys_log IS '操作日记';
 
-create table sys_theme (
+CREATE TABLE sys_theme (
     id NUMBER(20) PRIMARY KEY NOT NULL,
     user_id NUMBER(20) NOT NULL,
     color VARCHAR2(30) NOT NULL,
-    create_time date DEFAULT CURRENT_TIMESTAMP,
-    update_time date DEFAULT CURRENT_TIMESTAMP
+    create_time DATE DEFAULT CURRENT_TIMESTAMP,
+    update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
 -- 创建序列
-create sequence sys_theme_seq increment by 1 start with 1 nomaxvalue minvalue 1 nocycle;
+CREATE sequence sys_theme_seq increment BY 1 start WITH 1 nomaxvalue minvalue 1 nocycle;
 
 COMMENT ON COLUMN sys_theme.id IS '主键';
 COMMENT ON COLUMN sys_theme.user_id IS '用户id';

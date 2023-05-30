@@ -49,8 +49,8 @@ public class JellyBusinessFieldController {
     @GetMapping("/queryByPage")
     public ResultData queryByPage(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                  Long businessTableId, String name, String comment) {
-        return businessFieldService.queryByPage(pageNo, pageSize, businessTableId, name, comment);
+                                  Long businessTableId, String name, String remark) {
+        return businessFieldService.queryByPage(pageNo, pageSize, businessTableId, name, remark);
     }
 
     /**
