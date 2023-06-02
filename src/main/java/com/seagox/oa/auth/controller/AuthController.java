@@ -8,6 +8,8 @@ import com.seagox.oa.common.ResultData;
 import com.seagox.oa.groovy.IGroovyCloud;
 import com.seagox.oa.security.OnlineCounter;
 import com.seagox.oa.util.WeiChatUtils;
+import com.seagox.oa.util.GroovyUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -120,6 +122,18 @@ public class AuthController {
 	@RequestMapping("/testCloud")
 	public ResultData testCloud(HttpServletRequest request) {
 		return groovyCloud.execute(request);
+	}
+	
+	@RequestMapping("/testScript")
+	public Object testScript(HttpServletRequest request) {
+		Object[] params = new Object[]{1, 2};
+		String scriptText = "package com.seagull.oa.util;\r\n" + 
+				"\r\n" + 
+				"int test(int a, int b) {\r\n" + 
+				"	return a + b;\r\n" + 
+				"}";
+		
+		return GroovyUtils.parseScript(scriptText, "test", params);
 	}
 
 }
