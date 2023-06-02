@@ -23,7 +23,7 @@ public interface IJellyJobService {
     /**
      * 分页查询
      */
-    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId);
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name);
 
     /**
      * 添加

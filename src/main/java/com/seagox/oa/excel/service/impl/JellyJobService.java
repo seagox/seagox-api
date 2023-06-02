@@ -15,6 +15,7 @@ import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -50,10 +51,11 @@ public class JellyJobService implements IJellyJobService {
     }
 
     @Override
-    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId) {
+    public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, String name) {
         PageHelper.startPage(pageNo, pageSize);
         LambdaQueryWrapper<JellyJob> qw = new LambdaQueryWrapper<>();
-        qw.eq(JellyJob::getCompanyId, companyId);
+        qw.eq(JellyJob::getCompanyId, companyId)
+        .eq(!StringUtils.isEmpty(name), JellyJob::getName, name);
         List<JellyJob> list = jobMapper.selectList(qw);
         PageInfo<JellyJob> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);

@@ -48,8 +48,8 @@ public class JellyJobController {
      */
     @GetMapping("/queryByPage")
     public ResultData queryByPage(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                  @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, Long companyId) {
-        return jobService.queryByPage(pageNo, pageSize, companyId);
+                                  @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, Long companyId, String name) {
+        return jobService.queryByPage(pageNo, pageSize, companyId, name);
     }
 
     /**
