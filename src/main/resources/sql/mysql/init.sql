@@ -60,8 +60,8 @@ CREATE TABLE `jelly_import_rule_detail`  (
     `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '导入规则明细';
 
-DROP TABLE IF EXISTS `jelly_prINT`;
-CREATE TABLE `jelly_prINT`  (
+DROP TABLE IF EXISTS `jelly_print`;
+CREATE TABLE `jelly_print`  (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `company_id` BIGINT(20) NOT NULL COMMENT '公司id',
     `name` VARCHAR(30) NOT NULL COMMENT '名称',
@@ -70,7 +70,7 @@ CREATE TABLE `jelly_prINT`  (
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '打印模版';;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '打印模版';
 
 DROP TABLE IF EXISTS `jelly_form`;
 CREATE TABLE `jelly_form`  (

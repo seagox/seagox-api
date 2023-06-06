@@ -1502,10 +1502,10 @@ GO
 
 
 -- ----------------------------
--- Table structure for jelly_prINT
+-- Table structure for jelly_print
 -- ----------------------------
-DROP TABLE IF EXISTS dbo.jelly_prINT;
-CREATE TABLE dbo.jelly_prINT (
+DROP TABLE IF EXISTS dbo.jelly_print;
+CREATE TABLE dbo.jelly_print (
   id BIGINT PRIMARY KEY IDENTITY(1,1),
   company_id BIGINT  NOT NULL,
   name NVARCHAR(30)  NOT NULL,
