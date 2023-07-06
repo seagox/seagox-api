@@ -72,24 +72,7 @@
         LEFT JOIN sys_account b ON b.id = a.user_id
         LEFT JOIN sys_company c ON c.id = a.company_id
         <where>
-            <if test="_databaseId == 'mysql'">
-                and c.code LIKE CONCAT(#{prefix}, '%')
-            </if>
-            <if test="_databaseId == 'postgresql'">
-                and c.code LIKE #{prefix} || '%'
-            </if>
-            <if test="_databaseId == 'kingbase'">
-                and c.code LIKE #{prefix} || '%'
-            </if>
-            <if test="_databaseId == 'dm'">
-                and c.code LIKE #{prefix} || '%'
-            </if>
-            <if test="_databaseId == 'oracle'">
-                and c.code LIKE '%' || #{prefix} || '%'
-            </if>
-            <if test="_databaseId == 'sqlserver'">
-                and c.code LIKE '%' + #{prefix} + '%'
-            </if>
+            c.id = #{companyId}
             <if test="_databaseId == 'mysql' and title != null and title != ''">
                 and a.title LIKE CONCAT('%', #{title}, '%')
             </if>

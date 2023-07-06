@@ -23,7 +23,7 @@ public interface NoticeMapper extends BaseMapper<SysNotice> {
     /**
      * 查询所有
      */
-    List<Map<String, Object>> queryAll(@Param("prefix") String prefix, @Param("userId") Long userId, @Param("status") Integer status, @Param("title") String title);
+    List<Map<String, Object>> queryAll(@Param("companyId") Long companyId, @Param("userId") Long userId, @Param("status") Integer status, @Param("title") String title);
 
     /**
      * 查询已发/接收通知

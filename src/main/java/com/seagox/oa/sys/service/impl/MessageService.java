@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.sys.entity.SysCompany;
 import com.seagox.oa.sys.entity.SysMessage;
 import com.seagox.oa.sys.entity.SysNotice;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import com.seagox.oa.sys.mapper.NoticeMapper;
 import com.seagox.oa.sys.mapper.SysMessageMapper;
 import com.seagox.oa.sys.service.IMessageService;
@@ -26,15 +24,11 @@ public class MessageService implements IMessageService {
     private SysMessageMapper messageMapper;
 
     @Autowired
-    private CompanyMapper companyMapper;
-
-    @Autowired
     private NoticeMapper noticeMapper;
 
     @Override
     public ResultData queryUnRead(Long companyId, Long userId) {
-        SysCompany company = companyMapper.selectById(companyId);
-        return ResultData.success(messageMapper.queryCount(company.getCode().substring(0, 4), userId));
+        return ResultData.success(messageMapper.queryCount(companyId, userId));
     }
 
     @Override
@@ -69,9 +63,8 @@ public class MessageService implements IMessageService {
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, Long userId, Integer status, String title) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
-        List<Map<String, Object>> list = messageMapper.queryAll(company.getCode().substring(0, 4), userId, status, title);
+        List<Map<String, Object>> list = messageMapper.queryAll(companyId, userId, status, title);
         for (Map<String, Object> messageMap : list) {
             if (2 == (Integer) messageMap.get("type") && -1 == (Long) messageMap.get("businessType")) {
                 SysNotice notice = noticeMapper.selectById((Long) messageMap.get("businessKey"));

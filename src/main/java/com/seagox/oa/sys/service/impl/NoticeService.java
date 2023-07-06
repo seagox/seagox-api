@@ -4,10 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultCode;
 import com.seagox.oa.common.ResultData;
-import com.seagox.oa.sys.entity.SysCompany;
 import com.seagox.oa.sys.entity.SysMessage;
 import com.seagox.oa.sys.entity.SysNotice;
-import com.seagox.oa.sys.mapper.CompanyMapper;
 import com.seagox.oa.sys.mapper.NoticeMapper;
 import com.seagox.oa.sys.mapper.SysMessageMapper;
 import com.seagox.oa.sys.service.INoticeService;
@@ -32,9 +30,6 @@ public class NoticeService implements INoticeService {
 
     @Autowired
     private NoticeMapper noticeMapper;
-
-    @Autowired
-    private CompanyMapper companyMapper;
 
     @Transactional
     @Override
@@ -68,13 +63,12 @@ public class NoticeService implements INoticeService {
 
     @Override
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, Long userId, Integer status, String title, String queryType) {
-        SysCompany company = companyMapper.selectById(companyId);
         PageHelper.startPage(pageNo, pageSize);
         List<Map<String, Object>> list = new ArrayList<>();
         if ("all".equals(queryType)) {
-            list = noticeMapper.queryAll(company.getCode().substring(0, 4), null, status, title);
+            list = noticeMapper.queryAll(companyId, null, status, title);
         } else {
-            list = noticeMapper.queryAll(company.getCode().substring(0, 4), userId, status, title);
+            list = noticeMapper.queryAll(companyId, userId, status, title);
         }
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);

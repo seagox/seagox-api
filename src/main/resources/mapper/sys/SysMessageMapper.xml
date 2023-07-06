@@ -34,24 +34,7 @@
 		LEFT JOIN sys_account b ON b.id = a.from_user_id
 		LEFT JOIN sys_company c ON c.id = a.company_id
 		<where>
-			<if test="_databaseId == 'mysql'">
-				and c.code LIKE CONCAT(#{prefix}, '%')
-			</if>
-			<if test="_databaseId == 'postgresql'">
-				and c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'kingbase'">
-				and c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'dm'">
-				and c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'oracle'">
-				and c.code LIKE '%' || #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'sqlserver'">
-				and c.code LIKE '%' + #{prefix} + '%'
-			</if>
+			c.id = #{companyId}
 			<if test="_databaseId == 'mysql' and title != null and title != ''">
 				and a.title LIKE CONCAT('%', #{title}, '%')
 			</if>
@@ -85,24 +68,7 @@
 		LEFT JOIN sys_company c ON c.id = a.company_id
 		<where>
 			a.status = 0
-			<if test="_databaseId == 'mysql'">
-                AND c.code LIKE CONCAT(#{prefix}, '%')
-            </if>
-            <if test="_databaseId == 'postgresql'">
-            	AND c.code LIKE #{prefix} || '%'
-            </if>
-			<if test="_databaseId == 'kingbase'">
-				AND c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'dm'">
-				AND c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'oracle'">
-				AND c.code LIKE #{prefix} || '%'
-			</if>
-			<if test="_databaseId == 'sqlserver'">
-				AND c.code LIKE #{prefix} + '%'
-			</if>
+			AND c.id = #{companyId}
 			AND a.to_user_id = #{toUserId}
 		</where>
 	</select>
