@@ -2978,8 +2978,6 @@ CREATE TABLE dbo.sys_notice (
   resources NVARCHAR(max)  NULL,
   to_user_ids NVARCHAR(max)  NOT NULL,
   status INT DEFAULT 1,
-  classify NVARCHAR(30) DEFAULT '1',
-  relation NVARCHAR(max),
   create_time DATETIME2(7)  DEFAULT CURRENT_TIMESTAMP,
   update_time DATETIME2(7)  DEFAULT CURRENT_TIMESTAMP
 )
@@ -3042,20 +3040,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'sys_notice',
 'COLUMN', N'status'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'通知类型',
-'SCHEMA', N'dbo',
-'TABLE', N'sys_notice',
-'COLUMN', N'classify'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'关联通知',
-'SCHEMA', N'dbo',
-'TABLE', N'sys_notice',
-'COLUMN', N'relation'
 GO
 
 EXEC sp_addextendedproperty

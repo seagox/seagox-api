@@ -720,8 +720,6 @@ CREATE TABLE "public"."sys_notice" (
 	"user_id" BIGINT NOT NULL,
 	"to_user_ids" VARCHAR(500) NOT NULL,
     "status" INTEGER DEFAULT 1,
-    "classify" varchar(30) DEFAULT '1',
-    "relation" TEXT,
 	"create_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	"update_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -733,8 +731,6 @@ COMMENT ON COLUMN "public"."sys_notice"."resources" IS '附件json';
 COMMENT ON COLUMN "public"."sys_notice"."user_id" IS '发送公告人id';
 COMMENT ON COLUMN "public"."sys_notice"."to_user_ids" IS '接收公告人ids';
 COMMENT ON COLUMN "public"."sys_notice"."status" IS '状态(0:暂存;1:已发布;)';
-COMMENT ON COLUMN "public"."sys_notice"."classify" IS '通知类型';
-COMMENT ON COLUMN "public"."sys_notice"."relation" IS '关联通知';
 COMMENT ON COLUMN "public"."sys_notice"."create_time" IS '创建时间';
 COMMENT ON COLUMN "public"."sys_notice"."update_time" IS '更新时间';
 COMMENT ON TABLE "public"."sys_notice" IS '公告';

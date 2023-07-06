@@ -53,16 +53,6 @@ public class SysNotice {
     private Integer status;
 
     /**
-     * 关联通知
-     */
-    private String relation;
-
-    /**
-     * 通知类型(1:普通;2:重要;3:非常重要)
-     */
-    private String classify;
-
-    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -138,22 +128,6 @@ public class SysNotice {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
-    }
-
-    public String getClassify() {
-        return classify;
-    }
-
-    public void setClassify(String classify) {
-        this.classify = classify;
     }
 
     public LocalDateTime getCreateTime() {

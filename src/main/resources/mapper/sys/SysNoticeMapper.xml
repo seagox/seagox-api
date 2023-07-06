@@ -6,9 +6,6 @@
         SELECT
             a.id,
             a.title,
-            a.img_json AS "imgJson",
-            a.text,
-            a.annex_json AS "annexJson",
             a.from_user_id AS "fromUserId",
             a.to_user_ids AS "toUserId",
             a.status,
@@ -45,7 +42,6 @@
         a.id,
         a.title,
         b.name,
-        a.classify,
         <if test="status == 1">
             (select count(id) from sys_message where business_key = a.id and business_type = -1 and type = 2 and status = 1) as "readNum",
             (select count(id) from sys_message where business_key = a.id and business_type = -1 and type = 2 and status = 0) as "unreadNum",
@@ -143,7 +139,7 @@
     </select>
 
     <select id="queryByIds" resultType="camelKeyMap">
-        select id,title,classify from sys_notice
+        select id,title from sys_notice
         <where>
             id in
             <foreach collection="relationIdAry" item="id" open="(" separator="," close=")">

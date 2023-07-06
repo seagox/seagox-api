@@ -428,8 +428,6 @@ CREATE TABLE `sys_notice` (
   `resources` TEXT DEFAULT NULL COMMENT '附件json',
   `to_user_ids` TEXT NOT NULL COMMENT '接收公告人ids',
   `status` INT(4) DEFAULT 1 COMMENT '状态(0:暂存;1:已发布;)',
-  `classify` VARCHAR(30) DEFAULT '1' COMMENT '通知类型',
-  `relation` TEXT DEFAULT NULL COMMENT '关联通知',
   `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)

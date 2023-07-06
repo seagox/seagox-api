@@ -5,8 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.seagox.oa.common.ResultData;
 import com.seagox.oa.sys.entity.SysMessage;
-import com.seagox.oa.sys.entity.SysNotice;
-import com.seagox.oa.sys.mapper.NoticeMapper;
 import com.seagox.oa.sys.mapper.SysMessageMapper;
 import com.seagox.oa.sys.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +20,6 @@ public class MessageService implements IMessageService {
 
     @Autowired
     private SysMessageMapper messageMapper;
-
-    @Autowired
-    private NoticeMapper noticeMapper;
 
     @Override
     public ResultData queryUnRead(Long companyId, Long userId) {
@@ -65,14 +60,6 @@ public class MessageService implements IMessageService {
     public ResultData queryByPage(Integer pageNo, Integer pageSize, Long companyId, Long userId, Integer status, String title) {
         PageHelper.startPage(pageNo, pageSize);
         List<Map<String, Object>> list = messageMapper.queryAll(companyId, userId, status, title);
-        for (Map<String, Object> messageMap : list) {
-            if (2 == (Integer) messageMap.get("type") && -1 == (Long) messageMap.get("businessType")) {
-                SysNotice notice = noticeMapper.selectById((Long) messageMap.get("businessKey"));
-                messageMap.put("classify", notice.getClassify());
-            } else {
-                messageMap.put("classify", "1");
-            }
-        }
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<>(list);
         return ResultData.success(pageInfo);
     }

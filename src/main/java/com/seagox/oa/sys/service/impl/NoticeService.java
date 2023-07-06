@@ -9,7 +9,6 @@ import com.seagox.oa.sys.entity.SysNotice;
 import com.seagox.oa.sys.mapper.NoticeMapper;
 import com.seagox.oa.sys.mapper.SysMessageMapper;
 import com.seagox.oa.sys.service.INoticeService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,11 +120,6 @@ public class NoticeService implements INoticeService {
         result.put("title", sysNotice.getTitle());
         result.put("content", sysNotice.getContent());
         result.put("resources", sysNotice.getResources());
-        if (StringUtils.isNotBlank(sysNotice.getRelation())) {
-            String[] relationIdAry = sysNotice.getRelation().split(",");
-            List<Map<String, Object>> relationList = noticeMapper.queryByIds(relationIdAry);
-            result.put("relationList", relationList);
-        }
         return ResultData.success(result);
     }
 

@@ -770,8 +770,6 @@ CREATE TABLE sys_notice (
     user_id NUMBER(20) NOT NULL,
     to_user_ids VARCHAR2(500) NOT NULL,
     status NUMBER(4) DEFAULT 1,
-    classify VARCHAR2(30) DEFAULT '1',
-    relation VARCHAR2(500),
     create_time DATE DEFAULT CURRENT_TIMESTAMP,
     update_time DATE DEFAULT CURRENT_TIMESTAMP
 );
@@ -786,8 +784,6 @@ COMMENT ON COLUMN sys_notice.content IS '正文';
 COMMENT ON COLUMN sys_notice.resources IS '附件json';
 COMMENT ON COLUMN sys_notice.to_user_ids IS '接收公告人ids';
 COMMENT ON COLUMN sys_notice.status IS '状态(0:暂存;1:已发布;)';
-COMMENT ON COLUMN sys_notice.classify IS '通知类型';
-COMMENT ON COLUMN sys_notice.relation IS '关联通知';
 COMMENT ON COLUMN sys_notice.create_time IS '创建时间';
 COMMENT ON COLUMN sys_notice.update_time IS '更新时间';
 COMMENT ON TABLE sys_notice IS '公告';
